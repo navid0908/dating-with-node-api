@@ -1,0 +1,47 @@
+{
+  "name": "Dating-With-Node-Api",
+  "description": "Restful Dating Service",
+  "version": "0.0.1",
+  "author": {
+    "name": "Salim Kapadia",
+    "email": "salimk786@gmail.com"    
+  },  
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/salimkapadia/dating-with-node-api"
+  },
+  "bugs": {
+    "url": "https://github.com/salimkapadia/dating-with-node-api/issues"
+  },
+  "keywords": [
+    "nodejs",
+    "dating",
+    "restful",
+    "api"
+  ],
+  "dependencies": {
+    "hapi": "6.3.0",
+    "orm" : "*",
+    "mysql": "*",
+    "node-require-directory" : "*",
+    "colors": "0.6.2"    
+  },
+  "devDependencies": {
+    "lab": "3.x.x",
+    "nodemon": "1.2.1",
+    "lout": "5.0.1"
+  },
+  "engines": {
+    "node": ">=0.10.30"
+  },
+  "private": true,
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/salimkapadia/dating-with-node-api/blob/master/LICENSE"
+    }
+  ],
+  "scripts": {    
+    "test": "make test-coverage"
+  }
+}
