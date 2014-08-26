@@ -20,6 +20,7 @@
     "api"
   ],
   "dependencies": {
+    "db-migrate" : "*",
     "hapi": "6.3.0",
     "orm" : "*",
     "mysql": "*",

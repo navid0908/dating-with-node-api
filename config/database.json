@@ -1,0 +1,25 @@
+{  
+  "test": {
+    "driver": "mysql",
+    "user": "root",
+    "password": "",
+    "host": "localhost",
+    "database": "dating-with-node"
+  },
+
+  "dev": {
+    "driver": "mysql",
+    "user": "root",
+    "password": "",
+    "host": "localhost",
+    "database": "dating-with-node"
+  },
+
+  "prod": {
+    "driver": "mysql",
+    "user": "root",
+    "password": "",
+    "host": "localhost",
+    "database": "dating-with-node"
+  }
+}
