@@ -26,6 +26,7 @@ git clone https://github.com/salimkapadia/dating-with-node-api.git
 ```bash
 cd dating-with-node-api.git
 npm install
+cp config/config.js.example config/config.js
 ```
 1. Load the db
 ```bash

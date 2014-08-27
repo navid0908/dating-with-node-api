@@ -21,16 +21,16 @@
   ],
   "dependencies": {
     "db-migrate" : "*",
-    "hapi": "6.3.0",
+    "hapi": "6.6.*",
     "orm" : "*",
     "mysql": "*",
     "node-require-directory" : "*",
     "colors": "0.6.2"    
   },
   "devDependencies": {
-    "lab": "3.x.x",
+    "lab": "3.2.*",
     "nodemon": "1.2.1",
-    "lout": "5.0.1"
+    "lout": "5.0.*"
   },
   "engines": {
     "node": ">=0.10.30"
