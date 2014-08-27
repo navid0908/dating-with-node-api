@@ -30,7 +30,7 @@ npm install
 1. Load the db
 ```bash
 cd database
-db-migrate up --config ../config/database.json -e dev
+db-migrate up --config ../config/config.js -e database
 ```
 
 # Workflow
@@ -44,7 +44,7 @@ db-migrate up --config ../config/database.json -e dev
 	$ npm stop
 
 ### Making db changes
-We use [db-migrate](https://github.com/kunklejr/node-db-migrate) to manage changes in teh database commands.
+We use [db-migrate](https://github.com/kunklejr/node-db-migrate) to manage database changes.
 
 # Troubleshooting
 If you run into an error, make sure the database is created and that both node and the modules are in your PATH. To facilitate fast iterations, run [Nodemon](https://github.com/remy/nodemon) locally.
