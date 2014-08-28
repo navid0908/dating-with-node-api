@@ -24,7 +24,7 @@
     "hapi": "6.6.*",
     "orm" : "*",
     "mysql": "*",
-    "node-require-directory" : "*",
+    "require-directory" : "*",
     "colors": "0.6.2"    
   },
   "devDependencies": {

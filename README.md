@@ -44,8 +44,15 @@ db-migrate up --config ../config/config.js -e database
 
 	$ npm stop
 
-### Making db changes
-We use [db-migrate](https://github.com/kunklejr/node-db-migrate) to manage database changes.
+### Making changes
+
+#### Database (Mysql) 
+Database changes are managed through [db-migrate](https://github.com/kunklejr/node-db-migrate).
+
+# Testing
+The application can be tested like so:
+	$ npm test
+
 
 # Troubleshooting
 If you run into an error, make sure the database is created and that both node and the modules are in your PATH. To facilitate fast iterations, run [Nodemon](https://github.com/remy/nodemon) locally.
