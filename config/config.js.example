@@ -1,7 +1,7 @@
 // Defaults that you can access when you require this config.
 module.exports = {
     host: "127.0.0.1",
-    port: 8001,
+    port: 8080,
     hapi: {
         options: {cors: true}
     },

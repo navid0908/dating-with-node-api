@@ -30,7 +30,7 @@
   "devDependencies": {
     "lab": "3.2.*",
     "nodemon": "1.2.1",
-    "lout": "5.0.*"
+    "lout": "^5.0.2"
   },
   "engines": {
     "node": ">=0.10.30"

@@ -22,7 +22,7 @@ You should clone the [cookbooks](https://github.com/salimkapadia/dating-with-nod
 ```bash
 git clone https://github.com/salimkapadia/dating-with-node-api.git
 ```
-1. Install the project dependencies (frameworks/libraries) using npm
+1. Install project dependencies (frameworks/libraries) using npm
 ```bash
 cd dating-with-node-api.git
 npm install
@@ -51,8 +51,8 @@ Database changes are managed through [db-migrate](https://github.com/kunklejr/no
 
 # Testing
 The application can be tested like so:
-	$ npm test
 
+	$ npm test
 
 # Troubleshooting
 If you run into an error, make sure the database is created and that both node and the modules are in your PATH. To facilitate fast iterations, run [Nodemon](https://github.com/remy/nodemon) locally.
@@ -61,6 +61,9 @@ If you run into an error, make sure the database is created and that both node a
 npm install nodemon
 nodemon
 ```
+
+# Documentation
+API docs are provided via the [lout](https://github.com/hapijs/lout) plugin. In a browser, if you navigate to http://localhost:8080/docs you’ll see a list of routes that are configured as well as the HTTP method they use.
 
 License
 =========
