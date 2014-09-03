@@ -1,9 +1,18 @@
-// Defaults that you can access when you require this config.
+// Defaults of this app. 
 module.exports = {
-    host: "127.0.0.1",
-    port: 8080,
+    host: "127.0.0.1", //FQN or ip of this box that the server is attached too.
+    port: 8080, // Incoming HTTP traffic is assigned to this port.
     hapi: {
-        options: {cors: true}
+        serverOptions: {
+            cors: true,
+            cache: {
+                engine: require("catbox-redis"),
+                partition: 'dating-with-node', // The Redis parition name under which keys are stored. Default is ''
+                host: '127.0.0.1', //  The Redis server hostname. Defaults to '127.0.0.1'.
+                port: 6379, // The Redis server port or unix domain socket path. Defaults to 6379.
+                password: '' //  The Redis authentication password when required. If blank, auth is not sent.
+            }
+        }
     },
     database: {
         driver: "mysql",
@@ -26,18 +35,22 @@ module.exports = {
         facebook: {
             clientId: "",
             clientSecret: "",
+            callbackURL: "/auth/facebook/callback"
         },
         instagram: {
             clientId: "",
-            clientSecret: ""
+            clientSecret: "",
+            callbackURL: "/auth/instagram/callback"
         },
         twitter: {
             clientId: "",
-            clientSecret: ""
+            clientSecret: "",
+            callbackURL: "/auth/twitter/callback"
         },
         google: {
             clientId: "",
-            clientSecret: ""
+            clientSecret: "",
+            callbackURL: "/auth/google/callback"
         }
     }
 }

@@ -2,14 +2,14 @@
  * Dependencies.
  */
 var Hapi        = require('hapi'),
-	lout		= require('lout'),
+	lout		= require('lout'), // Self documenting tool for routes with http method.
     config      = require('./config/config'),
     routes      = require('./routes'),
     routeEntry;
 
 var server = new Hapi.Server(Number(config.port));
 
-// makes sure that if the script is being required as a module by another script, we don’t start the server. 
+// If the script is being required as a module by another script, don’t start the server.
 if (!module.parent)
 {
 	server.pack.register({plugin: lout}, function(err) {
