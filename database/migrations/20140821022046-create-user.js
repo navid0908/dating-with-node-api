@@ -2,7 +2,7 @@ var dbm = require('db-migrate');
 var type = dbm.dataType;
 
 exports.up = function (db, callback) {
-  db.createTable('users', {
+  db.createTable('user', {
     columns: {
       id: { type: 'int', primaryKey: true, autoIncrement: true },
       username: { type: 'string', length: 30, unique: true },
@@ -21,5 +21,5 @@ exports.up = function (db, callback) {
 }
 
 exports.down = function (db, callback) {
-  db.dropTable('users', callback);
+  db.dropTable('user', callback);
 };

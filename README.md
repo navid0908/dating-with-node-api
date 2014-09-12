@@ -47,7 +47,15 @@ db-migrate up --config ../config/config.js -e database
 ### Making changes
 
 #### Database (Mysql) 
-Database changes are managed through [db-migrate](https://github.com/kunklejr/node-db-migrate).
+Database changes are managed through [db-migrate](https://github.com/kunklejr/node-db-migrate). When creating migrations with [db-migrate](https://github.com/kunklejr/node-db-migrate), please use the following convention for the migrationName:
+  - create-tableName when your script is creating a table
+  - alter-tableName when your script is altering a table
+  - drop-tableName when your script is dropping a table.
+
+On a side note, table names should be singular. See [stackoverflow](http://stackoverflow.com/questions/338156/table-naming-dilemma-singular-vs-plural-names) for explanation.
+
+http://stackoverflow.com/questions/338156/table-naming-dilemma-singular-vs-plural-names
+
 
 # Testing
 The application can be tested like so:
