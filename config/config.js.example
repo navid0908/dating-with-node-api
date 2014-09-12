@@ -31,6 +31,10 @@ module.exports = {
         "api-key": "",
         "api-host": "https://mandrillapp.com/api/1.0/",
     },
+    cookie: {
+        name: "dating-with-node",
+        password: ""
+    },
     login: {
         facebook: {
             clientId: "",

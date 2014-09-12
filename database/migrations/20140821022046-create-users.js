@@ -7,11 +7,13 @@ exports.up = function (db, callback) {
       id: { type: 'int', primaryKey: true, autoIncrement: true },
       username: { type: 'string', length: 30, unique: true },
       email: { type: 'string', length: 60},
-      group_id: { type: 'smallint', length: 1},
-      social_login_type: { type: 'smallint', length: 1}, //facebook=1, instagram=2, twitter=3, google=4
+      password: { type: 'string', length: 60},
+      salt: { type: 'string', length: 60},
+      group_id: { type: 'smallint', length: 1}, //10=regular-user, 100=admin
+      social_login_type: { type: 'string', length: 20},
       social_login_token: { type: 'string', length: 60},
       status: { type: 'smallint', length: 1}, //pending=1,active=2,deleted=2,
-      created: { type: 'datetime'}, 
+      created: { type: 'datetime'},
       modified: { type: 'datetime'}
     },
     ifNotExists: true
@@ -19,5 +21,5 @@ exports.up = function (db, callback) {
 }
 
 exports.down = function (db, callback) {
-  db.dropTable('users', callback);  
+  db.dropTable('users', callback);
 };
