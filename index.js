@@ -6,7 +6,6 @@ var Hapi        = require('hapi'),
     routes      = require('./routes');
 
 var server = new Hapi.Server(Number(config.port));
-
 	server.pack.register([
 		{plugin:require('lout')}, // Self documenting tool for routes with http method.
 		{plugin:require('bell')}, // Social login plugin
@@ -25,6 +24,11 @@ var server = new Hapi.Server(Number(config.port));
 			        isSecure: false     // Terrible idea but required if not using HTTPS
 			    });
 		    }
+
+		    // Configure database connection
+			var dbHandler = require('./database');
+			dbHandler.init(config.database);
+
 		    // Add configured routes to the server routes
 			for (var tmp in routes){
 			    server.route(routes[tmp]);

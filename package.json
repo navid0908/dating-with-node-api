@@ -27,9 +27,10 @@
     "db-migrate": "*",
     "hapi": "6.6.*",
     "hapi-auth-cookie": "^1.3.2",
+    "joi": "^4.6.2",
     "mysql": "*",
-    "orm": "*",
-    "require-directory": "*"
+    "orm": "^2.1.19",
+    "require-directory": "^2.0.0"
   },
   "devDependencies": {
     "lab": "3.2.*",

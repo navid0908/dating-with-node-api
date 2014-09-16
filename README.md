@@ -54,7 +54,7 @@ Database changes are managed through [db-migrate](https://github.com/kunklejr/no
   - alter-tableName when your script is altering a table
   - drop-tableName when your script is dropping a table.
 * Table names should be singular. See [stackoverflow](http://stackoverflow.com/questions/338156/table-naming-dilemma-singular-vs-plural-names) for explanation.
-* Foreign keys should be lowercase like so: fk\_foreignKeyTableName\_primaryKeyTableName"
+* Foreign keys should be lowercase like so: fk\_foreignKeyTableName\_primaryKeyTableName
 
 
 # Testing

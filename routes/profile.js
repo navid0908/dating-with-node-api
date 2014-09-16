@@ -4,8 +4,12 @@ module.exports = exports = [
     {
         method: 'get',
         path: '/profiles',
-        handler: function(request, reply) {
-            reply([]);
+        config: {
+            handler: function(request, reply) {
+                reply([]);
+            },
+            description: "Obtain user profile",
+            tags: ['user', 'profile']
         }
     }
 ];
