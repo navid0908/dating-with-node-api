@@ -56,6 +56,28 @@ Database changes are managed through [db-migrate](https://github.com/kunklejr/no
 * Table names should be singular. See [stackoverflow](http://stackoverflow.com/questions/338156/table-naming-dilemma-singular-vs-plural-names) for explanation.
 * Foreign keys should be lowercase like so: fk\_foreignKeyTableName\_primaryKeyTableName
 
+#### Controllers
+
+* Should be saved in the controllers directory.
+* Filename should be camelCased and end with the word Controller like so - taskController.js
+* Controllers should look like this:
+```js
+//bodytypeController.js
+
+exports.get = {
+  description: "Lookup for various body types",
+  validate: {},
+  handler: function (request, reply) {
+  }
+}
+
+exports.post = {
+  validate: {},
+  handler: function (request, reply) {
+  }
+}
+```
+
 
 # Testing
 The application can be tested like so:

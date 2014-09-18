@@ -5,7 +5,7 @@ exports.up = function (db, callback) {
 	    db.createTable.bind(db, 'country', {
 		    columns: {
 		      id: { type: 'int', primaryKey: true, autoIncrement: true },
-		      code: { type: 'string', length: 2},
+		      code: { type: 'char', length: 2},
 		      name: { type: 'string', length: 100, unique:true}
 		    },
 		    ifNotExists: true
