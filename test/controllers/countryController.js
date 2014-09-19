@@ -1,6 +1,6 @@
 
 var Lab = require("lab"),
-    server = require("../../");
+    server = require("../../"),
     _ = require("underscore");
 
 Lab.experiment("Country", function() {
@@ -21,7 +21,7 @@ Lab.experiment("Country", function() {
 	        	Lab.expect(row).to.have.property('code');
 	        	Lab.expect(row).to.have.property('name');
 	        })
-	        done();
 	    });
+		done();
 	});
 });

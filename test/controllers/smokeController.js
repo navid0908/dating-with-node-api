@@ -1,6 +1,6 @@
 
 var Lab = require("lab"),
-    server = require("../../");
+    server = require("../../"),
     _ = require("underscore");
 
 Lab.experiment("Smoke", function() {
@@ -17,10 +17,10 @@ Lab.experiment("Smoke", function() {
 	        _.each(result, function(row){
 	        	var keys = Object.keys(row);
 	        	Lab.expect(keys).to.have.length(2);
-	        	Lab.expect(row).to.have.property('id');	        	
+	        	Lab.expect(row).to.have.property('id');
 	        	Lab.expect(row).to.have.property('description');
 	        })
-	        done();
 	    });
+		done();
 	});
 });

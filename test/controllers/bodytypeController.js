@@ -1,6 +1,6 @@
 
 var Lab = require("lab"),
-    server = require("../../");
+    server = require("../../"),
     _ = require("underscore");
 
 Lab.experiment("Bodytype", function() {
@@ -20,7 +20,7 @@ Lab.experiment("Bodytype", function() {
 	        	Lab.expect(row).to.have.property('id');
 	        	Lab.expect(row).to.have.property('description');
 	        })
-	        done();
 	    });
+		done();
 	});
 });

@@ -1,7 +1,7 @@
 
 var Lab = require("lab"),
-    server = require("../../");
-    _ = require("underscore");
+    server = require("../../"),
+    _ = require("underscore")
 
 Lab.experiment("Education", function() {
 	Lab.test("/education endpoint", function(done) {
@@ -17,10 +17,10 @@ Lab.experiment("Education", function() {
 	        _.each(result, function(row){
 	        	var keys = Object.keys(row);
 	        	Lab.expect(keys).to.have.length(2);
-	        	Lab.expect(row).to.have.property('id');	        	
+	        	Lab.expect(row).to.have.property('id');
 	        	Lab.expect(row).to.have.property('description');
 	        })
-	        done();
 	    });
+		done();
 	});
 });
