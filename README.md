@@ -22,12 +22,14 @@ You should clone the [cookbooks](https://github.com/salimkapadia/dating-with-nod
 ```bash
 git clone https://github.com/salimkapadia/dating-with-node-api.git
 ```
+
 1. Install project dependencies (frameworks/libraries) using npm
 ```bash
 cd dating-with-node-api.git
 npm install
 cp config/config.js.example config/config.js
 ```
+
 1. Load the db
 ```bash
 cd database
@@ -83,6 +85,9 @@ exports.post = {
 The application can be tested like so:
 
 	$ npm test
+
+If you need to add seed data for your tests, use db-migrate. See this [commit](https://github.com/salimkapadia/dating-with-node-api/commit/f3a7a7e2a01a9dde93a33590d7932807cc476556). Please keep in mind that during the build process, the test directory is not checked out.
+
 
 # Troubleshooting
 If you run into an error, make sure the database is created and that both node and the modules are in your PATH. To facilitate fast iterations, run [Nodemon](https://github.com/remy/nodemon) locally.
