@@ -52,6 +52,8 @@
     }
   ],
   "scripts": {
-    "test": "make test-coverage"
+    "test": "make test-coverage",
+    "start" : "node ./bin/pm2.js start",
+    "stop" : "node ./bin/pm2.js stop"
   }
 }
