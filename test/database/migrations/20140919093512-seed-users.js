@@ -9,6 +9,6 @@ exports.up = function (db, callback) {
 
 exports.down = function (db, callback) {
     async.series([
-        db.runSql.bind(db,'DELETE FROM user where email = "testemail@test.com"', []),        
+        db.runSql.bind(db,'DELETE FROM user where email = "testemail@test.com"', []),
     ], callback);
 };

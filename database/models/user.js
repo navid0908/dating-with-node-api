@@ -45,7 +45,7 @@ module.exports = function (db, cb) {
             },
             getModified: function () {
                 return this.modified;
-            },
+            },            
             serialize: function () {
                 return {
                     id:                     this.id,
@@ -63,4 +63,26 @@ module.exports = function (db, cb) {
             }
         }
     });
+    db.models.user.isUsernameTaken = function(userName, callback){
+        if (!userName){
+            callback('Value is undefined');
+        }
+        db.models.user.exists({username:userName}, function(err, exists){
+            if (err) callback(err); //@TODO: log db error
+            callback(null, exists);
+        });
+    };
+    db.models.user.isEmailTaken = function(userEmail, callback){
+        if (!userEmail){
+            callback('Value is undefined');
+        }
+        db.models.user.exists({email:userEmail}, function(err, exists){
+            if (err) callback(err); //@TODO: log db error
+            callback(null, exists);
+        });
+    };
+    db.models.user.create = function (payload, callback){        
+        //create the user
+        return callback([]);
+    }
 }
