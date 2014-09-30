@@ -4,11 +4,8 @@ exports.get = {
 	tags: ['lookup', 'children'],
 	description: "Lookup for children",
 	handler: function (request, reply) {
-		dbHandler.db.models.children.find().all(function (err, rows) {
-            var items = rows.map(function (m) {
-                return m.serialize();
-            });
-            reply(items);
-        });
+		dbHandler.models.Children.fetchAll().then(function(collection){
+			return JSON.stringify(collection);
+		});
 	}
 }

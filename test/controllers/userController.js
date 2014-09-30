@@ -188,6 +188,7 @@ Lab.experiment("method:post, url:/user ", function() {
 	    });
 	});
 	Lab.test("create user with auto generated username", function(done) {
+		//if this test fails, please check to see that you've ran the db seed for tests.
 	    var options = {
 	        method: "post",
 	        url: "/user",
@@ -199,8 +200,7 @@ Lab.experiment("method:post, url:/user ", function() {
 	        }
 	    };
 	    server.inject(options, function(response) {
-	        var result = response.result;
-	        //if this test fails, please check to see that you've ran the db seed for tests.
+	        var result = response.result;	        
 	        Lab.expect(response.statusCode).to.equal(200);
 	        done();
 	    });
