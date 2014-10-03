@@ -72,9 +72,9 @@ exports.createUser = {
 	},
 	{
 		assign: "isUsernameTaken",
-		method: function (request, reply){			
-			if (request.payload.username){				
-				return dbHandler.models.User.isUsernameTaken(request.payload.username, function (err, exists){					
+		method: function (request, reply){
+			if (request.payload.username){
+				return dbHandler.models.User.isUsernameTaken(request.payload.username, function (err, exists){
 					if (err){
 						return reply(Boom.badRequest(err));
 					}
@@ -95,7 +95,7 @@ exports.createUser = {
 				return dbHandler.models.User.isEmailTaken(request.payload.email, function (err, exists){					
 					if (err){
 						return reply(Boom.badRequest(err));
-					}
+					}					
 					if(exists){
 						return reply(Boom.conflict('Email is already registered. Please login'));
 					}else{
@@ -107,16 +107,14 @@ exports.createUser = {
 		}
 	}
 	],
-	handler: function (request, reply) {
-		if(! request.payload.username)
-		{
-			console.log('username not passed, generating a new one');
+	handler: function (request, reply) {		
+		if(! request.payload.username){
+			request.payload.username = internals.generateUsername(12);
 		}
-		request.payload.username = internals.generateUsername(12);
 		return dbHandler.models.User.create(request.payload, function (err, user){
 			if (err){
 				return reply(Boom.badRequest(err));
-			}			
+			}
 			return reply(user);
 		});
 	}

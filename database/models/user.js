@@ -26,8 +26,9 @@ module.exports = function(bookshelf){
             });
         },
         create : function(data, callback){
-            //create the user            
-            return callback(null, []);            
+            new this.constructor(data).save().then(function(model) {
+              return callback(null, model);
+            });
         },
     });
     return new User();

@@ -1,23 +1,20 @@
-var async = require('async');
-
-exports.up = function (db, callback) {
-	async.series([    
-	    db.createTable.bind(db, 'diet', {
-		    columns: {
-		      id: { type: 'int', primaryKey: true, autoIncrement: true },
-		      description: { type: 'string', length: 45}
-		    },
-		    ifNotExists: true
-	  	}),
-	  	db.insert.bind(db, 'diet', ['description'], ['Anything']),
-		db.insert.bind(db, 'diet', ['description'], ['Vegetarian']),
-		db.insert.bind(db, 'diet', ['description'], ['Vegan']),
-		db.insert.bind(db, 'diet', ['description'], ['Kosher']),
-		db.insert.bind(db, 'diet', ['description'], ['Halal']),
-	  	db.insert.bind(db, 'diet', ['description'], ['Other'])
-	  	], callback);
+'use strict';
+exports.up = function(knex, Promise) {
+    return knex.schema.createTable('diet', function (table) {
+            table.increments('id').primary();
+            table.string('description', 45).notNullable().unique();
+        }).then(function(table){
+        	return knex.insert([
+                    {description:'Anything'},
+                    {description:'Vegetarian'},
+                    {description:'Vegan'},
+                    {description:'Kosher'},
+                    {description:'Halal'},
+                    {description:'Other'}
+        		]).into('diet');
+		});
 };
 
-exports.down = function (db, callback) {
-  db.dropTable('diet', callback);
-};
+exports.down = function(knex, Promise) {
+  return knex.schema.dropTable('diet');
+}

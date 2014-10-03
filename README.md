@@ -9,7 +9,7 @@ The backend will use the following technologies and frameworks:
   - [Redis](http://redis.io/)
   - [Node-Mysql](https://github.com/felixge/node-mysql)
   - [Node-HapiJS](https://github.com/hapijs/hapi)
-  - [Node-Db-Migrate](https://github.com/kunklejr/node-db-migrate)
+  - [Bookshelfjs](http://bookshelfjs.org)
 
 
 # Installation
@@ -32,8 +32,7 @@ cp config/config.js.example config/config.js
 
 1. Load the db
 ```bash
-cd database
-db-migrate up --config ../config/config.js -e database
+knex migrate:latest --knexfile config/knexfile.js --cwd database/
 ```
 
 # Workflow
@@ -49,9 +48,9 @@ db-migrate up --config ../config/config.js -e database
 ### Making changes
 
 #### Database (Mysql) 
-Database changes are managed through [db-migrate](https://github.com/kunklejr/node-db-migrate).
+Database changes are managed through [knex](http://knexjs.org/#Migrations).
 
-* When creating migrations with [db-migrate](https://github.com/kunklejr/node-db-migrate), please use the following convention for the migrationName:
+* When creating migrations with [knex](http://knexjs.org/#Migrations), please use the following convention for the migrationName:
   - create-tableName when your script is creating a table
   - alter-tableName when your script is altering a table
   - drop-tableName when your script is dropping a table.
@@ -86,7 +85,7 @@ The application can be tested like so:
 
 	$ npm test
 
-If you need to add seed data for your tests, use db-migrate. See this [commit](https://github.com/salimkapadia/dating-with-node-api/commit/f3a7a7e2a01a9dde93a33590d7932807cc476556). Please keep in mind that during the build process, the test directory is not checked out.
+If you need to add seed data for your tests, use [knex seed-api](http://knexjs.org/#Seeds-API). Please keep in mind that during the build process, the test directory is not checked out.
 
 
 # Troubleshooting

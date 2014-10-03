@@ -1,22 +1,20 @@
-exports.up = function (db, callback) {
-  db.createTable('user', {
-    columns: {
-      id: { type: 'int', primaryKey: true, autoIncrement: true },
-      username: { type: 'string', length: 30, unique: true },
-      email: { type: 'string', length: 60},
-      password: { type: 'string', length: 60},
-      salt: { type: 'string', length: 60},
-      group_id: { type: 'smallint', length: 3}, //10=regular-user, 100=admin
-      social_login_type: { type: 'string', length: 20},
-      social_login_token: { type: 'string', length: 60},
-      status: { type: 'string', length: 10}, //pending,active,deleted
-      created: { type: 'datetime'},
-      modified: { type: 'datetime'}
-    },
-    ifNotExists: true
-  }, callback);
-}
-
-exports.down = function (db, callback) {
-  db.dropTable('user', callback);
+'use strict';
+exports.up = function(knex, Promise) {
+    return knex.schema.createTable('user', function(table) {
+      table.increments('id');
+      table.string('username', 30).notNullable().unique();
+      table.string('email', 60).nullable();
+      table.string('password', 60).nullable();
+      table.string('salt', 60).nullable();
+      table.specificType('group_id', 'smallint').nullable();
+      table.string('social_login_type', 20).nullable();
+      table.string('social_login_token', 60).nullable();
+      table.string('status', 10).nullable(); //pending,active,deleted
+      table.timestamps();
+    });
 };
+
+exports.down = function(knex, Promise) {
+  return knex.schema.dropTable('user');
+}
+ 

@@ -1,19 +1,13 @@
-var async = require('async');
-
-exports.up = function (db, callback) {
-	async.series([
-	    db.createTable.bind(db, 'phototype', {
-		    columns: {
-		      id: { type: 'int', primaryKey: true, autoIncrement: true },
-		      size: { type: 'string', length: 45}
-		    },
-		    ifNotExists: true
-	  	}),
-	  	db.insert.bind(db, 'phototype', ['size'], ['Original']),
-	  	db.insert.bind(db, 'phototype', ['size'], ['Thumnail_160X160'])
-	], callback);
+'use strict';
+exports.up = function(knex, Promise) {
+    return knex.schema.createTable('phototype', function (table) {
+            table.increments('id').primary();
+            table.string('size', 45).notNullable().unique();
+        }).then(function(table){
+        	return knex.insert([{size:'Original'},{size:'Thumnail_160X160'}]).into('phototype');
+		});
 };
 
-exports.down = function (db, callback) {
-  db.dropTable('phototype', callback);
-};
+exports.down = function(knex, Promise) {
+  return knex.schema.dropTable('phototype');
+}

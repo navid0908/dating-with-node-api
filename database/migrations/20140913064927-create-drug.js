@@ -1,20 +1,17 @@
-var async = require('async');
-
-exports.up = function (db, callback) {
-	async.series([    
-	    db.createTable.bind(db, 'drug', {
-		    columns: {
-		      id: { type: 'int', primaryKey: true, autoIncrement: true },
-		      description: { type: 'string', length: 45}
-		    },
-		    ifNotExists: true
-	  	}),
-	  	db.insert.bind(db, 'drug', ['description'], ['Never']),
-		db.insert.bind(db, 'drug', ['description'], ['Sometimes']),
-		db.insert.bind(db, 'drug', ['description'], ['Often'])		
-	  	], callback);
+'use strict';
+exports.up = function(knex, Promise) {
+    return knex.schema.createTable('drug', function (table) {
+            table.increments('id').primary();
+            table.string('description', 45).notNullable().unique();
+        }).then(function(table){
+        	return knex.insert([
+                    {description:'Never'},
+                    {description:'Sometimes'},
+                    {description:'Often'},
+        		]).into('drug');
+		});
 };
 
-exports.down = function (db, callback) {
-  db.dropTable('drug', callback);
-};
+exports.down = function(knex, Promise) {
+  return knex.schema.dropTable('drug');
+}

@@ -1,20 +1,14 @@
-
-exports.up = function (db, callback) {
-  db.createTable('photo', {
-    columns: {
-      id: { type: 'int', primaryKey: true, autoIncrement: true },
-      user_id: { type: 'int'}, /* References the user table*/
-      phototype_id: { type: 'int'}, /* References the phototype table*/
-      location: { type: 'string', length: 60}, /* location of where the id is stored - S3 bucket */
-      caption: { type: 'string', length: 140}, /* Something about the photo... */
-      is_primary: { type: 'boolean', defaultValue: true}, //1=yes, 0=no
-      created: { type: 'datetime'},
-      modified: { type: 'datetime'}
-    },
-    ifNotExists: true
-  }, callback);
-}
-
-exports.down = function (db, callback) {
-  db.dropTable('photo', callback);
+'use strict';
+exports.up = function(knex, Promise) {
+    return knex.schema.createTable('photo', function (table) {
+            table.increments('id').primary();
+            table.integer('user_id').notNullable().unsigned().references('user.id');
+            table.integer('phototype_id').notNullable().unsigned().references('phototype.id');
+            table.string('location', 60).nullable();
+            table.string('caption', 140).nullable();
+        });
 };
+
+exports.down = function(knex, Promise) {
+  return knex.schema.dropTable('photo');
+}
