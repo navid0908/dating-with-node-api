@@ -8,6 +8,7 @@ module.exports = {
         this.bookshelf = require('bookshelf')(knex);
 
         this.models = {
+          Activelevel : require('./models/activelevel')(this.bookshelf),
           Bodytype : require('./models/bodytype')(this.bookshelf),
           Children : require('./models/children')(this.bookshelf),
           Country : require('./models/country')(this.bookshelf),
