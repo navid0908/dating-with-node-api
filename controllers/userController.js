@@ -1,7 +1,8 @@
-var dbHandler = require('../database'),
-	Joi = require('joi'),
-	Boom = require('boom'),
-	Crypto = require('crypto');
+var dbHandler = require('../database');
+var	Joi = require('joi');
+var	Boom = require('boom');
+var	Crypto = require('crypto');
+var async = require('async');
 
 // private functions that will not be exposed to rest calls.
 var internals = {};
@@ -95,7 +96,7 @@ exports.createUser = {
 				return dbHandler.models.User.isEmailTaken(request.payload.email, function (err, exists){					
 					if (err){
 						return reply(Boom.badRequest(err));
-					}					
+					}
 					if(exists){
 						return reply(Boom.conflict('Email is already registered. Please login'));
 					}else{
@@ -107,15 +108,33 @@ exports.createUser = {
 		}
 	}
 	],
-	handler: function (request, reply) {		
-		if(! request.payload.username){
-			request.payload.username = internals.generateUsername(12);
-		}
-		return dbHandler.models.User.create(request.payload, function (err, user){
-			if (err){
-				return reply(Boom.badRequest(err));
+	handler: function (request, reply) {
+		async.auto({
+            user : function (done) {
+				if(! request.payload.username){
+					request.payload.username = internals.generateUsername(12);
+				}
+				if (request.payload.network == 'email'){
+					dbHandler.models.User.createAccount(
+						request.payload.username,
+						request.payload.email,
+						request.payload.password,
+						done
+					);
+				}else{
+					//@TODO: register via social network and pull information.
+				}
+			},
+			welcome : function(done){
+				//@TODO: send welcome email to them.
+				done(null,{});
 			}
-			return reply(user);
-		});
+		},function (err, results) {
+                if (err){
+					return reply(Boom.badRequest(err));
+				}
+                return reply(results.user);
+			}
+		);
 	}
 }

@@ -1,9 +1,9 @@
-var Lab = require("lab"),
-    server = require("../../"),
-    _ = require("underscore");
+var Lab = require("lab");
+var server = require("../../");
+var dbHandler = require('../../database');
 
 Lab.experiment("method:post, url:/user ", function() {
-	Lab.test("create user with missing parameters", function(done) {
+	Lab.test("create user with missing parameters - network", function(done) {
 	    var options = {
 	        method: "post",
 	        url: "/user",
@@ -18,12 +18,10 @@ Lab.experiment("method:post, url:/user ", function() {
 	        var result = response.result;
 	        //console.log(result);
 	        Lab.expect(response.statusCode).to.equal(400); // we didn't pass network in the payload.
+	        done();
 	    });
-	    done();
 	});
-
-	Lab.test("create user with invalid parameters", function(done) {
-		//test failure with short username
+	Lab.test("create user with invalid parameter - short username", function(done) {
 	    var options = {
 	        method: "post",
 	        url: "/user",
@@ -39,10 +37,11 @@ Lab.experiment("method:post, url:/user ", function() {
 	        var result = response.result;
 	        //console.log(result);
 	        Lab.expect(response.statusCode).to.equal(400);
+	        done();
 	    });
-
-	    //test failure with large username
-	    options = {
+	});
+	Lab.test("create user with invalid parameter - large username", function(done) {
+	    var options = {
 	        method: "post",
 	        url: "/user",
 	        payload:
@@ -56,11 +55,12 @@ Lab.experiment("method:post, url:/user ", function() {
 	    server.inject(options, function(response) {
 	        var result = response.result;
 	        //console.log(result);
-	        Lab.expect(response.statusCode).to.equal(400);	        
+	        Lab.expect(response.statusCode).to.equal(400);
+	        done();
 	    });
-
-	    //test failure with invalid email format
-	    options = {
+    });
+    Lab.test("create user with invalid parameter - bad email", function(done) {
+	    var options = {
 	        method: "post",
 	        url: "/user",
 	        payload:
@@ -74,16 +74,17 @@ Lab.experiment("method:post, url:/user ", function() {
 	    server.inject(options, function(response) {
 	        var result = response.result;
 	        //console.log(result);
-	        Lab.expect(response.statusCode).to.equal(400);	        
+	        Lab.expect(response.statusCode).to.equal(400);
+	        done();
 	    });
-
-	    //test failure with short password
-	    options = {
+    });
+    Lab.test("create user with invalid parameter - short password", function(done) {
+	    var options = {
 	        method: "post",
 	        url: "/user",
 	        payload:
 	        {
-                network: 					"email",
+                network: 				"email",
                 username:               "someusername",
                 email:                  "john@john.com",
                 password:               "some1", //too short
@@ -92,9 +93,9 @@ Lab.experiment("method:post, url:/user ", function() {
 	    server.inject(options, function(response) {
 	        var result = response.result;
 	        // console.log(result);
-	        Lab.expect(response.statusCode).to.equal(400);	        
+	        Lab.expect(response.statusCode).to.equal(400);
+	        done();
 	    });
-	    done();
 	});
 	Lab.test("create user with an invalid network", function(done) {
 	    var options = {
@@ -114,9 +115,7 @@ Lab.experiment("method:post, url:/user ", function() {
 	        done();
 	    });
 	});
-	Lab.test("create user with reserved username", function(done) {
-		//if this test fails, please check to see that you've ran the db seed for tests.
-
+	Lab.test("create user with reserved username - admin", function(done) {
 	    var options = {
 	        method: "post",
 	        url: "/user",
@@ -131,8 +130,11 @@ Lab.experiment("method:post, url:/user ", function() {
 	    server.inject(options, function(response) {
 	        var result = response.result;
 	        Lab.expect(response.statusCode).to.equal(409);
+	        done();
 	    });
-	    options = {
+	});
+	Lab.test("create user with reserved username - support", function(done) {
+	    var options = {
 	        method: "post",
 	        url: "/user",
 	        payload:
@@ -149,8 +151,30 @@ Lab.experiment("method:post, url:/user ", function() {
 	        done();
 	    });
 	});
+
+	Lab.before(function (done) {
+        //setup test records
+        var userModel = dbHandler.models.User;
+        userModel.createAccount('testjohndoe','randomemail@test.com','testpassword', function(result){
+			done();
+        });
+    });
+    Lab.after(function (done) {
+        // clean up
+        var userModel = dbHandler.models.User;
+        userModel.query({where: {username: 'testjohndoe'}}).fetchAll().then(function(collection){
+                collection.invokeThen('destroy').then(function() {
+				  // ... all models in the collection have been destroyed
+			});
+		});
+		userModel.query({where: {email: 'autogenerateusername@test.com'}}).fetchAll().then(function(collection){
+                collection.invokeThen('destroy').then(function() {
+				  // ... all models in the collection have been destroyed
+				  done();
+			});
+        });
+    });
 	Lab.test("create user with existing username in system", function(done) {
-	    //if this test fails, please check to see that you've ran the db seed for tests.
 	    var options = {
 	        method: "post",
 	        url: "/user",
@@ -169,7 +193,6 @@ Lab.experiment("method:post, url:/user ", function() {
 	    });
 	});
 	Lab.test("create user with existing email in system", function(done) {
-		//if this test fails, please check to see that you've ran the db seed for tests.
 	    var options = {
 	        method: "post",
 	        url: "/user",
@@ -177,7 +200,7 @@ Lab.experiment("method:post, url:/user ", function() {
 	        {
                 network: 				"email",
                 username:               "dating-with-node-api",
-                email:                  "testemail@test.com",
+                email:                  "randomemail@test.com",
                 password:               "testpassword",
 	        }
 	    };	    
@@ -188,20 +211,19 @@ Lab.experiment("method:post, url:/user ", function() {
 	    });
 	});
 	Lab.test("create user with auto generated username", function(done) {
-		//if this test fails, please check to see that you've ran the db seed for tests.	    
 	    var options = {
 	        method: "post",
 	        url: "/user",
 	        payload:
 	        {
                 network: 				"email",
-                email:                  "newedsfafsdmsasaail@test.com",
+                email:                  "autogenerateusername@test.com",
                 password:               "testpassword",
 	        }
 	    };
 	    server.inject(options, function(response) {
 	        var result = response.result;
-	        //console.log(result.message);
+	        //console.log(result);
 	        Lab.expect(response.statusCode).to.equal(200);
 	        done();
 	    });
