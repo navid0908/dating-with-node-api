@@ -34,6 +34,12 @@ module.exports = {
         name: "dating-with-node",
         password: ""
     },
+    registration: {
+        reservedUsernames : {
+            support: true,
+            admin: true,
+        }
+    },
     login: {
         facebook: {
             clientId: "",
