@@ -116,6 +116,7 @@ exports.createUser = {
 			},
 			welcome : function(done){
 				//@TODO: send welcome email to them.
+				//@TODO: break this out into its own component/plugin.
 				done(null,{});
 			}
 		},function (err, results) {
