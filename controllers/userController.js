@@ -3,6 +3,7 @@ var	Joi = require('joi');
 var	Boom = require('boom');
 var	Crypto = require('crypto');
 var async = require('async');
+var config = require('../config/config');
 
 // private functions that will not be exposed to rest calls.
 var internals = {};
@@ -13,20 +14,6 @@ internals.reservedUsernames = {
     support: true,
     admin: true,
 };
-
-internals.supportedNetworks = {
-    facebook: true,
-    instagram: true,
-    twitter: true,
-    google: true,
-    email: true,
-};
-
-internals.validateNetwork = function(type){
-	if(!type){
-		return reply(Boom.badRequest('Social network not supported'));
-	}
-}
 
 internals.generateUsername = function (len){
 	//http://blog.tompawlak.org/how-to-generate-random-values-nodejs-javascript
@@ -51,8 +38,10 @@ exports.createUser = {
 	{
 		assign: "isValidNetwork",
 		method: function (request, reply){
-			if (! internals.supportedNetworks[request.payload.network])
-			{
+			var supportedNetworks = Object.keys(config.login);
+			supportedNetworks.push("email");
+
+			if (supportedNetworks.indexOf(request.payload.network) == -1){
 				return reply(Boom.badRequest('Social Network is not supported.'));
 			}
 			reply(true);

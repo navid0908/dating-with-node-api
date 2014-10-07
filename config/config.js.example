@@ -1,8 +1,8 @@
 // Defaults of this app. 
 module.exports = {
-    host: "127.0.0.1", //FQN or ip of this box that the server is attached too.
-    port: 8080, // Incoming HTTP traffic is assigned to this port.
     hapi: {
+        host: "127.0.0.1", //FQN or ip of this box that the server is attached too.
+        port: 8080, // Incoming HTTP traffic is assigned to this port.
         serverOptions: {
             cors: true,
             cache: {
@@ -26,7 +26,7 @@ module.exports = {
             debug: false
         }
     },
-    mail    : {
+    mail: {
         "api-key": "",
         "api-host": "https://mandrillapp.com/api/1.0/",
     },

@@ -1,11 +1,11 @@
 /**
  * Dependencies.
  */
-var Hapi        = require('hapi'),
-    config      = require('./config/config'),
-    routes      = require('./routes');
+var Hapi        = require('hapi');
+var config      = require('./config/config');
+var routes      = require('./routes');
 
-var server = new Hapi.Server(Number(config.port));
+var server = new Hapi.Server(Number(config.hapi.port));
 	server.pack.register([
 		{plugin:require('lout')}, // Self documenting tool for routes with http method.
 		{plugin:require('bell')}, // Social login plugin
