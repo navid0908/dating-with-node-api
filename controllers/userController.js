@@ -5,15 +5,8 @@ var	Crypto = require('crypto');
 var async = require('async');
 var config = require('../config/config');
 
-// private functions that will not be exposed to rest calls.
+// private internal functions
 var internals = {};
-
-// Reserved usernames
-//@TODO move this to a config file.
-internals.reservedUsernames = {
-    support: true,
-    admin: true,
-};
 
 internals.generateUsername = function (len){
 	//http://blog.tompawlak.org/how-to-generate-random-values-nodejs-javascript
@@ -50,12 +43,9 @@ exports.createUser = {
 	{
 		assign: "isUsernameAllowed",
 		method: function (request, reply){
-			if (request.payload.username)
-			{
-				if( internals.reservedUsernames[request.payload.username])
-				{
-					return reply(Boom.conflict('Username is reserved.'));
-				}
+			var reservedUsernames = Object.keys(config.registration.reservedUsernames);
+			if (reservedUsernames.indexOf(request.payload.username) > -1){
+				return reply(Boom.conflict('Username is reserved.'));
 			}
 			reply(true);
 		}
@@ -127,4 +117,4 @@ exports.createUser = {
 			}
 		);
 	}
-}
+};
