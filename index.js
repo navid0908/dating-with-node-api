@@ -14,15 +14,12 @@ var server = new Hapi.Server(Number(config.hapi.port));
 		    if (err) throw err;
 
 		    // Configure the plugins that are now attached to the server.
-		    for(var tmp in config.login)
-		    {
-				server.auth.strategy(tmp, 'bell', {
-			        provider: tmp,
-			        password: config.cookie.password,
-			        clientId: config.login[tmp].clientId,
-			        clientSecret: config.login[tmp].clientSecret,
-			        isSecure: false     // Terrible idea but required if not using HTTPS
-			    });
+		    for (var index=0; index < config.plugin.auth.strategy.length; index++){
+				server.auth.strategy(
+					config.plugin.auth.strategy[index].name,
+					config.plugin.auth.strategy[index].scheme,
+					config.plugin.auth.strategy[index].options
+				);
 		    }
 
 		    // Configure database connection

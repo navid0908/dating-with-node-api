@@ -30,10 +30,6 @@ module.exports = {
         apiKey: "",
         apiHost: "https://mandrillapp.com/api/1.0/",
     },
-    cookie: {
-        name: "dating-with-node",
-        password: ""
-    },
     registration: {
         reservedUsernames : {
             support: true,
@@ -41,25 +37,61 @@ module.exports = {
         }
     },
     login: {
-        facebook: {
-            clientId: "",
-            clientSecret: "",
-            callbackURL: "/auth/facebook/callback"
-        },
-        instagram: {
-            clientId: "",
-            clientSecret: "",
-            callbackURL: "/auth/instagram/callback"
-        },
-        twitter: {
-            clientId: "",
-            clientSecret: "",
-            callbackURL: "/auth/twitter/callback"
-        },
-        google: {
-            clientId: "",
-            clientSecret: "",
-            callbackURL: "/auth/google/callback"
+        maxAllowedAttempts : 5,
+    },
+    plugin : {
+        auth : {
+            strategy : [
+                {
+                    name: 'facebook',
+                    scheme: 'bell',
+                    options: {
+                        provider: 'facebook',
+                        password: '', //random generated password
+                        clientId: "",
+                        clientSecret: "",
+                    }
+                },
+                {
+                    name: 'instagram',
+                    scheme: 'bell',
+                    options: {
+                        provider: 'instagram',
+                        password: '', //random generated password
+                        clientId: "",
+                        clientSecret: "",
+                    }
+                },
+                {
+                    name: 'twitter',
+                    scheme: 'bell',
+                    options: {
+                        provider: 'twitter',
+                        password: '', //random generated password
+                        clientId: "",
+                        clientSecret: "",
+                    }
+                },
+                {
+                    name: 'google',
+                    scheme: 'bell',
+                    options: {
+                        provider: 'google',
+                        password: '', //random generated password
+                        clientId: "",
+                        clientSecret: "",
+                    }
+                },
+                {
+                    name: 'session',
+                    scheme: 'cookie',
+                    options: {
+                        password: '', //random generated password
+                        cookie: "dating-with-node",
+                        redirectTo: "/auth/login",
+                        isSecure: false
+                    }
+                }]
         }
     }
 }

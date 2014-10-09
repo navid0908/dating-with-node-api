@@ -7,12 +7,12 @@ module.exports = function(bookshelf){
         hasTimestamps: ['created_at', 'updated_at'],
         defaults: function() {
            return {
-             // defaults values when the record is created.
+             // default values for when the record is created.
              status: 'ative',
-             group_id : this.getUserBasicGroupId()
+             group_id : this.userStandard()
            }
         },
-        getUserBasicGroupId : function(){
+        userStandard : function(){
             return 10;
         },
         isUsernameTaken : function(userName, callback){            
@@ -31,7 +31,7 @@ module.exports = function(bookshelf){
             if (!emailAddress){
                 return callback('email is undefined');
             }
-            this.query({where: {email: emailAddress}}).fetchAll().then(function(collection){                
+            this.query({where: {email: emailAddress}}).fetchAll().then(function(collection){
                 if (collection.length >= 1){
                     return callback(null, true);
                 }else{
@@ -55,6 +55,35 @@ module.exports = function(bookshelf){
                         password: password,
                         hash: results.hash
                     });
+            });
+        },
+        findByCredentials : function(emailAddress, password, callback){
+            var self = this;
+            async.auto({
+                    user: function (done) {
+                        self.query({where: {email: emailAddress}}).fetch().then(function(model){
+                            done(null,model);
+                        });
+                    },
+                    passwordMatch: ['user', function (done, results) {
+                        //unable to locate the user based on the email.
+                        if (!results.user) {
+                            return done(null, false);
+                        }
+                        //found a user record, lets compare the passwords.
+                        bcrypt.compare(password, results.user.get('password'), done);
+                    }]
+                }, function (err, results) {
+                    if (err) {
+                        return callback(err);
+                    }
+                    if(results.passwordMatch){
+                        // credentials are valid.
+                        // return the user object to the requester but replace the hash password with the original.
+                        results.user.set('password', password);
+                        return callback(null, results.user);
+                    }
+                    callback();
             });
         },
         createAccount : function(username, email, password, callback){
