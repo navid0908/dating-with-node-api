@@ -31,8 +31,7 @@ exports.createUser = {
 	{
 		assign: "isValidNetwork",
 		method: function (request, reply){
-			var supportedNetworks = Object.keys(config.login);
-			supportedNetworks.push("email");
+			var supportedNetworks = config.login.validNetworks;
 
 			if (supportedNetworks.indexOf(request.payload.network) == -1){
 				return reply(Boom.badRequest('Social Network is not supported.'));
