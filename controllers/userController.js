@@ -21,24 +21,13 @@ exports.createUser = {
 	description: "This creates a user on the system",
 	validate: {
 		payload: {
-            network: Joi.string().min(3).max(20).required(),
+            network: Joi.string().valid(config.login.validNetworks).required(),
             username: Joi.string().min(3).max(30),
             email: Joi.string().email().max(60),
             password: Joi.string().min(6).max(60)
         }
 	},
 	pre: [
-	{
-		assign: "isValidNetwork",
-		method: function (request, reply){
-			var supportedNetworks = config.login.validNetworks;
-
-			if (supportedNetworks.indexOf(request.payload.network) == -1){
-				return reply(Boom.badRequest('Social Network is not supported.'));
-			}
-			reply(true);
-		}
-	},
 	{
 		assign: "isUsernameAllowed",
 		method: function (request, reply){
