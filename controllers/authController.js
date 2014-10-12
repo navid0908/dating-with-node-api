@@ -2,6 +2,7 @@ var dbHandler = require('../database');
 var async = require('async');
 var config = require('../config/config');
 var	Boom = require('boom');
+var	Joi = require('joi');
 
 // private internal functions
 var internals = {};
@@ -18,6 +19,13 @@ exports.login = {
 			redirectTo: false
 		}
 	},
+	validate: {
+		payload: {
+            network: Joi.string().valid(config.login.validNetworks).required(),
+            email: Joi.string().email().max(60),
+            password: Joi.string().min(6).max(60)
+        }
+	},
 	pre: [{
 		assign: 'isLoggedin',
 		method: function(request, reply){
@@ -31,7 +39,7 @@ exports.login = {
 		assign: 'isLoginAbuse',
 		method: function(request, reply){
 			var emailAddress = request.payload.email;
-			var ipAddress = request.info.remoteAddress;
+			var ipAddress = (request.info.remoteAddress) ? request.info.remoteAddress : ' ';
 			dbHandler.models.Authattempt.findByEmailIpaddress(emailAddress, ipAddress, function(error, collection){
 				if(error){
 					return reply(Boom.badRequest(error));
@@ -51,19 +59,20 @@ exports.login = {
 				if(error){
 					return reply(Boom.badRequest(error));
 				}
+				//if a valid record is not found, user will be undefined.
 				reply(user);
 			});
 		}
 	},{
 		assign: 'logAttempt',
 		method: function(request, reply){
-			// credentials are valid, create session.
+			// credentials are valid, and a user object was returned, so let's create a session.
 			if (request.pre.user){
 				return reply();
 			}
 			// credentials are NOT valid, log user attempt.
 			var emailAddress = request.payload.email;
-			var ipAddress = request.info.remoteAddress;
+			var ipAddress = (request.info.remoteAddress) ? request.info.remoteAddress : ' ';
 			dbHandler.models.Authattempt.createEntry(emailAddress, ipAddress, function(error, model){
 				if(error){
 					return reply(Boom.badRequest(error));

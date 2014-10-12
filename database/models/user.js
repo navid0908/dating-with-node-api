@@ -75,6 +75,7 @@ module.exports = function(bookshelf){
                     }]
                 }, function (err, results) {
                     if (err) {
+                        //@TODO: log db error.
                         return callback(err);
                     }
                     if(results.passwordMatch){

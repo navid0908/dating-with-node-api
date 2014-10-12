@@ -20,7 +20,7 @@ module.exports = function(bookshelf){
                         callback(error);
                   });
           },
-          findByEmailIpaddress : function(emailAddress, ipAddress, callback){            
+          findByEmailIpaddress : function(emailAddress, ipAddress, callback){
             if (!emailAddress){
               return callback('email is undefined');
             }
