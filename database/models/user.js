@@ -57,6 +57,29 @@ module.exports = function(bookshelf){
                     });
             });
         },
+        findBySocialCredentials : function(socialLoginType, socialLoginToken, callback){
+            var self = this;
+            async.auto({
+                    user: function (done) {
+                        self.query({where: {
+                            social_login_type: socialLoginType,
+                            social_login_token: socialLoginToken
+                        }}).fetch().then(function(model){
+                            done(null,model);
+                        });
+                    }
+                }, function (err, results) {
+                    if (err) {
+                        //@TODO: log db error.
+                        return callback(err);
+                    }
+                    if(results.user){
+                        // found record
+                        return callback(null, results.user);
+                    }
+                    callback();
+            });
+        },
         findByCredentials : function(emailAddress, password, callback){
             var self = this;
             async.auto({

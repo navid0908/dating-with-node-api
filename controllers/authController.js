@@ -34,8 +34,7 @@ exports.login = {
 			}
 			reply();
 		}
-	},
-	{
+	},{
 		assign: 'isLoginAbuse',
 		method: function(request, reply){
 			var emailAddress = request.payload.email;
@@ -82,7 +81,7 @@ exports.login = {
 			});
 		}
 	}],
-	handler: function (request, reply) {		
+	handler: function (request, reply) {
 		request.auth.session.set(request.pre.user);
     	return reply.redirect('/');
 	}
@@ -100,12 +99,41 @@ exports.facebook = {
 	tags: ['auth', 'social login', 'facebook'],
 	description: "App login via facebook",	
 	auth: 'facebook',
+	pre: [
+	{
+		assign: 'isLoggedin',
+		method: function(request, reply){
+			//check to see if a session exists or if they approved social login.
+			if (request.auth.isAuthenticated) {
+				return reply.redirect('/');
+			}
+			reply();
+		}
+	},
+	{
+		assign: 'user',
+		method: function(request, reply){
+			dbHandler.models.User.findBySocialCredentials(request.auth.credentials.provider, request.auth.credentials.profile.raw.id, function(error, user){
+				if(error){
+					return reply(Boom.badRequest(error));
+				}
+				//we found a user
+				reply(user);
+			});
+		}
+	},
+	],
     handler: function (request, reply) {
-		// Perform any account lookup or registration, setup local session,
-        // and redirect to the application. The third-party credentials are
-        // stored in request.auth.credentials. Any query parameters from
-        // the initial request are passed back via request.auth.credentials.query.
-        //return reply.redirect('/home');				
-        return reply([]);
+		if (request.pre.user){
+			request.auth.session.set(request.pre.user);
+			return reply.redirect('/');
+		}else{
+			return reply(Boom.badRequest('Please register.'));
+		}
+		// console.log('request method: ' + request.method);
+		// console.log('request.auth');
+		// console.log(request.auth);
+		// console.log('request.auth.credentials.profile.raw');
+		// console.log(request.auth.credentials.profile.raw.id);
     }
 };

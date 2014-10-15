@@ -50,6 +50,7 @@ module.exports = {
                         password: '', //random generated password
                         clientId: "",
                         clientSecret: "",
+                        isSecure: false     // Terrible idea but required if not using HTTPS
                     }
                 },
                 {
@@ -60,6 +61,7 @@ module.exports = {
                         password: '', //random generated password
                         clientId: "",
                         clientSecret: "",
+                        isSecure: false     // Terrible idea but required if not using HTTPS
                     }
                 },
                 {
@@ -70,6 +72,7 @@ module.exports = {
                         password: '', //random generated password
                         clientId: "",
                         clientSecret: "",
+                        isSecure: false     // Terrible idea but required if not using HTTPS
                     }
                 },
                 {
@@ -80,6 +83,7 @@ module.exports = {
                         password: '', //random generated password
                         clientId: "",
                         clientSecret: "",
+                        isSecure: false     // Terrible idea but required if not using HTTPS
                     }
                 },
                 {
@@ -89,7 +93,7 @@ module.exports = {
                         password: '', //random generated password
                         cookie: "dating-with-node",
                         redirectTo: "/auth/login",
-                        isSecure: false
+                        isSecure: false isSecure: false     // Terrible idea but required if not using HTTPS
                     }
                 }]
         }
