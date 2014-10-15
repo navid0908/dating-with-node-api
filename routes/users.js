@@ -3,7 +3,7 @@ var controllers = require("../controllers");
 module.exports = exports = [
     {
         method: 'post',
-        path: '/user',
-        config: controllers.userController.createUser
+        path: '/user/signup',
+        config: controllers.userController.signUp
     }
 ];

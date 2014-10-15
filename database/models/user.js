@@ -57,13 +57,13 @@ module.exports = function(bookshelf){
                     });
             });
         },
-        findBySocialCredentials : function(socialLoginType, socialLoginToken, callback){
+        findBySocialCredentials : function(socialLoginType, socialLoginId, callback){
             var self = this;
             async.auto({
                     user: function (done) {
                         self.query({where: {
                             social_login_type: socialLoginType,
-                            social_login_token: socialLoginToken
+                            social_login_id: socialLoginId
                         }}).fetch().then(function(model){
                             done(null,model);
                         });

@@ -16,8 +16,8 @@ internals.generateUsername = function (len){
 	        .replace(/\+/g, '0')  // replace '+' with '0'
 	        .replace(/\//g, '0'); // replace '/' with '0'
 	}
-exports.createUser = {
-	tags: ['user', 'create'],
+exports.signUp = {
+	tags: ['user', 'signup'],
 	description: "This creates a user on the system",
 	validate: {
 		payload: {
@@ -29,7 +29,7 @@ exports.createUser = {
 	},
 	pre: [
 	{
-		assign: "isUsernameAllowed",
+		assign: "isUsernameReserved",
 		method: function (request, reply){
 			var reservedUsernames = Object.keys(config.registration.reservedUsernames);
 			if (reservedUsernames.indexOf(request.payload.username) > -1){

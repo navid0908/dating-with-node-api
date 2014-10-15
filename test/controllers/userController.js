@@ -6,7 +6,7 @@ Lab.experiment("method:post, url:/user ", function() {
 	Lab.test("create user with missing parameters - network", function(done) {
 	    var options = {
 	        method: "post",
-	        url: "/user",
+	        url: "/user/signup",
 	        payload:
 	        {
                 username:               "testusername",
@@ -24,7 +24,7 @@ Lab.experiment("method:post, url:/user ", function() {
 	Lab.test("create user with invalid parameter - short username", function(done) {
 	    var options = {
 	        method: "post",
-	        url: "/user",
+	        url: "/user/signup",
 	        payload:
 	        {
                 network: 					"email",
@@ -43,7 +43,7 @@ Lab.experiment("method:post, url:/user ", function() {
 	Lab.test("create user with invalid parameter - large username", function(done) {
 	    var options = {
 	        method: "post",
-	        url: "/user",
+	        url: "/user/signup",
 	        payload:
 	        {
                 network: 					"email",
@@ -62,7 +62,7 @@ Lab.experiment("method:post, url:/user ", function() {
     Lab.test("create user with invalid parameter - bad email", function(done) {
 	    var options = {
 	        method: "post",
-	        url: "/user",
+	        url: "/user/signup",
 	        payload:
 	        {
                 network: 				"email",
@@ -81,7 +81,7 @@ Lab.experiment("method:post, url:/user ", function() {
     Lab.test("create user with invalid parameter - short password", function(done) {
 	    var options = {
 	        method: "post",
-	        url: "/user",
+	        url: "/user/signup",
 	        payload:
 	        {
                 network: 				"email",
@@ -100,7 +100,7 @@ Lab.experiment("method:post, url:/user ", function() {
 	Lab.test("create user with an invalid network", function(done) {
 	    var options = {
 	        method: "post",
-	        url: "/user",
+	        url: "/user/signup",
 	        payload:
 	        {
                 network: 				"yahoo",
@@ -118,7 +118,7 @@ Lab.experiment("method:post, url:/user ", function() {
 	Lab.test("create user with reserved username - admin", function(done) {
 	    var options = {
 	        method: "post",
-	        url: "/user",
+	        url: "/user/signup",
 	        payload:
 	        {
                 network: 				"email",
@@ -136,7 +136,7 @@ Lab.experiment("method:post, url:/user ", function() {
 	Lab.test("create user with reserved username - support", function(done) {
 	    var options = {
 	        method: "post",
-	        url: "/user",
+	        url: "/user/signup",
 	        payload:
 	        {
                 network: 				"email",
@@ -177,7 +177,7 @@ Lab.experiment("method:post, url:/user ", function() {
 	Lab.test("create user with existing username in system", function(done) {
 	    var options = {
 	        method: "post",
-	        url: "/user",
+	        url: "/user/signup",
 	        payload:
 	        {
                 network: 				"email",
@@ -195,7 +195,7 @@ Lab.experiment("method:post, url:/user ", function() {
 	Lab.test("create user with existing email in system", function(done) {
 	    var options = {
 	        method: "post",
-	        url: "/user",
+	        url: "/user/signup",
 	        payload:
 	        {
                 network: 				"email",
@@ -213,7 +213,7 @@ Lab.experiment("method:post, url:/user ", function() {
 	Lab.test("create user with auto generated username", function(done) {
 	    var options = {
 	        method: "post",
-	        url: "/user",
+	        url: "/user/signup",
 	        payload:
 	        {
                 network: 				"email",
