@@ -1,5 +1,6 @@
 var async = require('async');
 var bcrypt = require('bcrypt');
+var _ = require('underscore');
 
 module.exports = function(bookshelf){
     var User = bookshelf.Model.extend({
@@ -12,6 +13,9 @@ module.exports = function(bookshelf){
              group_id : this.userStandard()
            }
         },
+        getAttributues : function(){
+            return ['id','username','email','password','group_id','social_login_type','social_login_id','status','created_at','updated_at'];
+        },
         userStandard : function(){
             return 10;
         },
@@ -19,9 +23,9 @@ module.exports = function(bookshelf){
             if (!userName){
                 return callback('userName is undefined');
             }
-            this.query({where: {username: userName}}).fetchAll().then(function(collection){                
+            this.query({where: {username: userName}}).fetchAll().then(function(collection){
                 if (collection.length >= 1){
-                    return callback(null, true);
+                    return callback('username is taken', true);
                 }else{
                     return callback(null, false);
                 }
@@ -33,7 +37,7 @@ module.exports = function(bookshelf){
             }
             this.query({where: {email: emailAddress}}).fetchAll().then(function(collection){
                 if (collection.length >= 1){
-                    return callback(null, true);
+                    return callback('email is taken',true);
                 }else{
                     return callback(null, false);
                 }
@@ -55,6 +59,36 @@ module.exports = function(bookshelf){
                         password: password,
                         hash: results.hash
                     });
+            });
+        },
+        find : function(payload, callback){
+            var self = this;
+            var defaults = this.getAttributues();
+
+            async.auto({
+                isValidPayload : function(done){
+                    _.each(payload, function(value, key){
+                         if(self.getAttributues().indexOf(key) == -1){
+                            //@TODO: log error
+                            return done('Unable to search by the given key: ' + key);
+                         }
+                    });
+                    done();
+                }
+            }, function(err, results){
+                if (err) {
+                    //@TODO: log db error.
+                    return callback(err);
+                }
+                self.query({where: payload}).fetchAll().then(function(collection){
+                    if (collection.length == 0){
+                        callback(null, null);
+                    }else if (collection.length == 1){
+                        callback(null,  collection.at(0));
+                    }else{
+                        callback(null,collection);
+                    }
+                });
             });
         },
         findBySocialCredentials : function(socialLoginType, socialLoginId, callback){
@@ -83,10 +117,13 @@ module.exports = function(bookshelf){
         findByCredentials : function(emailAddress, password, callback){
             var self = this;
             async.auto({
+                    // user: function (done) {
+                    //     self.query({where: {email: emailAddress}}).fetch().then(function(model){
+                    //         done(null,model);
+                    //     });
+                    // },
                     user: function (done) {
-                        self.query({where: {email: emailAddress}}).fetch().then(function(model){
-                            done(null,model);
-                        });
+                        self.find({email: emailAddress}, done);
                     },
                     passwordMatch: ['user', function (done, results) {
                         //unable to locate the user based on the email.

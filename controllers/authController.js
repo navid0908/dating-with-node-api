@@ -30,7 +30,7 @@ exports.login = {
 		assign: 'isLoggedin',
 		method: function(request, reply){
 			if (request.auth.isAuthenticated) {
-				return reply.redirect('/');
+				//return reply.redirect('/');
 			}
 			reply();
 		}
@@ -83,7 +83,7 @@ exports.login = {
 	}],
 	handler: function (request, reply) {
 		request.auth.session.set(request.pre.user);
-    	return reply.redirect('/');
+		return reply([]);
 	}
 };
 exports.logout = {
@@ -92,7 +92,7 @@ exports.logout = {
 	auth: 'session',
 	handler: function (request, reply) {
 		request.auth.session.clear();
-		return reply.redirect('/');
+		return reply([]);
 	}
 };
 exports.facebook = {
@@ -125,7 +125,6 @@ exports.facebook = {
 	],
     handler: function (request, reply) {
 		if (request.pre.user){
-			request.auth.session.set(request.pre.user);
 			return reply.redirect('/');
 		}else{
 			return reply(Boom.badRequest('Please register.'));
