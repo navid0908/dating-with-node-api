@@ -1,4 +1,5 @@
-# Dating-With-Node-Api
+Dating-With-Node-Api
+===================
 This project is the backend api service for a dating site written entirely in javascript.
 
 # Dependencies
@@ -15,22 +16,19 @@ The backend will use the following technologies and frameworks:
 # Installation
 Once your enviornment is setup as per [Dating-With-Node-Cookbooks](https://github.com/salimkapadia/dating-with-node-cookbooks), follow the below installation steps.
 
-## Installation Steps
+ -  You should clone the [cookbooks](https://github.com/salimkapadia/dating-with-node-cookbooks) and this [app](github.com/salimkapadia/dating-with-node-api) under the same parent directory.
 
-1. Check out the repo
-You should clone the [cookbooks](https://github.com/salimkapadia/dating-with-node-cookbooks) and this app under the same parent directory.
 ```bash
 git clone https://github.com/salimkapadia/dating-with-node-api.git
 ```
-
-1. Install project dependencies (frameworks/libraries) using npm
+- Install project dependencies (frameworks/libraries) using npm
 ```bash
 cd dating-with-node-api.git
-npm install
+npm install -g
 cp config/config.js.example config/config.js
 ```
 
-1. Load the db
+- Load the db
 ```bash
 knex migrate:latest --knexfile config/knexfile.js --cwd database/
 ```
@@ -39,11 +37,11 @@ knex migrate:latest --knexfile config/knexfile.js --cwd database/
 
 ### Starting the Application
 
-	$ npm start
+       $ npm start
 
 ### Stopping the Application
 
-	$ npm stop
+       $ npm stop
 
 ### Making changes
 
@@ -81,12 +79,23 @@ exports.post = {
 
 
 # Testing
-The application can be tested like so:
+Please keep in mind that during the build process, the test directory is not checked out. The application can be tested like so:
 
-	$ npm test
+       $ npm test
 
-If you need to add seed data for your tests, use [knex seed-api](http://knexjs.org/#Seeds-API). Please keep in mind that during the build process, the test directory is not checked out.
+# Seed data
+If you need to add seed data for your tests, use [knex seed-cli](http://knexjs.org/#Seeds-CLI).
 
+- Adding a seed file:
+```bash
+cd test
+knex seed:make --knexfile ../config/knexfile.js --cwd database/ insert-users
+```
+- Running seed files:
+```bash
+cd test
+knex seed:run --knexfile ../config/knexfile.js --cwd database/
+```
 
 # Troubleshooting
 If you run into an error, make sure the database is created and that both node and the modules are in your PATH. To facilitate fast iterations, run [Nodemon](https://github.com/remy/nodemon) locally.
