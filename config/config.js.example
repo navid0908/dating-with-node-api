@@ -14,6 +14,14 @@ module.exports = {
             }
         },
         plugins : [
+            // mailer tool
+            {
+                plugin:require('../plugins/mailer/'),
+                options: {
+                    apiKey: "",
+                    apiHost: "https://mandrillapp.com/api/1.0/",
+                }
+            },
             {plugin:require('lout')}, // Self documenting tool for routes with http method.
             {plugin:require('bell')}, // Social login plugin
             {plugin:require('hapi-auth-cookie')} // Session management plugin
@@ -89,10 +97,15 @@ module.exports = {
             debug: false
         }
     },
-    mail: {
-        apiKey: "",
-        apiHost: "https://mandrillapp.com/api/1.0/",
-    },
+    mail: [{
+        welcome : {
+            from_email : 'mailer@dating-with-node.com',
+            from_name : 'Dating With Node',
+            headers : {'Reply-To': 'no-reply@mailer.dating-with-node.com'},
+            subject: 'Welcome to Dating With Node',
+            text : 'Welcome to Dating With Node',
+        }
+    }],
     registration: {
         reservedUsernames : {
             support: true,

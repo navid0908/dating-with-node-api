@@ -4,6 +4,7 @@ var	Boom = require('boom');
 var	Crypto = require('crypto');
 var async = require('async');
 var config = require('../config/config');
+var _ = require('underscore');
 
 // private internal functions
 var internals = {};
@@ -188,9 +189,13 @@ exports.signUp = {
 				}
 			},
 			welcome : function(done){
-				//@TODO: send welcome email to them.
-				//@TODO: break this out into its own component/plugin.
-				done(null,{});
+				// Send welcome email to them.
+				var mailer = request.server.plugins.mailer;
+				var messagePayload = {"to": [{"email": request.payload.email,"type": "to"}]};
+				_.extend(messagePayload,config.mail[0].welcome);
+				mailer.mandrill_client.messages.send({"message": messagePayload, async:true}, function(result) {					
+					done();
+				});
 			}
 		},function (err, results) {
                 if (err){
