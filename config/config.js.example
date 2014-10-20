@@ -3,7 +3,7 @@ module.exports = {
     hapi: {
         host: "127.0.0.1", //FQN or ip of this box that the server is attached too.
         port: 8080, // Incoming HTTP traffic is assigned to this port.
-        serverOptions: {
+        options: {
             cors: true,
             cache: {
                 engine: require("catbox-redis"),
@@ -12,34 +12,12 @@ module.exports = {
                 port: 6379, // The Redis server port or unix domain socket path. Defaults to 6379.
                 password: '' //  The Redis authentication password when required. If blank, auth is not sent.
             }
-        }
-    },
-    database: {
-        client: "mysql",
-        connection:{
-            database: 'dating-with-node',
-            port: 3306,
-            host: '127.0.0.1',
-            user: 'root',
-            password: '',
-            charset  : 'utf8',
-            debug: false
-        }
-    },
-    mail: {
-        apiKey: "",
-        apiHost: "https://mandrillapp.com/api/1.0/",
-    },
-    registration: {
-        reservedUsernames : {
-            support: true,
-            admin: true,
-        }
-    },
-    login: {
-        maxAllowedAttempts : 5,
-    },
-    plugin : {
+        },
+        plugins : [
+            {plugin:require('lout')}, // Self documenting tool for routes with http method.
+            {plugin:require('bell')}, // Social login plugin
+            {plugin:require('hapi-auth-cookie')} // Session management plugin
+        ],
         auth : {
             strategy : [
                 {
@@ -97,5 +75,31 @@ module.exports = {
                     }
                 }]
         }
-    }
+
+    },
+    database: {
+        client: "mysql",
+        connection:{
+            database: 'dating-with-node',
+            port: 3306,
+            host: '127.0.0.1',
+            user: 'root',
+            password: '',
+            charset  : 'utf8',
+            debug: false
+        }
+    },
+    mail: {
+        apiKey: "",
+        apiHost: "https://mandrillapp.com/api/1.0/",
+    },
+    registration: {
+        reservedUsernames : {
+            support: true,
+            admin: true,
+        }
+    },
+    login: {
+        maxAllowedAttempts : 5,
+    },
 }
