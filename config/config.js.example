@@ -100,10 +100,17 @@ module.exports = {
     mail: [{
         welcome : {
             from_email : 'mailer@dating-with-node.com',
-            from_name : 'Dating With Node',
+            from_name : 'DatingWithNode',
             headers : {'Reply-To': 'no-reply@mailer.dating-with-node.com'},
             subject: 'Welcome to Dating With Node',
             text : 'Welcome to Dating With Node',
+        },
+        password_reset : {
+            from_email : 'mailer@dating-with-node.com',
+            from_name : 'DatingWithNode',
+            headers : {'Reply-To': 'no-reply@mailer.dating-with-node.com'},
+            subject: 'Profile updated',
+            text : 'Your profile was updated',
         }
     }],
     registration: {

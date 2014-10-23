@@ -1,7 +1,7 @@
 'use strict';
 	
 var users = [{
-	password: '$2a$10$ZwoBxFZsBOBXGMfKvZYQ3OnQgXAIiqi5UlJWRhQZr1NP.BPQMnyYC',
+	password: '$2a$10$ZwoBxFZsBOBXGMfKvZYQ3OnQgXAIiqi5UlJWRhQZr1NP.BPQMnyYC', //testpassword
 	email:'testemail@test.com',
 	group_id:10,
 	status: 'active',

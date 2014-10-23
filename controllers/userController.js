@@ -136,6 +136,11 @@ exports.update = {
 				results.user.set('password', results.passwordHash.hash);
 			}
 			results.user.save(results.user.changed, { patch: true }).then(function(model){
+				// Send profile update email to them
+				var mailer = request.server.plugins.mailer;
+				var messagePayload = {"to": [{"email": model.get('email'),"type": "to"}]};
+				_.extend(messagePayload,config.mail[0].password_reset);
+				mailer.mandrill_client.messages.send({"message": messagePayload, async:true}, function(result){});
 				request.auth.session.set(model);
 				reply([]);
 			});
@@ -193,7 +198,7 @@ exports.signUp = {
 				var mailer = request.server.plugins.mailer;
 				var messagePayload = {"to": [{"email": request.payload.email,"type": "to"}]};
 				_.extend(messagePayload,config.mail[0].welcome);
-				mailer.mandrill_client.messages.send({"message": messagePayload, async:true}, function(result) {					
+				mailer.mandrill_client.messages.send({"message": messagePayload, async:true}, function(result) {
 					done();
 				});
 			}
