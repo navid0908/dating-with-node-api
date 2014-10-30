@@ -1,6 +1,8 @@
-module.exports = function(bookshelf){
-    var Diet = bookshelf.Model.extend({    
-          tableName: 'diet'
-        });
-    return Diet;
-};
+var datingWithNode = require('./base');
+var Diet;
+
+Diet = datingWithNode.Model.extend({
+  tableName: 'diet'
+});
+
+module.exports = datingWithNode.model('Diet', Diet);

@@ -1,4 +1,4 @@
-var dbHandler = require('../database');
+var models = require('../database');
 var	Joi = require('joi');
 var	Boom = require('boom');
 var	Crypto = require('crypto');
@@ -6,7 +6,7 @@ var async = require('async');
 var config = require('../config/config');
 var _ = require('underscore');
 
-// private internal functions
+// private internal properties/functions
 var internals = {};
 
 internals.generateUsername = function (len){
@@ -29,7 +29,7 @@ internals.isUsernameReserved = function (request, reply){
 };
 internals.isUsernameTaken = function (request, reply){
 	if (request.payload.username){
-		dbHandler.models.User.isUsernameTaken(request.payload.username, function (err, exists){
+		models.User.isUsernameTaken(request.payload.username, function (err, exists){
 			if (err){
 				reply(Boom.conflict('Username is already taken.'));
 			}else{
@@ -43,7 +43,7 @@ internals.isUsernameTaken = function (request, reply){
 
 internals.isEmailTaken = function (request, reply){
 	if (request.payload.email){
-		dbHandler.models.User.isEmailTaken(request.payload.email, function (err, exists){
+		models.User.isEmailTaken(request.payload.email, function (err, exists){
 			if (err){
 				reply(Boom.conflict('Email is already registered. Please login'));
 			}else{
@@ -83,7 +83,7 @@ exports.update = {
 	handler: function (request, reply) {
 		async.auto({
 			user: function (done) {
-				dbHandler.models.User.find({id:request.auth.credentials.id}, function(err, model){
+				models.User.find({id:request.auth.credentials.id}, function(err, model){
 					if (err){
 						done('Unable to find user record');
 					}else{
@@ -95,7 +95,7 @@ exports.update = {
 				if(request.payload.username && request.payload.username != results.user.get('username')){
 					//they entered a username that is different from their logged in username.
 					//make sure its unique.
-					dbHandler.models.User.isUsernameTaken(request.payload.username, done);
+					models.User.isUsernameTaken(request.payload.username, done);
 				}else{
 					done();
 				}
@@ -104,7 +104,7 @@ exports.update = {
 				if(request.payload.email && request.payload.email != results.user.get('email')){
 					//they entered a new email that is different from their logged in email.
 					//make sure its unique.
-					dbHandler.models.User.isEmailTaken(request.payload.email, done);
+					models.User.isEmailTaken(request.payload.email, done);
 				}else{
 					done();
 				}
@@ -117,7 +117,7 @@ exports.update = {
 					done('Password and Password 2 do not match');
 				}
 				if(request.payload.password){
-					dbHandler.models.User.generatePasswordHash(request.payload.password, done);
+					models.User.generatePasswordHash(request.payload.password, done);
 				}else{
 					done();
 				}
@@ -183,7 +183,7 @@ exports.signUp = {
 					request.payload.username = internals.generateUsername(12);
 				}
 				if (request.payload.network == 'email'){
-					dbHandler.models.User.createAccount(
+					models.User.createAccount(
 						request.payload.username,
 						request.payload.email,
 						request.payload.password,
@@ -199,8 +199,8 @@ exports.signUp = {
 				var messagePayload = {"to": [{"email": request.payload.email,"type": "to"}]};
 				_.extend(messagePayload,config.mail[0].welcome);
 				mailer.mandrill_client.messages.send({"message": messagePayload, async:true}, function(result) {
-					done();
 				});
+				done();
 			}
 		},function (err, results) {
                 if (err){

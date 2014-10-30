@@ -1,6 +1,8 @@
-module.exports = function(bookshelf){
-    var Bodytype = bookshelf.Model.extend({    
-          tableName: 'bodytype'
-        });
-    return Bodytype;
-};
+var datingWithNode = require('./base');
+var Bodytype;
+
+Bodytype = datingWithNode.Model.extend({
+  tableName: 'bodytype'
+});
+
+module.exports = datingWithNode.model('Bodytype', Bodytype);

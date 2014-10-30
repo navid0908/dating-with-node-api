@@ -1,6 +1,6 @@
 var Lab = require("lab");
 var server = require("../../");
-var dbHandler = require('../../database');
+var models = require('../../database');
 
 Lab.experiment("method:post, url:/user ", function() {
 	Lab.test("create user with missing parameters - network", function(done) {
@@ -154,14 +154,14 @@ Lab.experiment("method:post, url:/user ", function() {
 
 	Lab.before(function (done) {
         //setup test records
-        var userModel = dbHandler.models.User;
+        var userModel = models.User;
         userModel.createAccount('testjohndoe','randomemail@test.com','testpassword', function(result){
 			done();
         });
     });
     Lab.after(function (done) {
         // clean up
-        var userModel = dbHandler.models.User;
+        var userModel = models.User;
         userModel.query({where: {username: 'testjohndoe'}}).fetchAll().then(function(collection){
                 collection.invokeThen('destroy').then(function() {
 				  // ... all models in the collection have been destroyed
@@ -223,7 +223,7 @@ Lab.experiment("method:post, url:/user ", function() {
 	    };
 	    server.inject(options, function(response) {
 	        var result = response.result;
-	        //console.log(result);
+	        // console.log(result);
 	        Lab.expect(response.statusCode).to.equal(200);
 	        done();
 	    });

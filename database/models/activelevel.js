@@ -1,6 +1,8 @@
-module.exports = function(bookshelf){
-    var Activelevel = bookshelf.Model.extend({    
-          tableName: 'activelevel'
-        });
-    return Activelevel;
-};
+var datingWithNode = require('./base');
+var Activelevel;
+
+Activelevel = datingWithNode.Model.extend({
+  tableName: 'activelevel'
+});
+
+module.exports = datingWithNode.model('Activelevel', Activelevel);

@@ -1,4 +1,4 @@
-var dbHandler = require('../database');
+var models = require('../database');
 var async = require('async');
 var config = require('../config/config');
 var	Boom = require('boom');
@@ -39,7 +39,7 @@ exports.login = {
 		method: function(request, reply){
 			var emailAddress = request.payload.email;
 			var ipAddress = (request.info.remoteAddress) ? request.info.remoteAddress : ' ';
-			dbHandler.models.Authattempt.findByEmailIpaddress(emailAddress, ipAddress, function(error, collection){
+			models.Authattempt.findByEmailIpaddress(emailAddress, ipAddress, function(error, collection){
 				if(error){
 					return reply(Boom.badRequest(error));
 				}
@@ -54,7 +54,7 @@ exports.login = {
 		method: function(request, reply){
 			var emailAddress = request.payload.email;
 			var password = request.payload.password;
-			dbHandler.models.User.findByCredentials(emailAddress, password, function(error, user){
+			models.User.findByCredentials(emailAddress, password, function(error, user){
 				if(error){
 					return reply(Boom.badRequest(error));
 				}
@@ -72,7 +72,7 @@ exports.login = {
 			// credentials are NOT valid, log user attempt.
 			var emailAddress = request.payload.email;
 			var ipAddress = (request.info.remoteAddress) ? request.info.remoteAddress : ' ';
-			dbHandler.models.Authattempt.createEntry(emailAddress, ipAddress, function(error, model){
+			models.Authattempt.createEntry(emailAddress, ipAddress, function(error, model){
 				if(error){
 					return reply(Boom.badRequest(error));
 				}
@@ -113,7 +113,7 @@ exports.facebook = {
 	{
 		assign: 'user',
 		method: function(request, reply){
-			dbHandler.models.User.findBySocialCredentials(request.auth.credentials.provider, request.auth.credentials.profile.raw.id, function(error, user){
+			models.User.findBySocialCredentials(request.auth.credentials.provider, request.auth.credentials.profile.raw.id, function(error, user){
 				if(error){
 					return reply(Boom.badRequest(error));
 				}

@@ -1,6 +1,6 @@
 var Lab = require("lab");
 var server = require("../../");
-var dbHandler = require('../../database');
+var models = require('../../database');
 
 Lab.experiment("method:post, url:/auth/login ", function() {
 	Lab.test("Login with an invalid network", function(done) {
@@ -35,7 +35,7 @@ Lab.experiment("method:post, url:/auth/login ", function() {
 
 	    //setup abuse records
 		for (var i=1; i<=5; i++){
-			dbHandler.models.Authattempt.createEntry(testAbuseEmail, ' ', function(error, model){});
+			models.Authattempt.createEntry(testAbuseEmail, ' ', function(error, model){});
 		}
 
 	    server.inject(options, function(response) {
@@ -43,7 +43,7 @@ Lab.experiment("method:post, url:/auth/login ", function() {
 	        Lab.expect(result.statusCode).to.equal(400);
 	        Lab.expect(result.message).to.equal('Maximum number of attempts reached.');
 
-			dbHandler.models.Authattempt.query({where: {email: testAbuseEmail}}).fetchAll().then(function(collection){
+			models.Authattempt.query({where: {email: testAbuseEmail}}).fetchAll().then(function(collection){
                 collection.invokeThen('destroy').then(function() {
 				  // ... all models in the collection have been destroyed
 				  done();
@@ -67,7 +67,7 @@ Lab.experiment("method:post, url:/auth/login ", function() {
 	        Lab.expect(result.statusCode).to.equal(400);
 	        Lab.expect(result.message).to.equal('Email and password combination do not match.');
 
-			dbHandler.models.Authattempt.query({where: {email: 'testemail@test.com'}}).fetchAll().then(function(collection){
+			models.Authattempt.query({where: {email: 'testemail@test.com'}}).fetchAll().then(function(collection){
                 collection.invokeThen('destroy').then(function() {
 				  // ... all models in the collection have been destroyed
 				  done();
@@ -91,7 +91,7 @@ Lab.experiment("method:post, url:/auth/login ", function() {
 	        Lab.expect(result.statusCode).to.equal(400);
 
 	        // Lets inspect the db to see if a login attempt record was created
-		    dbHandler.models.Authattempt.query({where: {email: 'testemail@test.com'}}).fetchAll().then(function(collection){
+		    models.Authattempt.query({where: {email: 'testemail@test.com'}}).fetchAll().then(function(collection){
 				Lab.expect(collection.length).to.equal(1);
                 collection.invokeThen('destroy').then(function() {
 				  // ... all models in the collection have been destroyed
@@ -116,7 +116,7 @@ Lab.experiment("method:post, url:/auth/login ", function() {
 	        Lab.expect("set-cookie" in result).to.equal(true);
 
 	        // Lets inspect the db to see if a login attempt record was created
-		    dbHandler.models.Authattempt.query({where: {email: 'testemail@test.com'}}).fetchAll().then(function(collection){
+		    models.Authattempt.query({where: {email: 'testemail@test.com'}}).fetchAll().then(function(collection){
                 Lab.expect(collection.length).to.equal(0);
                 collection.invokeThen('destroy').then(function() {
 				  // ... all models in the collection have been destroyed

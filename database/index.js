@@ -1,25 +1,22 @@
-module.exports = {
-    bookshelf: null,
-    models: null,
+var models;
+models = {
+    init: function () {
+        var self = this;
 
-    init: function (options) {
-      if (options) {
-        var knex = require('knex')(options); //pass in db config options.
-        this.bookshelf = require('bookshelf')(knex);
-
-        this.models = {
-          Authattempt : require('./models/authattempt')(this.bookshelf),
-          Activelevel : require('./models/activelevel')(this.bookshelf),
-          Bodytype : require('./models/bodytype')(this.bookshelf),
-          Children : require('./models/children')(this.bookshelf),
-          Country : require('./models/country')(this.bookshelf),
-          Diet : require('./models/diet')(this.bookshelf),
-          Drink : require('./models/drink')(this.bookshelf),
-          Drug : require('./models/drug')(this.bookshelf),
-          Education : require('./models/education')(this.bookshelf),
-          Smoke : require('./models/smoke')(this.bookshelf),
-          User : require('./models/user')(this.bookshelf),
-        };
-      }
+        // One off inclusion of Base file.
+		self.Base = require('./models/base');
+		self.Authattempt = require('./models/authattempt');
+		self.Activelevel = require('./models/activelevel');
+		self.Bodytype = require('./models/bodytype');
+		self.Children = require('./models/children');
+		self.Country = require('./models/country');
+		self.Diet = require('./models/diet');
+		self.Drink = require('./models/drink');
+		self.Drug = require('./models/drug');
+		self.Education = require('./models/education');
+		self.Smoke = require('./models/smoke');
+		self.User = require('./models/user');
     }
-}
+};
+
+module.exports = models;
