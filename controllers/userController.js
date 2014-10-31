@@ -4,7 +4,7 @@ var	Boom = require('boom');
 var	Crypto = require('crypto');
 var async = require('async');
 var config = require('../config/config');
-var _ = require('underscore');
+var _ = require('lodash');
 
 // private internal properties/functions
 var internals = {};

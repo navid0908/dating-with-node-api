@@ -1,7 +1,6 @@
-
-var Lab = require("lab"),
-    server = require("../../"),
-    _ = require("underscore");
+var Lab = require("lab");
+var server = require("../../");
+var _ = require("lodash");
 
 Lab.experiment("Activelevel", function() {
 	Lab.test("/activelevel endpoint", function(done) {

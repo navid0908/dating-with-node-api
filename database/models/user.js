@@ -2,15 +2,14 @@ var async = require('async');
 var bcrypt = require('bcrypt');
 var _ = require('underscore');
 
-var datingWithNode = require('./base');
+var baseModel = require('./base');
+var Photo = require('./photo');
 var User;
 
 // private internal properties/functions
 var internals = {};
 
-var Photo = require('./photo');
-
-User = datingWithNode.Model.extend({
+User = baseModel.Model.extend({
     tableName: 'user',
     hasTimestamps: ['created_at', 'updated_at'],
     defaults: function() {
@@ -190,4 +189,4 @@ User = datingWithNode.Model.extend({
     },
 });
 
-module.exports = datingWithNode.model('User', User);
+module.exports = baseModel.model('User', User);

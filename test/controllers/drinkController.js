@@ -1,7 +1,6 @@
-
-var Lab = require("lab"),
-    server = require("../../"),
-    _ = require("underscore");
+var Lab = require("lab");
+var server = require("../../");
+var _ = require("lodash");
 
 Lab.experiment("Drink", function() {
 	Lab.test("/drink endpoint", function(done) {
