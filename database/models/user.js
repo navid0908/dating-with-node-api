@@ -8,9 +8,9 @@ var User;
 // private internal properties/functions
 var internals = {};
 
+var Photo = require('./photo');
 
 User = datingWithNode.Model.extend({
-
     tableName: 'user',
     hasTimestamps: ['created_at', 'updated_at'],
     defaults: function() {
@@ -19,11 +19,10 @@ User = datingWithNode.Model.extend({
          status: 'ative',
          group_id : User.userStandard()
        }
-    }},{
-    photos : function(){
-        var Photo = require('./photo');
-        return this.hasMany('Photo');
     },
+    photos : function(){
+        return this.hasMany(Photo);
+    }},{
     getAttributues : function(){
         return ['id','username','email','password','group_id','social_login_type','social_login_id','status','created_at','updated_at'];
     },

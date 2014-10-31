@@ -1,8 +1,8 @@
 // # Post Model
-var datingWithNode = require('./base');
+var baseModel = require('./base');
 var Authattempt;
 
-Authattempt = datingWithNode.Model.extend({
+Authattempt = baseModel.Model.extend({
   tableName: 'authattempt',
   defaults: function() {
      return {
@@ -36,4 +36,4 @@ Authattempt = datingWithNode.Model.extend({
   },
 });
 
-module.exports = datingWithNode.model('Authattempt', Authattempt);
+module.exports = baseModel.model('Authattempt', Authattempt);

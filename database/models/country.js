@@ -1,8 +1,8 @@
-var datingWithNode = require('./base');
+var baseModel = require('./base');
 var Country;
 
-Country = datingWithNode.Model.extend({
+Country = baseModel.Model.extend({
   tableName: 'country'
 });
 
-module.exports = datingWithNode.model('Country', Country);
+module.exports = baseModel.model('Country', Country);

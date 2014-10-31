@@ -1,8 +1,8 @@
-var datingWithNode = require('./base');
+var baseModel = require('./base');
 var Activelevel;
 
-Activelevel = datingWithNode.Model.extend({
+Activelevel = baseModel.Model.extend({
   tableName: 'activelevel'
 });
 
-module.exports = datingWithNode.model('Activelevel', Activelevel);
+module.exports = baseModel.model('Activelevel', Activelevel);

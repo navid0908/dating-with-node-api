@@ -1,7 +1,11 @@
 var models;
 models = {
-    init: function () {
-        var self = this;
+    init: function (options) {
+		var self = this;
+		var knex = require('knex')(options); //pass in db config options.
+		var Bookshelf = require('bookshelf');
+		var datingWithNode = Bookshelf.dbh = Bookshelf(knex);
+
 
         // One off inclusion of Base file.
 		self.Base = require('./models/base');

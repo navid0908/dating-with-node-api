@@ -1,8 +1,8 @@
-var datingWithNode = require('./base');
+var baseModel = require('./base');
 var Bodytype;
 
-Bodytype = datingWithNode.Model.extend({
+Bodytype = baseModel.Model.extend({
   tableName: 'bodytype'
 });
 
-module.exports = datingWithNode.model('Bodytype', Bodytype);
+module.exports = baseModel.model('Bodytype', Bodytype);
