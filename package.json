@@ -41,9 +41,9 @@
     "underscore": "^1.7.0"
   },
   "devDependencies": {
-    "lab": "3.2.*",
+    "lab": "^5.0.1",
+    "lout": "^5.1.1",
     "nodemon": "1.2.1",
-    "lout": "^5.0.2"
   },
   "engines": {
     "node": ">=0.10.30"
