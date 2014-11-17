@@ -6,6 +6,7 @@ baseModel.plugin('registry');
 
 baseModel.Model = baseModel.Model.extend({
 	//object properties
+	hasTimestamps: true,
 },{
 	//static properties
 });

@@ -4,6 +4,7 @@ var Authattempt;
 
 Authattempt = baseModel.Model.extend({
   tableName: 'authattempt',
+  hasTimestamps: false,
   defaults: function() {
      return {
        // default values for when the record is created.

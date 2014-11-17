@@ -11,7 +11,6 @@ var internals = {};
 
 User = baseModel.Model.extend({
     tableName: 'user',
-    hasTimestamps: ['created_at', 'updated_at'],
     defaults: function() {
        return {
          // default values for when the record is created.
