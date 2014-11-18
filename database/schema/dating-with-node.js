@@ -44,6 +44,10 @@ var Schema = {
             id: {type: 'increments', nullable: false, primary: true},
             description: {type: 'string', maxlength: 45, nullable: false},
         },
+        profession: {
+            id: {type: 'increments', nullable: false, primary: true},
+            description: {type: 'string', maxlength: 45, nullable: false},
+        },
         authattempt: {
             id: {type: 'increments', nullable: false, primary: true},
             email: {type: 'string', maxlength: 60, nullable: true},
@@ -91,6 +95,7 @@ var Schema = {
             children_id: {type: 'integer', nullable: true, unsigned: true, references: 'children.id'},
             activelevel_id: {type: 'integer', nullable: true, unsigned: true, references: 'activelevel.id'},
             astrologicalsign_id: {type: 'integer', nullable: true, unsigned: true, references: 'astrologicalsign.id'},
+            profession_id: {type: 'integer', nullable: true, unsigned: true, references: 'profession.id'},
             height: {type: 'decimal', nullable: true},
             gender: {type: 'string', maxlength: 1, nullable: true},
             orientation: {type: 'string', maxlength: 1, nullable: true},

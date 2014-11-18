@@ -316,6 +316,28 @@
 		{"description":"Aquarius"},
 		{"description":"Pisces"}
 	],
+	"profession" : [
+		{"description":"Rather Not Say"},
+		{"description":"Student"},
+		{"description":"Business owner"},
+		{"description":"Art / Music / Writing"},
+		{"description":"Banking/Finance"},
+		{"description":"Administration"},
+		{"description":"Technology"},
+		{"description":"Construction"},
+		{"description":"Education"},
+		{"description":"Entertainment/Media"},
+		{"description":"Management"},
+		{"description":"Hospitality"},
+		{"description":"Law"},
+		{"description":"Medicine"},
+		{"description":"Military"},
+		{"description":"Politics / Government"},
+		{"description":"Sales / Marketing"},
+		{"description":"Science / Engineering"},
+		{"description":"Transportation"},
+		{"description":"Unemployed"}
+	],
 	"user" : [
 		{"social_login_type" : "email" , "email" : "testemail@test.com", "password" : "$2a$10$vyAfZ26xOtas10nLmY.CPOVK9G.OqC6p77ttNQgGPIJdtr8ioMPr6"}
 	]

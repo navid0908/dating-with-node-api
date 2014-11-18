@@ -11,6 +11,7 @@ models = {
 		self.Base = require('./models/base');
 		self.Authattempt = require('./models/authattempt');
 		self.Activelevel = require('./models/activelevel');
+		self.Astrologicalsign = require('./models/astrologicalsign');
 		self.Bodytype = require('./models/bodytype');
 		self.Children = require('./models/children');
 		self.Country = require('./models/country');
@@ -18,6 +19,8 @@ models = {
 		self.Drink = require('./models/drink');
 		self.Drug = require('./models/drug');
 		self.Education = require('./models/education');
+		self.Photo = require('./models/photo');
+		self.Profession = require('./models/profession');
 		self.Smoke = require('./models/smoke');
 		self.User = require('./models/user');
     }
