@@ -302,6 +302,20 @@
 		{"description":"Active"},
 		{"description":"Very Active"}
 	],
+	"astrologicalsign" : [
+		{"description":"Aries"},
+		{"description":"Taurus"},
+		{"description":"Gemini"},
+		{"description":"Cancer"},
+		{"description":"Leo"},
+		{"description":"Virgo"},
+		{"description":"Libra"},
+		{"description":"Scorpio"},
+		{"description":"Sagittarius"},
+		{"description":"Capricorn"},
+		{"description":"Aquarius"},
+		{"description":"Pisces"}
+	],
 	"user" : [
 		{"social_login_type" : "email" , "email" : "testemail@test.com", "password" : "$2a$10$vyAfZ26xOtas10nLmY.CPOVK9G.OqC6p77ttNQgGPIJdtr8ioMPr6"}
 	]
