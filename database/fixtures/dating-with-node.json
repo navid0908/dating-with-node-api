@@ -338,6 +338,13 @@
 		{"description":"Transportation"},
 		{"description":"Unemployed"}
 	],
+	"relationshipstatus" : [
+		{"description":"Single"},
+		{"description":"Divorced"},
+		{"description":"Open Relationship - This site is not for you."},
+		{"description":"Married - This site is not for you."},
+		{"description":"Seeing someone - this site is not for you."}
+	],
 	"user" : [
 		{"social_login_type" : "email" , "email" : "testemail@test.com", "password" : "$2a$10$vyAfZ26xOtas10nLmY.CPOVK9G.OqC6p77ttNQgGPIJdtr8ioMPr6"}
 	]
