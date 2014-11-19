@@ -106,6 +106,12 @@ var Schema = {
             birthday: {type: 'dateTime', nullable: false},
             created_at: {type: 'dateTime', nullable: false},
             updated_at: {type: 'dateTime', nullable: true},
-        }
+        },
+        block: { // allows user x to block user y
+            id: {type: 'increments', nullable: false, primary: true},
+            user_id: {type: 'integer', nullable: false, unsigned: true, references: 'user.id'},
+            block_user_id: {type: 'integer', nullable: false, unsigned: true, references: 'user.id'},
+            created_at: {type: 'dateTime', nullable: false},
+        },
     };
 module.exports = Schema;
