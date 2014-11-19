@@ -341,6 +341,7 @@
 	"relationshipstatus" : [
 		{"description":"Single"},
 		{"description":"Divorced"},
+		{"description":"Widowed"},
 		{"description":"Open Relationship - This site is not for you."},
 		{"description":"Married - This site is not for you."},
 		{"description":"Seeing someone - this site is not for you."}
