@@ -52,6 +52,10 @@ var Schema = {
             id: {type: 'increments', nullable: false, primary: true},
             description: {type: 'string', maxlength: 45, nullable: false},
         },
+        buzzline :{
+            id: {type: 'increments', nullable: false, primary: true},
+            description: {type: 'string', maxlength: 45, nullable: false},
+        },
         authattempt: {
             id: {type: 'increments', nullable: false, primary: true},
             email: {type: 'string', maxlength: 60, nullable: true},
