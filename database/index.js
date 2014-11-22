@@ -20,6 +20,7 @@ models = {
 		self.Drug = require('./models/drug');
 		self.Education = require('./models/education');
 		self.Photo = require('./models/photo');
+		self.Phototype = require('./models/phototype');
 		self.Profession = require('./models/profession');
 		self.Relationshipstatus = require('./models/relationshipstatus');
 		self.Smoke = require('./models/smoke');
