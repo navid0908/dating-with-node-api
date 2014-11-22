@@ -13,6 +13,7 @@ models = {
 		self.Activelevel = require('./models/activelevel');
 		self.Astrologicalsign = require('./models/astrologicalsign');
 		self.Bodytype = require('./models/bodytype');
+		self.Buzzline = require('./models/buzzline');
 		self.Children = require('./models/children');
 		self.Country = require('./models/country');
 		self.Diet = require('./models/diet');
