@@ -78,6 +78,7 @@ var Schema = {
             id: {type: 'increments', nullable: false, primary: true},
             user_id: {type: 'integer', nullable: false, unsigned: true, references: 'user.id'},
             phototype_id: {type: 'integer', nullable: false, unsigned: true, references: 'phototype.id'},
+            is_primary: {type: 'integer', maxlength: 1, fieldtype: 'tinyint', nullable: false, defaultTo: 0},
             location: {type: 'string', maxlength: 60, nullable: false},
             caption: {type: 'string', maxlength: 140, nullable: true},
             created_at: {type: 'dateTime', nullable: false},
