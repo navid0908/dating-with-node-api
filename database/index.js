@@ -12,6 +12,7 @@ models = {
 		self.Authattempt = require('./models/authattempt');
 		self.Activelevel = require('./models/activelevel');
 		self.Astrologicalsign = require('./models/astrologicalsign');
+		self.Block = require('./models/block');
 		self.Bodytype = require('./models/bodytype');
 		self.Buzzline = require('./models/buzzline');
 		self.Children = require('./models/children');
