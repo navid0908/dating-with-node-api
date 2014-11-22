@@ -24,6 +24,7 @@ models = {
 		self.Photo = require('./models/photo');
 		self.Phototype = require('./models/phototype');
 		self.Profession = require('./models/profession');
+		self.Profile = require('./models/profile');
 		self.Relationshipstatus = require('./models/relationshipstatus');
 		self.Smoke = require('./models/smoke');
 		self.User = require('./models/user');
