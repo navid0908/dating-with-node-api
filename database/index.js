@@ -21,6 +21,7 @@ models = {
 		self.Drug = require('./models/drug');
 		self.Education = require('./models/education');
 		self.Location = require('./models/location');
+		self.Logvisit = require('./models/logvisit');
 		self.Photo = require('./models/photo');
 		self.Phototype = require('./models/phototype');
 		self.Profession = require('./models/profession');
