@@ -1,3 +1,7 @@
+/**
+ * @description This model stores a users profile.
+ */
+
 var baseModel = require('./base');
 var Profile;
 

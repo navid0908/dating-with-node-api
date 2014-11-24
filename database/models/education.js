@@ -1,3 +1,7 @@
+/**
+ * @description This model is a lookup table for the various Education Levels.
+ */
+
 var datingWithNode = require('./base');
 var Education;
 

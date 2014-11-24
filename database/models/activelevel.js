@@ -1,8 +1,13 @@
+/**
+ * @description This model is a lookup table for the various Activity Levels.
+ */
+
 var baseModel = require('./base');
 var Activelevel;
 
 Activelevel = baseModel.Model.extend({
-  tableName: 'activelevel'
+  tableName: 'activelevel',
+  hasTimestamps: false,
 });
 
 module.exports = baseModel.model('Activelevel', Activelevel);

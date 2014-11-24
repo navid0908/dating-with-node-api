@@ -1,3 +1,7 @@
+/**
+ * @description This model identifies each person a user visits.
+ */
+
 var baseModel = require('./base');
 var Logvisit;
 

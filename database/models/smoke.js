@@ -1,3 +1,7 @@
+/**
+ * @description This model is a lookup table for the various smoking habbits of a user.
+ */
+
 var datingWithNode = require('./base');
 var Smoke;
 

@@ -1,3 +1,7 @@
+/**
+ * @description This model is a lookup table for the various Children a user identifies with.
+ */
+
 var baseModel = require('./base');
 var Children;
 

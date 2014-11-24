@@ -1,3 +1,7 @@
+/**
+ * @description This model is a lookup table for the various Body types.
+ */
+
 var baseModel = require('./base');
 var Bodytype;
 

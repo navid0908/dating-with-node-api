@@ -1,4 +1,7 @@
-// # Post Model
+/**
+ * @description This model is used to log every invalid auth request.
+ */
+
 var baseModel = require('./base');
 var Authattempt;
 

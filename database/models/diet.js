@@ -1,3 +1,7 @@
+/**
+ * @description This model is a lookup table for the various Diet habbits of a user.
+ */
+
 var baseModel = require('./base');
 var Diet;
 

@@ -1,3 +1,7 @@
+/**
+ * @description This model is a lookup table for the various Drug activities of a user.
+ */
+
 var baseModel = require('./base');
 var Drug;
 

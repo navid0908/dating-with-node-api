@@ -1,6 +1,10 @@
+/**
+ * @description This model stores user credentials.
+ */
+
 var async = require('async');
 var bcrypt = require('bcrypt');
-var _ = require('underscore');
+var _ = require('lodash');
 
 var baseModel = require('./base');
 var Photo = require('./photo');
@@ -11,6 +15,7 @@ var internals = {};
 
 User = baseModel.Model.extend({
     tableName: 'user',
+
     defaults: function() {
        return {
          // default values for when the record is created.
@@ -71,7 +76,6 @@ User = baseModel.Model.extend({
     },
     find : function(payload, callback){
         var self = this;
-        var defaults = this.getAttributues();
 
         async.auto({
             isValidPayload : function(done){

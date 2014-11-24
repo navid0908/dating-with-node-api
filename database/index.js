@@ -4,7 +4,7 @@ models = {
 		var self = this;
 		var knex = require('knex')(options); //pass in db config options.
 		var Bookshelf = require('bookshelf');
-		Bookshelf.dbh = Bookshelf(knex);
+		Bookshelf.dbh = Bookshelf(knex); // Initializes a new Bookshelf instance
 
 
         // One off inclusion of Base file.

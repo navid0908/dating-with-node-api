@@ -1,3 +1,7 @@
+/**
+ * @description This model is a lookup table for the various Drinking activities for a user
+ */
+
 var baseModel = require('./base');
 var Drink;
 

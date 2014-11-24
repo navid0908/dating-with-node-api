@@ -1,3 +1,7 @@
+/**
+ * @description This model is a lookup table for the various Relationship statues.
+ */
+
 var baseModel = require('./base');
 var Relationshipstatus;
 
