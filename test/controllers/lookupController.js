@@ -22,8 +22,8 @@ Lab.experiment("Lookup", function() {
 				Lab.expect(row).to.have.property('id');
 				Lab.expect(row).to.have.property('description');
 			});
+			done();
 		});
-		done();
 	});
 	Lab.test("/astrologicalsign endpoint", function(done) {
 		var options = {
@@ -44,8 +44,8 @@ Lab.experiment("Lookup", function() {
 				Lab.expect(row).to.have.property('id');
 				Lab.expect(row).to.have.property('description');
 			});
+			done();
 		});
-		done();
 	});
 	Lab.test("/bodytype endpoint", function(done) {
 		var options = {
@@ -66,8 +66,8 @@ Lab.experiment("Lookup", function() {
 				Lab.expect(row).to.have.property('id');
 				Lab.expect(row).to.have.property('description');
 			});
+			done();
 		});
-		done();
 	});
 	Lab.test("/buzzline endpoint", function(done) {
 		var options = {
@@ -88,8 +88,8 @@ Lab.experiment("Lookup", function() {
 				Lab.expect(row).to.have.property('id');
 				Lab.expect(row).to.have.property('description');
 			});
+			done();
 		});
-		done();
 	});
 	Lab.test("/children endpoint", function(done) {
 		var options = {
@@ -109,9 +109,9 @@ Lab.experiment("Lookup", function() {
 			_.each(rows, function(row){
 				Lab.expect(row).to.have.property('id');
 				Lab.expect(row).to.have.property('description');
-			})
+			});
+			done();
 		});
-		done();
 	});
 	Lab.test("/country endpoint", function(done) {
 		var options = {
@@ -132,8 +132,8 @@ Lab.experiment("Lookup", function() {
 				Lab.expect(row).to.have.property('id');
 				Lab.expect(row).to.have.property('code');
 			});
+			done();
 		});
-		done();
 	});
 	Lab.test("/diet endpoint", function(done) {
 		var options = {
@@ -154,8 +154,8 @@ Lab.experiment("Lookup", function() {
 				Lab.expect(row).to.have.property('id');
 				Lab.expect(row).to.have.property('description');
 			});
+			done();
 		});
-		done();
 	});
 	Lab.test("/drink endpoint", function(done) {
 		var options = {
@@ -176,8 +176,8 @@ Lab.experiment("Lookup", function() {
 				Lab.expect(row).to.have.property('id');
 				Lab.expect(row).to.have.property('description');
 			});
+			done();
 		});
-		done();
 	});
 	Lab.test("/drug endpoint", function(done) {
 		var options = {
@@ -198,8 +198,8 @@ Lab.experiment("Lookup", function() {
 				Lab.expect(row).to.have.property('id');
 				Lab.expect(row).to.have.property('description');
 			});
+			done();
 		});
-		done();
 	});
 	Lab.test("/education endpoint", function(done) {
 		var options = {
@@ -220,8 +220,8 @@ Lab.experiment("Lookup", function() {
 				Lab.expect(row).to.have.property('id');
 				Lab.expect(row).to.have.property('description');
 			});
+			done();
 		});
-		done();
 	});
 	Lab.test("/phototype endpoint", function(done) {
 		var options = {
@@ -242,8 +242,8 @@ Lab.experiment("Lookup", function() {
 				Lab.expect(row).to.have.property('id');
 				Lab.expect(row).to.have.property('size');
 			});
+			done();
 		});
-		done();
 	});
 	Lab.test("/profession endpoint", function(done) {
 		var options = {
@@ -264,8 +264,8 @@ Lab.experiment("Lookup", function() {
 				Lab.expect(row).to.have.property('id');
 				Lab.expect(row).to.have.property('description');
 			});
+			done();
 		});
-		done();
 	});
 	Lab.test("/relationshipstatus endpoint", function(done) {
 		var options = {
@@ -286,8 +286,8 @@ Lab.experiment("Lookup", function() {
 				Lab.expect(row).to.have.property('id');
 				Lab.expect(row).to.have.property('description');
 			});
+			done();
 		});
-		done();
 	});	
 	Lab.test("/smoke endpoint", function(done) {
 		var options = {
@@ -308,7 +308,7 @@ Lab.experiment("Lookup", function() {
 				Lab.expect(row).to.have.property('id');
 				Lab.expect(row).to.have.property('description');
 			});
+			done();
 		});
-		done();
 	});
 });
