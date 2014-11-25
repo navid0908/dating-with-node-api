@@ -8,18 +8,21 @@ Lab.experiment("Drug", function() {
 	        method: "GET",
 	        url: "/drug"
 	    };
-	    server.inject(options, function(response) {
-	        var result = response.result;
-	        Lab.expect(response.statusCode).to.equal(200);
-	        Lab.expect(result).to.be.instanceof(Array);
-	        Lab.expect(result).to.have.length(3);
-	        _.each(result, function(row){
-	        	var keys = Object.keys(row);
-	        	Lab.expect(keys).to.have.length(2);
-	        	Lab.expect(row).to.have.property('id');
-	        	Lab.expect(row).to.have.property('description');
-	        })
-	    });
+		server.inject(options, function(response) {
+			var result = response.result;
+
+			Lab.expect(response.statusCode).to.equal(200);
+			Lab.expect(response.result).to.be.instanceof(Object);
+			Lab.expect(result).to.have.property('drug');
+
+			var rows = result.drug[0];
+			Lab.expect(rows).to.have.length(3);
+
+			_.each(rows, function(row){
+				Lab.expect(row).to.have.property('id');
+				Lab.expect(row).to.have.property('description');
+			})
+		});
 		done();
 	});
 });

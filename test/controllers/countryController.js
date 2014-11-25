@@ -8,19 +8,21 @@ Lab.experiment("Country", function() {
 	        method: "GET",
 	        url: "/country"
 	    };
-	    server.inject(options, function(response) {
-	        var result = response.result;
-	        Lab.expect(response.statusCode).to.equal(200);
-	        Lab.expect(result).to.be.instanceof(Array);
-	        Lab.expect(result).to.have.length(237);
-	        _.each(result, function(row){
-	        	var keys = Object.keys(row);
-	        	Lab.expect(keys).to.have.length(3);
-	        	Lab.expect(row).to.have.property('id');
-	        	Lab.expect(row).to.have.property('code');
-	        	Lab.expect(row).to.have.property('name');
-	        })
-	    });
+		server.inject(options, function(response) {
+			var result = response.result;
+
+			Lab.expect(response.statusCode).to.equal(200);
+			Lab.expect(response.result).to.be.instanceof(Object);
+			Lab.expect(result).to.have.property('country');
+
+			var rows = result.country[0];
+			Lab.expect(rows).to.have.length(237);
+
+			_.each(rows, function(row){
+				Lab.expect(row).to.have.property('id');
+				Lab.expect(row).to.have.property('code');
+			})
+		});
 		done();
 	});
 });
