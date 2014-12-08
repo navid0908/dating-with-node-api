@@ -37,29 +37,37 @@ exports.login = {
 	},{
 		assign: 'isLoginAbuse',
 		method: function(request, reply){
-			var emailAddress = request.payload.email;
+			var emailAddress = request.payload.email.toLowerCase();
 			var ipAddress = (request.info.remoteAddress) ? request.info.remoteAddress : ' ';
-			models.Authattempt.findByEmailIpaddress(emailAddress, ipAddress, function(error, collection){
+			models.Authattempt.findAll({email:emailAddress, ip:ipAddress}).then(function(collection){
+				if(!collection){
+					return reply();
+				}
+				if(collection.length >= config.login.maxAllowedAttempts){
+					return reply(Boom.badRequest('Maximum number of attempts reached.'));
+				}
+				return reply();
+			}).catch(function(error){
 				if(error){
 					return reply(Boom.badRequest(error));
 				}
-				if(collection.length >=config.login.maxAllowedAttempts){
-					return reply(Boom.badRequest('Maximum number of attempts reached.'));
-				}
-				reply();
 			});
 		}
 	},{
 		assign: 'user',
 		method: function(request, reply){
-			var emailAddress = request.payload.email;
+			var emailAddress = request.payload.email.toLowerCase();
 			var password = request.payload.password;
-			models.User.findByCredentials(emailAddress, password, function(error, user){
+			models.User.findByCredentials({email: emailAddress, password:password}).then(function (userRecord) {
+	            if(userRecord){
+	                return reply ({user: [userRecord.toJSON()]});
+	            }
+	            return reply();
+	        }).catch(function(error){
 				if(error){
-					return reply(Boom.badRequest(error));
+					//@TODO: log db error ?
 				}
-				//if a valid record is not found, user will be undefined.
-				reply(user);
+				return reply();
 			});
 		}
 	},{
@@ -70,14 +78,16 @@ exports.login = {
 				return reply();
 			}
 			// credentials are NOT valid, log user attempt.
-			var emailAddress = request.payload.email;
+			var emailAddress = request.payload.email.toLowerCase();
 			var ipAddress = (request.info.remoteAddress) ? request.info.remoteAddress : ' ';
-			models.Authattempt.createEntry(emailAddress, ipAddress, function(error, model){
-				if(error){
-					return reply(Boom.badRequest(error));
-				}
+			return models.Authattempt.add({email:emailAddress, ip:ipAddress}).then(function(result){
 				//@TODO: check for account status.
 				return reply(Boom.badRequest('Email and password combination do not match.'));
+			}).catch(function (error) {
+				if(error){
+					//@TODO: log db error ?
+				}
+				return reply(Boom.badRequest(error));
 			});
 		}
 	}],
@@ -113,13 +123,16 @@ exports.facebook = {
 	{
 		assign: 'user',
 		method: function(request, reply){
-			models.User.findBySocialCredentials(request.auth.credentials.provider, request.auth.credentials.profile.raw.id, function(error, user){
-				if(error){
-					return reply(Boom.badRequest(error));
-				}
-				//we found a user
-				reply(user);
-			});
+			var payload = {
+					network:request.auth.credentials.provider,
+					token:request.auth.credentials.profile.raw.id
+				};
+			return models.findOne(payload).then(function (userRecord) {
+	            if(userRecord){
+	                return reply ({user: [userRecord.toJSON()]});
+	            }
+	            return reply(Boom.badRequest(error));
+	        });
 		}
 	},
 	],

@@ -1,12 +1,12 @@
 /**
- * @description This model is a lookup table for the various smoking habbits of a user.
- */
+* @description - The purpose of this model is to lookup various smoking habbits of a user.
+*/
 
 var datingWithNode = require('./base');
 var Smoke;
 
-Smoke = datingWithNode.Model.extend({
-  tableName: 'smoke'
-});
+	Smoke = datingWithNode.Model.extend({
+		tableName: 'smoke'
+	});
 
 module.exports = datingWithNode.model('Smoke', Smoke);

@@ -359,6 +359,6 @@
 		{"description":"Hi! If I send you a message, will you reply?"}
 	],
 	"user" : [
-		{"social_login_type" : "email" , "email" : "testemail@test.com", "password" : "$2a$10$vyAfZ26xOtas10nLmY.CPOVK9G.OqC6p77ttNQgGPIJdtr8ioMPr6"}
+		{"social_login_type" : "email" , "email" : "testemail@test.com", "password" : "$2a$10$ppMRNBdlu2ehVFhWShLf7OaA1e.p.4ypvU/LV9Y7Nd1ZKZJ1AFy6K"}
 	]
 }

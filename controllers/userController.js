@@ -3,6 +3,7 @@ var	Joi = require('joi');
 var	Boom = require('boom');
 var	Crypto = require('crypto');
 var async = require('async');
+var Promise = require('bluebird');
 var config = require('../config/config');
 var _ = require('lodash');
 
@@ -27,32 +28,32 @@ internals.isUsernameReserved = function (request, reply){
 	}
 	reply();
 };
-internals.isUsernameTaken = function (request, reply){
-	if (request.payload.username){
-		models.User.isUsernameTaken(request.payload.username, function (err, exists){
-			if (err){
-				reply(Boom.conflict('Username is already taken.'));
-			}else{
-				reply();
-			}
-		});
-	}else{
-		reply();
-	}
-};
 
-internals.isEmailTaken = function (request, reply){
-	if (request.payload.email){
-		models.User.isEmailTaken(request.payload.email, function (err, exists){
-			if (err){
-				reply(Boom.conflict('Email is already registered. Please login'));
-			}else{
-				reply();
-			}
-		});
-	}else{
-		reply();
-	}
+internals.sendWelcomeEmail = function(request, userData){
+	var mailer = request.server.plugins.mailer;
+	var payload = {
+			to: [{
+				email: request.payload.email,
+				type: "to"
+			}]
+		};
+	_.extend(payload,config.mail[0].welcome);
+	return mailer.mandrill_client.messages.send({"message": payload, async:true}, function(result) {
+		return result;
+	});
+};
+internals.sendUpdateEmail = function(request, userData){
+	var mailer = request.server.plugins.mailer;
+	var payload = {
+			to: [{
+				email: userData.email,
+				type: "to"
+			}]
+		};
+	_.extend(payload,config.mail[0].update);
+	return mailer.mandrill_client.messages.send({"message": payload, async:true}, function(result) {
+		return result;
+	});
 };
 
 exports.update = {
@@ -81,69 +82,51 @@ exports.update = {
 		method: internals.isUsernameReserved
 	}],
 	handler: function (request, reply) {
-		async.auto({
-			user: function (done) {
-				models.User.find({id:request.auth.credentials.id}, function(err, model){
-					if (err){
-						done('Unable to find user record');
-					}else{
-						done(null,model);
-					}
+		var user;
+		models.User.findOne({id: request.auth.credentials.id}).then(function (userRecord) {
+			if(userRecord){
+				return userRecord;
+			}
+			return Promise.reject('Unable to find user record.');
+		}).then(function (userRecord) {
+			if(request.payload.username && request.payload.username != results.user.get('username')){
+				//they entered a username that is different from their logged in username.
+				//make sure its unique.
+				return models.User.isUsernameUnique(request.payload.username).then(function (isUnique) {
+					return userRecord
+				}).catch(function (error) {
+					//'email is already taken'
+					return Promise.reject(error);
 				});
-			},
-			usernameCheck : ['user', function (done, results) {
-				if(request.payload.username && request.payload.username != results.user.get('username')){
-					//they entered a username that is different from their logged in username.
-					//make sure its unique.
-					models.User.isUsernameTaken(request.payload.username, done);
-				}else{
-					done();
-				}
-			}],
-			emailCheck : ['user', 'usernameCheck', function (done, results) {
-				if(request.payload.email && request.payload.email != results.user.get('email')){
-					//they entered a new email that is different from their logged in email.
-					//make sure its unique.
-					models.User.isEmailTaken(request.payload.email, done);
-				}else{
-					done();
-				}
-            }],
-            passwordHash : ['emailCheck', function (done, results) {
-				if( (request.payload.password && !request.payload.password2) || (request.payload.password2 && !request.payload.password)){
-					done('Password and/or Password 2 are missing');
-				}
-				if(request.payload.password && (request.payload.password != request.payload.password2)) {
-					done('Password and Password 2 do not match');
-				}
-				if(request.payload.password){
-					models.User.generatePasswordHash(request.payload.password, done);
-				}else{
-					done();
-				}
-            }]
-        }, function (err, results) {
-            if (err) {
-                return reply(Boom.badRequest(err));
-            }
+			}
+			return userRecord;
+		}).then(function (userRecord) {
+			if(request.payload.email && request.payload.email != results.user.get('email')){
+				//they entered an email that is different from their logged in email.
+				//make sure its unique.
+				return models.User.isEmailUnique(request.payload.email).then(function (isUnique) {
+					return userRecord
+				}).catch(function (error) {
+					//'email is already taken'
+					return Promise.reject(error);
+				});
+			}
+			return userRecord;
+		}).then(function (userRecord) {
 			if(request.payload.username){
-				results.user.set('username', request.payload.username);
+				userRecord.set('username', request.payload.username);
 			}
 			if(request.payload.email){
-				results.user.set('email', request.payload.email);
+				userRecord.set('email', request.payload.email);
 			}
-			if(results.passwordHash){
-				results.user.set('password', results.passwordHash.hash);
-			}
-			results.user.save(results.user.changed, { patch: true }).then(function(model){
-				// Send profile update email to them
-				var mailer = request.server.plugins.mailer;
-				var messagePayload = {"to": [{"email": model.get('email'),"type": "to"}]};
-				_.extend(messagePayload,config.mail[0].password_reset);
-				mailer.mandrill_client.messages.send({"message": messagePayload, async:true}, function(result){});
-				request.auth.session.set(model);
-				reply([]);
-			});
+			return userRecord.save();
+		}).then(function (userRecord) {
+			user = userRecord.toJSON();
+			return internals.sendUpdateEmail(request, user);
+		}).then(function () {
+            return reply ({user: [user]});
+        }).catch(function (error) {
+			return reply(Boom.conflict(error));
 		});
 	}
 };
@@ -164,50 +147,55 @@ exports.signUp = {
 		method: internals.isUsernameReserved
 	},
 	{
-		assign: "isUsernameTaken",
-		method: internals.isUsernameTaken
+		assign: "isUsernameUnique",
+		method: function (request, reply){
+				if (request.payload.username){
+					models.User.isUsernameUnique(request.payload.username).then(function (isExist) {
+						return reply();
+					}).catch(function (error) {
+						//'Username is already taken'
+						return reply(Boom.conflict(error));
+					});
+				}
+				return reply();
+		}
 	},
 	{
-		assign: "isEmailTaken",
-		method: internals.isEmailTaken
+		assign: "isEmailUnique",
+		method: function(request, reply){
+			if (request.payload.email){
+				models.User.isEmailUnique(request.payload.email).then(function (isExist) {
+					return reply();
+				}).catch(function (error) {
+					//'email is already taken'
+					return reply(Boom.conflict(error));
+				});
+			}
+		}
 	},
 	],
 	handler: function (request, reply) {
+		var user;
+		var newUser;
 		if(request.payload.network == 'email' && !request.payload.email){
 			//If they failed to provide an email address during registration.
 			return reply(Boom.badRequest('email is required'));
 		}
-		async.auto({
-            user : function (done) {
-				if(! request.payload.username){
-					request.payload.username = internals.generateUsername(12);
-				}
-				if (request.payload.network == 'email'){
-					models.User.createAccount(
-						request.payload.username,
-						request.payload.email,
-						request.payload.password,
-						done
-					);
-				}else{
-					//@TODO: register via social network and pull information.
-				}
-			},
-			welcome : function(done){
-				// Send welcome email to them.
-				var mailer = request.server.plugins.mailer;
-				var messagePayload = {"to": [{"email": request.payload.email,"type": "to"}]};
-				_.extend(messagePayload,config.mail[0].welcome);
-				mailer.mandrill_client.messages.send({"message": messagePayload, async:true}, function(result) {
-				});
-				done();
-			}
-		},function (err, results) {
-                if (err){
-					return reply(Boom.badRequest(err));
-				}
-                return reply(results.user);
-			}
-		);
+		if(! request.payload.username){
+			request.payload.username = internals.generateUsername(12);
+		}
+		newUser = {	username: request.payload.username,
+					email: request.payload.email.toLowerCase(),
+					password: request.payload.password,
+					network: request.payload.network
+		};
+		models.User.add(newUser).then(function (userRecord) {
+			user = userRecord.toJSON();
+			return internals.sendWelcomeEmail(request, user);
+		}).then(function () {
+            return reply ({user: [user]});
+		}).catch(function (error) {
+			return reply(Boom.badRequest(error));
+		});
 	}
 };
