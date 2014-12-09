@@ -23,7 +23,7 @@ activelevel = {
 		handler: function (request, reply) {
 			models.Activelevel.findAll().then(function(result){
 				if(result){
-					return reply({activelevel: [result.toJSON()]});
+					return reply({activelevel: result.toJSON()});
 				}
 				return Boom.notFound('Active levels not found');
 			});
@@ -37,7 +37,7 @@ astrologicalsign = {
 		handler: function (request, reply) {
 			models.Astrologicalsign.findAll().then(function(result){
 				if(result){
-					return reply({astrologicalsign: [result.toJSON()]});
+					return reply({astrologicalsign: result.toJSON()});
 				}
 				return Boom.notFound('Astrological Signs not found');
 			});
@@ -52,7 +52,7 @@ bodytype = {
 		handler: function (request, reply) {
 			models.Bodytype.findAll().then(function(result){
 				if(result){
-					return reply({bodytype: [result.toJSON()]});
+					return reply({bodytype: result.toJSON()});
 				}
 				return Boom.notFound('Body types not found');
 			});
@@ -67,7 +67,7 @@ buzzline = {
 		handler: function (request, reply) {
 			models.Buzzline.findAll().then(function(result){
 				if(result){
-					return reply({buzzline: [result.toJSON()]});
+					return reply({buzzline: result.toJSON()});
 				}
 				return Boom.notFound('Buzz lines not found');
 			});
@@ -82,7 +82,7 @@ children = {
 		handler: function (request, reply) {
 			models.Children.findAll().then(function(result){
 				if(result){
-					return reply({children: [result.toJSON()]});
+					return reply({children: result.toJSON()});
 				}
 				return Boom.notFound('Children types not found');
 			});
@@ -97,7 +97,7 @@ country = {
 		handler: function (request, reply) {
 			models.Country.findAll().then(function(result){
 				if(result){
-					return reply({country: [result.toJSON()]});
+					return reply({country: result.toJSON()});
 				}
 				return Boom.notFound('Countries not found');
 			});
@@ -112,7 +112,7 @@ diet = {
 		handler: function (request, reply) {
 			models.Diet.findAll().then(function(result){
 				if(result){
-					return reply({diet: [result.toJSON()]});
+					return reply({diet: result.toJSON()});
 				}
 				return Boom.notFound('Diet types not found');
 			});
@@ -127,7 +127,7 @@ drink = {
 		handler: function (request, reply) {
 			models.Drink.findAll().then(function(result){
 				if(result){
-					return reply({drink: [result.toJSON()]});
+					return reply({drink: result.toJSON()});
 				}
 				return Boom.notFound('Drink types not found');
 			});
@@ -142,7 +142,7 @@ drug = {
 		handler: function (request, reply) {
 			models.Drug.findAll().then(function(result){
 				if(result){
-					return reply({drug: [result.toJSON()]});
+					return reply({drug: result.toJSON()});
 				}
 				return Boom.notFound('Drug types not found');
 			});
@@ -157,7 +157,7 @@ education = {
 		handler: function (request, reply) {
 			models.Education.findAll().then(function(result){
 				if(result){
-					return reply({education: [result.toJSON()]});
+					return reply({education: result.toJSON()});
 				}
 				return Boom.notFound('Education types not found');
 			});
@@ -172,7 +172,7 @@ phototype = {
 		handler: function (request, reply) {
 			models.Phototype.findAll().then(function(result){
 				if(result){
-					return reply({phototype: [result.toJSON()]});
+					return reply({phototype: result.toJSON()});
 				}
 				return Boom.notFound('Photo types not found');
 			});
@@ -187,7 +187,7 @@ profession = {
 		handler: function (request, reply) {
 			models.Profession.findAll().then(function(result){
 				if(result){
-					return reply({profession: [result.toJSON()]});
+					return reply({profession: result.toJSON()});
 				}
 				return Boom.notFound('Profession types not found');
 			});
@@ -202,7 +202,7 @@ relationshipstatus = {
 		handler: function (request, reply) {
 			models.Relationshipstatus.findAll().then(function(result){
 				if(result){
-					return reply({relationshipstatus: [result.toJSON()]});
+					return reply({relationshipstatus: result.toJSON()});
 				}
 				return Boom.notFound('Relationship status not found');
 			});
@@ -217,7 +217,7 @@ smoke = {
 		handler: function (request, reply) {
 			models.Smoke.findAll().then(function(result){
 				if(result){
-					return reply({smoke: [result.toJSON()]});
+					return reply({smoke: result.toJSON()});
 				}
 				return Boom.notFound('Smoke types not found');
 			});

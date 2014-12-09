@@ -1,10 +1,36 @@
-var Lab = require("lab");
-var server = require("../../");
-var models = require('../../database');
-var async = require('async');
+	var Lab = require("lab");
+	var Code = require('code');   // assertion library
+	var server = require("../../");
+	var models = require('../../database');
+	var async = require('async');
 
-Lab.experiment("method:post, url:/user ", function() {
-	Lab.test("create user with missing parameters - network", function(done) {
+	// Test shortcuts
+	var lab = exports.lab = Lab.script();
+
+lab.experiment("method:post, url:/user ", function() {
+	var user;
+	lab.beforeEach(function (done) {
+		//setup test records
+		var userModel = models.User;
+		var payload = {
+				username:'testjohndoe',
+				email: 'randomemail@test.com',
+				password: 'testpassword'
+			};
+		userModel.add(payload).then(function (userRecord) {
+			done();
+		});
+	});
+	lab.afterEach(function (done) {
+		// clean up
+		models.User.findOne({username: 'testjohndoe'}).then(function (userRecord) {
+			user = userRecord.toJSON();
+			models.User.destroy({id:user.id}).then(function () {
+				done();
+			});
+		});
+	});
+	lab.test("create user with missing parameters - network", function(done) {
 	    var options = {
 	        method: "post",
 	        url: "/user/signup",
@@ -18,11 +44,11 @@ Lab.experiment("method:post, url:/user ", function() {
 	    server.inject(options, function(response) {
 	        var result = response.result;
 	        //console.log(result);
-	        Lab.expect(response.statusCode).to.equal(400); // we didn't pass network in the payload.
+	        Code.expect(response.statusCode).to.equal(400); // we didn't pass network in the payload.
 	        done();
 	    });
 	});
-	Lab.test("create user with invalid parameter - short username", function(done) {
+	lab.test("create user with invalid parameter - short username", function(done) {
 	    var options = {
 	        method: "post",
 	        url: "/user/signup",
@@ -37,11 +63,11 @@ Lab.experiment("method:post, url:/user ", function() {
 		server.inject(options, function(response) {
 			var result = response.result;
 			//console.log(result);
-			Lab.expect(response.statusCode).to.equal(400);
+			Code.expect(response.statusCode).to.equal(400);
 			done();
 		});
 	});
-	Lab.test("create user with invalid parameter - large username", function(done) {
+	lab.test("create user with invalid parameter - large username", function(done) {
 	    var options = {
 			method: "post",
 			url: "/user/signup",
@@ -56,11 +82,11 @@ Lab.experiment("method:post, url:/user ", function() {
 		server.inject(options, function(response) {
 			var result = response.result;
 			//console.log(result);
-			Lab.expect(response.statusCode).to.equal(400);
+			Code.expect(response.statusCode).to.equal(400);
 			done();
 		});
     });
-    Lab.test("create user with invalid parameter - bad email", function(done) {
+    lab.test("create user with invalid parameter - bad email", function(done) {
 	    var options = {
 	        method: "post",
 	        url: "/user/signup",
@@ -75,11 +101,11 @@ Lab.experiment("method:post, url:/user ", function() {
 	    server.inject(options, function(response) {
 			var result = response.result;
 			//console.log(result);
-			Lab.expect(response.statusCode).to.equal(400);
+			Code.expect(response.statusCode).to.equal(400);
 			done();
 	    });
     });
-    Lab.test("create user with invalid parameter - short password", function(done) {
+    lab.test("create user with invalid parameter - short password", function(done) {
 	    var options = {
 	        method: "post",
 	        url: "/user/signup",
@@ -94,11 +120,11 @@ Lab.experiment("method:post, url:/user ", function() {
 		server.inject(options, function(response) {
 			var result = response.result;
 			// console.log(result);
-			Lab.expect(response.statusCode).to.equal(400);
+			Code.expect(response.statusCode).to.equal(400);
 			done();
 	    });
 	});
-	Lab.test("create user with an invalid network", function(done) {
+	lab.test("create user with an invalid network", function(done) {
 		var options = {
 			method: "post",
 			url: "/user/signup",
@@ -112,11 +138,11 @@ Lab.experiment("method:post, url:/user ", function() {
 		};
 		server.inject(options, function(response) {
 			var result = response.result;
-			Lab.expect(response.statusCode).to.equal(400);
+			Code.expect(response.statusCode).to.equal(400);
 			done();
 		});
 	});
-	Lab.test("create user with reserved username - admin", function(done) {
+	lab.test("create user with reserved username - admin", function(done) {
 	    var options = {
 			method: "post",
 			url: "/user/signup",
@@ -130,11 +156,11 @@ Lab.experiment("method:post, url:/user ", function() {
 	    };
 		server.inject(options, function(response) {
 			var result = response.result;
-			Lab.expect(response.statusCode).to.equal(409);
+			Code.expect(response.statusCode).to.equal(409);
 			done();
 		});
 	});
-	Lab.test("create user with reserved username - support", function(done) {
+	lab.test("create user with reserved username - support", function(done) {
 		var options = {
 			method: "post",
 			url: "/user/signup",
@@ -148,31 +174,11 @@ Lab.experiment("method:post, url:/user ", function() {
 		};
 		server.inject(options, function(response) {
 			var result = response.result;
-			Lab.expect(response.statusCode).to.equal(409);
+			Code.expect(response.statusCode).to.equal(409);
 			done();
 		});
 	});
-
-	Lab.before(function (done) {
-		//setup test records
-		var userModel = models.User;
-		var payload = {
-				username:'testjohndoe',
-				email: 'randomemail@test.com',
-				password: 'testpassword'
-			};
-		userModel.add(payload).then(function (userRecord) {
-			done();
-		});
-	});
-	Lab.after(function (done) {
-		// clean up
-		models.User.findOne({username: 'testjohndoe'}).then(function (userRecord) {
-			models.User.destroy({id:userRecord.id});
-			done();
-		});
-    });
-	Lab.test("create user with existing username in system", function(done) {
+	lab.test("create user with existing username in system", function(done) {
 		var options = {
 			method: "post",
 			url: "/user/signup",
@@ -186,11 +192,11 @@ Lab.experiment("method:post, url:/user ", function() {
 		};
 		server.inject(options, function(response) {
 			var result = response.result;
-			Lab.expect(response.statusCode).to.equal(409);
+			Code.expect(response.statusCode).to.equal(409);
 			done();
 		});
 	});
-	Lab.test("create user with existing email in system", function(done) {
+	lab.test("create user with existing email in system", function(done) {
 		var options = {
 			method: "post",
 			url: "/user/signup",
@@ -204,11 +210,11 @@ Lab.experiment("method:post, url:/user ", function() {
 		};
 		server.inject(options, function(response) {
 			var result = response.result;
-			Lab.expect(response.statusCode).to.equal(409);
+			Code.expect(response.statusCode).to.equal(409);
 			done();
 		});
 	});
-	Lab.test("create user with auto generated username", function(done) {
+	lab.test("create user with auto generated username", function(done) {
 		var options = {
 			method: "post",
 			url: "/user/signup",
@@ -221,7 +227,7 @@ Lab.experiment("method:post, url:/user ", function() {
 		};
 		server.inject(options, function(response) {
 			var result = response.result;
-			Lab.expect(response.statusCode).to.equal(200);
+			Code.expect(response.statusCode).to.equal(200);
 
 			// clean up
 			models.User.findOne({email: 'autogenerateusername@test.com'}).then(function (userRecord) {
@@ -232,7 +238,7 @@ Lab.experiment("method:post, url:/user ", function() {
 	});
 });
 
-Lab.experiment("method:put, url:/user/{id} ", function() {
+lab.experiment("method:put, url:/user/{id} ", function() {
 	var self = this;
 	var user1 = {
 				email: 'autogenerateusername1@test.com',
@@ -248,7 +254,7 @@ Lab.experiment("method:put, url:/user/{id} ", function() {
 				network: 'email'
 				};
 
-	Lab.before(function (done) {
+	lab.beforeEach(function (done) {
 		//setup test records
 		models.User.add(user1).then(function (userRecord) {
 			user1 = userRecord.toJSON();
@@ -258,14 +264,14 @@ Lab.experiment("method:put, url:/user/{id} ", function() {
 			done();
 		});
 	});
-	Lab.after(function (done) {
+	lab.afterEach(function (done) {
 		// clean up
 		models.User.destroy({id:user1.id}).then(function () {});
 		models.User.destroy({id:user2.id}).then(function () {
 			done();
 		});
     });
-    Lab.test("update user's username with authenticated user", function(labTestDone) {
+    lab.test("update user's username with authenticated user", function(labTestDone) {
 		var options;
 		async.auto({
 			loginUserOne : function(done){
@@ -279,7 +285,7 @@ Lab.experiment("method:put, url:/user/{id} ", function() {
 					}
 				};
 				server.inject(options, function(response) {
-					Lab.expect("set-cookie" in response.headers).to.equal(true);
+					Code.expect("set-cookie" in response.headers).to.equal(true);
 					var cookie = response.headers['set-cookie'][0].match(/(?:[^\x00-\x20\(\)<>@\,;\:\\"\/\[\]\?\=\{\}\x7F]+)\s*=\s*(?:([^\x00-\x20\"\,\;\\\x7F]*))/);
 					done(null,cookie);
 				});
@@ -295,7 +301,7 @@ Lab.experiment("method:put, url:/user/{id} ", function() {
 				};
 				console.log(options);
 				server.inject(options, function(response) {
-					Lab.expect(response.statusCode).to.equal(200);
+					Code.expect(response.statusCode).to.equal(200);
 					done();
 				});
 			}]}, function(err, results){

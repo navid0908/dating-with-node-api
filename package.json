@@ -37,12 +37,12 @@
     "lodash": "^2.4.1",
     "mandrill-api": "^1.0.41",
     "mysql": "*",
-    "pm2": "^0.10.8",
     "require-directory": "^2.0.0"
   },
   "devDependencies": {
-    "lab": "^5.0.1",
-    "lout": "^5.1.1",
+    "code": "^1.x.x",
+    "lab": "^5.1.0",
+    "lout": "5.x.x",
     "nodemon": "1.2.1"
   },
   "engines": {

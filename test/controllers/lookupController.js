@@ -1,9 +1,13 @@
-var Lab = require("lab");
-var server = require("../../");
-var _ = require("lodash");
+	var Lab = require("lab");
+	var Code = require('code');   // assertion library
+	var server = require("../../");
+	var _ = require("lodash");
 
-Lab.experiment("Lookup", function() {
-	Lab.test("/activelevel get endpoint", function(done) {
+	// Test shortcuts
+	var lab = exports.lab = Lab.script();
+
+lab.experiment("Lookup", function() {
+	lab.test("/activelevel get endpoint", function(done) {
 		var options = {
 			method: "GET",
 			url: "/lookup/activelevel"
@@ -11,21 +15,21 @@ Lab.experiment("Lookup", function() {
 		server.inject(options, function(response) {
 			var result = response.result;
 
-			Lab.expect(response.statusCode).to.equal(200);
-			Lab.expect(response.result).to.be.instanceof(Object);
-			Lab.expect(result).to.have.property('activelevel');
+			Code.expect(response.statusCode).to.equal(200);
+			Code.expect(response.result).to.be.instanceof(Object);
+			Code.expect(result.hasOwnProperty('activelevel')).to.be.a.boolean();
 
-			var rows = result.activelevel[0];
-			Lab.expect(rows).to.have.length(5);
+			var rows = result.activelevel;
+			Code.expect(rows).to.have.length(5);
 
 			_.each(rows, function(row){
-				Lab.expect(row).to.have.property('id');
-				Lab.expect(row).to.have.property('description');
+				Code.expect(row.hasOwnProperty('id')).to.be.a.boolean();
+				Code.expect(row.hasOwnProperty('description')).to.be.a.boolean();
 			});
 			done();
 		});
 	});
-	Lab.test("/astrologicalsign endpoint", function(done) {
+	lab.test("/astrologicalsign endpoint", function(done) {
 		var options = {
 			method: "GET",
 			url: "/lookup/astrologicalsign"
@@ -33,21 +37,21 @@ Lab.experiment("Lookup", function() {
 		server.inject(options, function(response) {
 			var result = response.result;
 
-			Lab.expect(response.statusCode).to.equal(200);
-			Lab.expect(response.result).to.be.instanceof(Object);
-			Lab.expect(result).to.have.property('astrologicalsign');
+			Code.expect(response.statusCode).to.equal(200);
+			Code.expect(response.result).to.be.instanceof(Object);
+			Code.expect(result.hasOwnProperty('astrologicalsign')).to.be.a.boolean();
 
-			var rows = result.astrologicalsign[0];
-			Lab.expect(rows).to.have.length(12);
+			var rows = result.astrologicalsign;
+			Code.expect(rows).to.have.length(12);
 
 			_.each(rows, function(row){
-				Lab.expect(row).to.have.property('id');
-				Lab.expect(row).to.have.property('description');
+				Code.expect(row.hasOwnProperty('id')).to.be.a.boolean();
+				Code.expect(row.hasOwnProperty('description')).to.be.a.boolean();
 			});
 			done();
 		});
 	});
-	Lab.test("/bodytype endpoint", function(done) {
+	lab.test("/bodytype endpoint", function(done) {
 		var options = {
 			method: "GET",
 			url: "/lookup/bodytype"
@@ -55,21 +59,21 @@ Lab.experiment("Lookup", function() {
 		server.inject(options, function(response) {
 			var result = response.result;
 
-			Lab.expect(response.statusCode).to.equal(200);
-			Lab.expect(response.result).to.be.instanceof(Object);
-			Lab.expect(result).to.have.property('bodytype');
+			Code.expect(response.statusCode).to.equal(200);
+			Code.expect(response.result).to.be.instanceof(Object);
+			Code.expect(result.hasOwnProperty('bodytype')).to.be.a.boolean();
 
-			var rows = result.bodytype[0];
-			Lab.expect(rows).to.have.length(10);
+			var rows = result.bodytype;
+			Code.expect(rows).to.have.length(10);
 
 			_.each(rows, function(row){
-				Lab.expect(row).to.have.property('id');
-				Lab.expect(row).to.have.property('description');
+				Code.expect(row.hasOwnProperty('id')).to.be.a.boolean();
+				Code.expect(row.hasOwnProperty('description')).to.be.a.boolean();
 			});
 			done();
 		});
 	});
-	Lab.test("/buzzline endpoint", function(done) {
+	lab.test("/buzzline endpoint", function(done) {
 		var options = {
 			method: "GET",
 			url: "/lookup/buzzline"
@@ -77,21 +81,21 @@ Lab.experiment("Lookup", function() {
 		server.inject(options, function(response) {
 			var result = response.result;
 
-			Lab.expect(response.statusCode).to.equal(200);
-			Lab.expect(response.result).to.be.instanceof(Object);
-			Lab.expect(result).to.have.property('buzzline');
+			Code.expect(response.statusCode).to.equal(200);
+			Code.expect(response.result).to.be.instanceof(Object);
+			Code.expect(result.hasOwnProperty('buzzline')).to.be.a.boolean();
 
-			var rows = result.buzzline[0];
-			Lab.expect(rows).to.have.length(10);
+			var rows = result.buzzline;
+			Code.expect(rows).to.have.length(10);
 
 			_.each(rows, function(row){
-				Lab.expect(row).to.have.property('id');
-				Lab.expect(row).to.have.property('description');
+				Code.expect(row.hasOwnProperty('id')).to.be.a.boolean();
+				Code.expect(row.hasOwnProperty('description')).to.be.a.boolean();
 			});
 			done();
 		});
 	});
-	Lab.test("/children endpoint", function(done) {
+	lab.test("/children endpoint", function(done) {
 		var options = {
 			method: "GET",
 			url: "/lookup/children"
@@ -99,21 +103,21 @@ Lab.experiment("Lookup", function() {
 		server.inject(options, function(response) {
 			var result = response.result;
 
-			Lab.expect(response.statusCode).to.equal(200);
-			Lab.expect(response.result).to.be.instanceof(Object);
-			Lab.expect(result).to.have.property('children');
+			Code.expect(response.statusCode).to.equal(200);
+			Code.expect(response.result).to.be.instanceof(Object);
+			Code.expect(result.hasOwnProperty('children')).to.be.a.boolean();
 
-			var rows = result.children[0];
-			Lab.expect(rows).to.have.length(3);
+			var rows = result.children;
+			Code.expect(rows).to.have.length(3);
 
 			_.each(rows, function(row){
-				Lab.expect(row).to.have.property('id');
-				Lab.expect(row).to.have.property('description');
+				Code.expect(row.hasOwnProperty('id')).to.be.a.boolean();
+				Code.expect(row.hasOwnProperty('description')).to.be.a.boolean();
 			});
 			done();
 		});
 	});
-	Lab.test("/country endpoint", function(done) {
+	lab.test("/country endpoint", function(done) {
 		var options = {
 			method: "GET",
 			url: "/lookup/country"
@@ -121,21 +125,21 @@ Lab.experiment("Lookup", function() {
 		server.inject(options, function(response) {
 			var result = response.result;
 
-			Lab.expect(response.statusCode).to.equal(200);
-			Lab.expect(response.result).to.be.instanceof(Object);
-			Lab.expect(result).to.have.property('country');
+			Code.expect(response.statusCode).to.equal(200);
+			Code.expect(response.result).to.be.instanceof(Object);
+			Code.expect(result.hasOwnProperty('country')).to.be.a.boolean();
 
-			var rows = result.country[0];
-			Lab.expect(rows).to.have.length(237);
+			var rows = result.country;
+			Code.expect(rows).to.have.length(237);
 
 			_.each(rows, function(row){
-				Lab.expect(row).to.have.property('id');
-				Lab.expect(row).to.have.property('code');
+				Code.expect(row.hasOwnProperty('id')).to.be.a.boolean();
+				Code.expect(row.hasOwnProperty('code')).to.be.a.boolean();
 			});
 			done();
 		});
 	});
-	Lab.test("/diet endpoint", function(done) {
+	lab.test("/diet endpoint", function(done) {
 		var options = {
 			method: "GET",
 			url: "/lookup/diet"
@@ -143,21 +147,21 @@ Lab.experiment("Lookup", function() {
 		server.inject(options, function(response) {
 			var result = response.result;
 
-			Lab.expect(response.statusCode).to.equal(200);
-			Lab.expect(response.result).to.be.instanceof(Object);
-			Lab.expect(result).to.have.property('diet');
+			Code.expect(response.statusCode).to.equal(200);
+			Code.expect(response.result).to.be.instanceof(Object);
+			Code.expect(result.hasOwnProperty('diet')).to.be.a.boolean();
 
-			var rows = result.diet[0];
-			Lab.expect(rows).to.have.length(6);
+			var rows = result.diet;
+			Code.expect(rows).to.have.length(6);
 
 			_.each(rows, function(row){
-				Lab.expect(row).to.have.property('id');
-				Lab.expect(row).to.have.property('description');
+				Code.expect(row.hasOwnProperty('id')).to.be.a.boolean();
+				Code.expect(row.hasOwnProperty('description')).to.be.a.boolean();
 			});
 			done();
 		});
 	});
-	Lab.test("/drink endpoint", function(done) {
+	lab.test("/drink endpoint", function(done) {
 		var options = {
 			method: "GET",
 			url: "/lookup/drink"
@@ -165,21 +169,21 @@ Lab.experiment("Lookup", function() {
 		server.inject(options, function(response) {
 			var result = response.result;
 
-			Lab.expect(response.statusCode).to.equal(200);
-			Lab.expect(response.result).to.be.instanceof(Object);
-			Lab.expect(result).to.have.property('drink');
+			Code.expect(response.statusCode).to.equal(200);
+			Code.expect(response.result).to.be.instanceof(Object);
+			Code.expect(result.hasOwnProperty('drink')).to.be.a.boolean();
 
-			var rows = result.drink[0];
-			Lab.expect(rows).to.have.length(5);
+			var rows = result.drink;
+			Code.expect(rows).to.have.length(5);
 
 			_.each(rows, function(row){
-				Lab.expect(row).to.have.property('id');
-				Lab.expect(row).to.have.property('description');
+				Code.expect(row.hasOwnProperty('id')).to.be.a.boolean();
+				Code.expect(row.hasOwnProperty('description')).to.be.a.boolean();
 			});
 			done();
 		});
 	});
-	Lab.test("/drug endpoint", function(done) {
+	lab.test("/drug endpoint", function(done) {
 		var options = {
 			method: "GET",
 			url: "/lookup/drug"
@@ -187,21 +191,21 @@ Lab.experiment("Lookup", function() {
 		server.inject(options, function(response) {
 			var result = response.result;
 
-			Lab.expect(response.statusCode).to.equal(200);
-			Lab.expect(response.result).to.be.instanceof(Object);
-			Lab.expect(result).to.have.property('drug');
+			Code.expect(response.statusCode).to.equal(200);
+			Code.expect(response.result).to.be.instanceof(Object);
+			Code.expect(result.hasOwnProperty('drug')).to.be.a.boolean();
 
-			var rows = result.drug[0];
-			Lab.expect(rows).to.have.length(3);
+			var rows = result.drug;
+			Code.expect(rows).to.have.length(3);
 
 			_.each(rows, function(row){
-				Lab.expect(row).to.have.property('id');
-				Lab.expect(row).to.have.property('description');
+				Code.expect(row.hasOwnProperty('id')).to.be.a.boolean();
+				Code.expect(row.hasOwnProperty('description')).to.be.a.boolean();
 			});
 			done();
 		});
 	});
-	Lab.test("/education endpoint", function(done) {
+	lab.test("/education endpoint", function(done) {
 		var options = {
 			method: "GET",
 			url: "/lookup/education"
@@ -209,21 +213,21 @@ Lab.experiment("Lookup", function() {
 		server.inject(options, function(response) {
 			var result = response.result;
 
-			Lab.expect(response.statusCode).to.equal(200);
-			Lab.expect(response.result).to.be.instanceof(Object);
-			Lab.expect(result).to.have.property('education');
+			Code.expect(response.statusCode).to.equal(200);
+			Code.expect(response.result).to.be.instanceof(Object);
+			Code.expect(result.hasOwnProperty('education')).to.be.a.boolean();
 
-			var rows = result.education[0];
-			Lab.expect(rows).to.have.length(7);
+			var rows = result.education;
+			Code.expect(rows).to.have.length(7);
 
 			_.each(rows, function(row){
-				Lab.expect(row).to.have.property('id');
-				Lab.expect(row).to.have.property('description');
+				Code.expect(row.hasOwnProperty('id')).to.be.a.boolean();
+				Code.expect(row.hasOwnProperty('description')).to.be.a.boolean();
 			});
 			done();
 		});
 	});
-	Lab.test("/phototype endpoint", function(done) {
+	lab.test("/phototype endpoint", function(done) {
 		var options = {
 			method: "GET",
 			url: "/lookup/phototype"
@@ -231,21 +235,21 @@ Lab.experiment("Lookup", function() {
 		server.inject(options, function(response) {
 			var result = response.result;
 
-			Lab.expect(response.statusCode).to.equal(200);
-			Lab.expect(response.result).to.be.instanceof(Object);
-			Lab.expect(result).to.have.property('phototype');
+			Code.expect(response.statusCode).to.equal(200);
+			Code.expect(response.result).to.be.instanceof(Object);
+			Code.expect(result.hasOwnProperty('phototype')).to.be.a.boolean();
 
-			var rows = result.phototype[0];
-			Lab.expect(rows).to.have.length(2);
+			var rows = result.phototype;
+			Code.expect(rows).to.have.length(2);
 
 			_.each(rows, function(row){
-				Lab.expect(row).to.have.property('id');
-				Lab.expect(row).to.have.property('size');
+				Code.expect(row.hasOwnProperty('id')).to.be.a.boolean();
+				Code.expect(row.hasOwnProperty('size')).to.be.a.boolean();
 			});
 			done();
 		});
 	});
-	Lab.test("/profession endpoint", function(done) {
+	lab.test("/profession endpoint", function(done) {
 		var options = {
 			method: "GET",
 			url: "/lookup/profession"
@@ -253,21 +257,21 @@ Lab.experiment("Lookup", function() {
 		server.inject(options, function(response) {
 			var result = response.result;
 
-			Lab.expect(response.statusCode).to.equal(200);
-			Lab.expect(response.result).to.be.instanceof(Object);
-			Lab.expect(result).to.have.property('profession');
+			Code.expect(response.statusCode).to.equal(200);
+			Code.expect(response.result).to.be.instanceof(Object);
+			Code.expect(result.hasOwnProperty('profession')).to.be.a.boolean();
 
-			var rows = result.profession[0];
-			Lab.expect(rows).to.have.length(20);
+			var rows = result.profession;
+			Code.expect(rows).to.have.length(20);
 
 			_.each(rows, function(row){
-				Lab.expect(row).to.have.property('id');
-				Lab.expect(row).to.have.property('description');
+				Code.expect(row.hasOwnProperty('id')).to.be.a.boolean();
+				Code.expect(row.hasOwnProperty('description')).to.be.a.boolean();
 			});
 			done();
 		});
 	});
-	Lab.test("/relationshipstatus endpoint", function(done) {
+	lab.test("/relationshipstatus endpoint", function(done) {
 		var options = {
 			method: "GET",
 			url: "/lookup/relationshipstatus"
@@ -275,21 +279,21 @@ Lab.experiment("Lookup", function() {
 		server.inject(options, function(response) {
 			var result = response.result;
 
-			Lab.expect(response.statusCode).to.equal(200);
-			Lab.expect(response.result).to.be.instanceof(Object);
-			Lab.expect(result).to.have.property('relationshipstatus');
+			Code.expect(response.statusCode).to.equal(200);
+			Code.expect(response.result).to.be.instanceof(Object);
+			Code.expect(result.hasOwnProperty('relationshipstatus')).to.be.a.boolean();
 
-			var rows = result.relationshipstatus[0];
-			Lab.expect(rows).to.have.length(6);
+			var rows = result.relationshipstatus;
+			Code.expect(rows).to.have.length(6);
 
 			_.each(rows, function(row){
-				Lab.expect(row).to.have.property('id');
-				Lab.expect(row).to.have.property('description');
+				Code.expect(row.hasOwnProperty('id')).to.be.a.boolean();
+				Code.expect(row.hasOwnProperty('description')).to.be.a.boolean();
 			});
 			done();
 		});
 	});	
-	Lab.test("/smoke endpoint", function(done) {
+	lab.test("/smoke endpoint", function(done) {
 		var options = {
 			method: "GET",
 			url: "/lookup/smoke"
@@ -297,16 +301,16 @@ Lab.experiment("Lookup", function() {
 		server.inject(options, function(response) {
 			var result = response.result;
 
-			Lab.expect(response.statusCode).to.equal(200);
-			Lab.expect(response.result).to.be.instanceof(Object);
-			Lab.expect(result).to.have.property('smoke');
+			Code.expect(response.statusCode).to.equal(200);
+			Code.expect(response.result).to.be.instanceof(Object);
+			Code.expect(result.hasOwnProperty('smoke')).to.be.a.boolean();
 
-			var rows = result.smoke[0];
-			Lab.expect(rows).to.have.length(5);
+			var rows = result.smoke;
+			Code.expect(rows).to.have.length(5);
 
 			_.each(rows, function(row){
-				Lab.expect(row).to.have.property('id');
-				Lab.expect(row).to.have.property('description');
+				Code.expect(row.hasOwnProperty('id')).to.be.a.boolean();
+				Code.expect(row.hasOwnProperty('description')).to.be.a.boolean();
 			});
 			done();
 		});
