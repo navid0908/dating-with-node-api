@@ -71,7 +71,7 @@ exports.update = {
 	pre: [{
 		assign: "isValidUser",
 		method: function (request, reply){
-			if(request.params.id != request.auth.credentials.id ){
+			if(request.auth.credentials.user && request.params.id != request.auth.credentials.user.id ){
 				reply(Boom.conflict('User id being updated is not the authenticated user'));
 			}else{
 				reply();
@@ -83,13 +83,13 @@ exports.update = {
 	}],
 	handler: function (request, reply) {
 		var user;
-		models.User.findOne({id: request.auth.credentials.id}).then(function (userRecord) {
+		models.User.findOne({id: request.auth.credentials.user.id}).then(function (userRecord) {
 			if(userRecord){
 				return userRecord;
 			}
 			return Promise.reject('Unable to find user record.');
 		}).then(function (userRecord) {
-			if(request.payload.username && request.payload.username != results.user.get('username')){
+			if(request.payload.username && request.payload.username != userRecord.get('username')){
 				//they entered a username that is different from their logged in username.
 				//make sure its unique.
 				return models.User.isUsernameUnique(request.payload.username).then(function (isUnique) {
@@ -101,7 +101,7 @@ exports.update = {
 			}
 			return userRecord;
 		}).then(function (userRecord) {
-			if(request.payload.email && request.payload.email != results.user.get('email')){
+			if(request.payload.email && request.payload.email != userRecord.get('email')){
 				//they entered an email that is different from their logged in email.
 				//make sure its unique.
 				return models.User.isEmailUnique(request.payload.email).then(function (isUnique) {

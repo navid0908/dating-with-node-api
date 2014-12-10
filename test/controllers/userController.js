@@ -239,73 +239,63 @@ lab.experiment("method:post, url:/user ", function() {
 });
 
 lab.experiment("method:put, url:/user/{id} ", function() {
-	var self = this;
-	var user1 = {
-				email: 'autogenerateusername1@test.com',
-				username: 'autogenerateusername1',
+	var tmp;
+	var cookie;
+	var payloadRequest;
+	var user = {
+				email: 'autogenerateusername212@test.com',
+				username: 'autogenerateuser2nam2e1',
 				password: 'testpassword',
 				network: 'email'
 				};
 
-	var user2 = {
-				email: 'autogenerateusername2@test.com',
-				username: 'autogenerateusername2',
-				password: 'testpassword',
-				network: 'email'
-				};
-
+	//this will create a user, log in the user and store the cookie for later use within the tests.
 	lab.beforeEach(function (done) {
-		//setup test records
-		models.User.add(user1).then(function (userRecord) {
-			user1 = userRecord.toJSON();
-		});
-		models.User.add(user2).then(function (userRecord) {
-			user2 = userRecord.toJSON();
-			done();
+		//setup test record
+		models.User.add(user).then(function (userRecord) {
+			user = userRecord.toJSON();
+
+			//setup payload to login for newly created user.
+			payloadRequest = { method: "post",url: "/auth/login",
+						payload: {
+							network: 'email',
+							email: user.email,
+							password: 'testpassword'
+						}
+					};
+			//perform login action and store the cookie.
+			server.inject(payloadRequest, function(response) {
+				Code.expect("set-cookie" in response.headers).to.equal(true);
+				tmp = response.headers['set-cookie'][0].match(/(?:[^\x00-\x20\(\)<>@\,;\:\\"\/\[\]\?\=\{\}\x7F]+)\s*=\s*(?:([^\x00-\x20\"\,\;\\\x7F]*))/);
+				cookie = tmp[0];
+				done();
+			});
 		});
 	});
 	lab.afterEach(function (done) {
-		// clean up
-		models.User.destroy({id:user1.id}).then(function () {});
-		models.User.destroy({id:user2.id}).then(function () {
-			done();
-		});
-    });
-    lab.test("update user's username with authenticated user", function(labTestDone) {
-		var options;
-		async.auto({
-			loginUserOne : function(done){
-				options = {
-					method: "post",
-					url: "/auth/login",
-					payload: {
-						network: 'email',
-						email: user1.email,
-						password: 'testpassword'
-					}
-				};
-				server.inject(options, function(response) {
-					Code.expect("set-cookie" in response.headers).to.equal(true);
-					var cookie = response.headers['set-cookie'][0].match(/(?:[^\x00-\x20\(\)<>@\,;\:\\"\/\[\]\?\=\{\}\x7F]+)\s*=\s*(?:([^\x00-\x20\"\,\;\\\x7F]*))/);
-					done(null,cookie);
-				});
-			},
-			updateUserOne: ['loginUserOne', function(done, results){
-				options = {
-					method: "put",
-					url: "/user/" + user1.id,
-					payload: {
-						username:'autogenerateusername1111',
-					},
-					headers : {cookie:results.loginUserOne[0]}
-				};
-				console.log(options);
-				server.inject(options, function(response) {
-					Code.expect(response.statusCode).to.equal(200);
+		//setup payload to logout user.
+			payloadRequest = { method: "get",url: "/auth/logout",headers : {cookie:cookie}};
+			//perform log out action
+			server.inject(payloadRequest, function(response) {
+		        Code.expect(response.statusCode).to.equal(200);
+		        // remove dummy user
+				models.User.destroy({id:user.id}).then(function () {
 					done();
 				});
-			}]}, function(err, results){
-					labTestDone();
 			});
+    });
+    lab.test("update user's username with authenticated user", function(done) {
+		payloadRequest = {
+			method: "put",
+			url: "/user/" + user.id,
+			payload: {
+				username:'autogenerateusername1111',
+			},
+			headers : {cookie:cookie}
+		};
+		server.inject(payloadRequest, function(response) {
+			Code.expect(response.statusCode).to.equal(200);
+			done();
+		});
     });
 });

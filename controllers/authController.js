@@ -60,7 +60,7 @@ exports.login = {
 			var password = request.payload.password;
 			models.User.findByCredentials({email: emailAddress, password:password}).then(function (userRecord) {
 	            if(userRecord){
-	                return reply ({user: [userRecord.toJSON()]});
+	                return reply ({user:userRecord.toJSON()});
 	            }
 	            return reply();
 	        }).catch(function(error){
