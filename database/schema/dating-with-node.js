@@ -124,5 +124,18 @@ var Schema = {
             block_user_id: {type: 'integer', nullable: false, unsigned: true, references: 'user.id'},
             created_at: {type: 'dateTime', nullable: false},
         },
+        invitationcode: {
+            id: {type: 'increments', nullable: false, primary: true},
+            code: {type: 'string', maxlength: 60, nullable: false, unique:true},
+            is_used: {type: 'integer', maxlength: 1, fieldtype: 'tinyint', nullable: false, defaultTo: 0},
+            created_at: {type: 'dateTime', nullable: false},
+        },
+        invitation: {
+            id: {type: 'increments', nullable: false, primary: true},
+            invitationcode_id: {type: 'integer', nullable: true, unsigned: true, references: 'invitationcode.id'},
+            inviter_user_id: {type: 'integer', nullable: true, unsigned: true, references: 'user.id'},
+            email: {type: 'string', maxlength: 60, nullable: true},
+            created_at: {type: 'dateTime', nullable: false},
+        }
     };
 module.exports = Schema;

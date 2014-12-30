@@ -206,7 +206,16 @@ var baseModel = require('bookshelf').dbh;
 			var id = options.id;
 			options = this.filterOptions(options, 'destroy');
 			return this.forge({id: id}).destroy(options);
-	    },
+		},
+		/**
+		 * This returns the number of records in the table by performing a mysql count
+		 * @return {[integer]} The number of records in the table.
+		 */
+		count: function(){
+			return baseModel.knex(this.prototype.tableName).count('*').then(function(result){
+				return result[0]['count(*)'];
+			});
+		}
 	});
 
 // Export baseModel for use elsewhere

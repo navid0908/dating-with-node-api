@@ -118,6 +118,12 @@ module.exports = {
             headers : {'Reply-To': 'no-reply@mailer.dating-with-node.com'},
             subject: 'Profile updated',
             text : 'Your profile was updated',
+        },
+        invite : {
+            from_email : 'mailer@dating-with-node.com',
+            from_name : 'DatingWithNode',
+            headers : {'Reply-To': 'no-reply@mailer.dating-with-node.com'},
+            text : '',
         }
     }],
     registration: {
@@ -129,4 +135,7 @@ module.exports = {
     login: {
         maxAllowedAttempts : 5,
     },
+    invitations : {
+        systemMax: 1000
+    }
 }

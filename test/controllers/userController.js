@@ -274,7 +274,7 @@ lab.experiment("method:put, url:/user/{id} ", function() {
 	});
 	lab.afterEach(function (done) {
 		//setup payload to logout user.
-			payloadRequest = { method: "get",url: "/auth/logout",headers : {cookie:cookie}};
+			payloadRequest = { method: "get",url: "/auth/logout", headers : {cookie:cookie}};
 			//perform log out action
 			server.inject(payloadRequest, function(response) {
 		        Code.expect(response.statusCode).to.equal(200);
