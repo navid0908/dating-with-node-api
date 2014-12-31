@@ -39,7 +39,7 @@ exports.invite = {
 	},
 	handler : function (request, reply){
 		// Have we reached a system max of the allowed number of invites ?
-		models.Invitationcode.count().then(function (result){
+		models.Invitation.count().then(function (result){
 			if(result && result >= config.invitation.systemMax ){
 				return Promise.reject('No more invitations are allowed');
 			}
@@ -51,29 +51,15 @@ exports.invite = {
 				}
 			});
 		}).then(function (){
-			return models.Base.transaction(function (t) {
-				var options = {};
-				options.transacting = t;
-				models.Invitationcode.add(options).then(function(invitationcode){
-					invitationcode = invitationcode.toJSON();
-					return {
-						invitationcode_id:invitationcode.id,
-						inviter_user_id:request.auth.credentials.user.id,
-						email: request.payload.email
-					};
-				}).then(function(invitation){
-					return models.Invitation.add(invitation,options);
-				}).then(function (result){
-					return t.commit();
-				}).then(function(){
-					return internals.sendInviteEmail(request);
-				}).then(function(){
-					return reply();
-				}).catch(function (error) {
-					t.rollback(error);
-					return reply(Boom.badRequest(error));
-				});
-			});
+			var data = {
+				email:request.payload.email,
+				user_id:request.auth.credentials.user.id
+			}
+			return models.Invitation.add(data)
+		}).then(function (invitation){
+			return internals.sendInviteEmail(request);
+		}).then(function(){
+			return reply();
 		}).catch(function (error) {
 			return reply(Boom.badRequest(error));
 		});

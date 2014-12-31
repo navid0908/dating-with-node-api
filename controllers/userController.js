@@ -177,7 +177,7 @@ exports.signUp = {
 	{
 		assign: "isInvitationcodeValid",
 		method: function(request, reply){
-			return models.Invitationcode.findOne({
+			return models.Invitation.findOne({
 					invitationcode:request.payload.invitationcode,
 					is_used:0
 				}).then(function(result){
@@ -209,7 +209,7 @@ exports.signUp = {
 					network: request.payload.network
 			};
 
-		return models.Invitationcode.findOne({code:request.payload.invitationcode, is_used:0}).then(function(invitationRecord){
+		return models.Invitation.findOne({code:request.payload.invitationcode, is_used:0}).then(function(invitationRecord){
 			return models.Base.transaction(function (t) {
 					options.transacting = t;
 					invitationRecord.set('is_used',1);

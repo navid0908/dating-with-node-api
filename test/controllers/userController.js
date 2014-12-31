@@ -262,32 +262,38 @@ lab.experiment("method:post, url:/user ", function() {
 		});
 	});
 	lab.test("create user with used invitationcode", function(done) {
-		models.Invitationcode.add().then(function(result){
-			result.set('is_used',1).save().then(function(result){
-				result = result.toJSON();
-				var options = {
-					method: "post",
-					url: "/user/signup",
-					payload:
-					{
-						network: 				"email",
-						username: 				"dating-with-node-api",
-						email: 					"somemeail@test.com",
-						password: 				"testpassword",
-						invitationcode: 		result.code
-					}
-				};
-				server.inject(options, function(response) {
-					var result = response.result;
-					Code.expect(response.statusCode).to.equal(409);
-					done();
-				});
+		models.Invitation.add({
+			user_id:1,
+			email: "testemail@email.com",
+		}).then(function(invitationRecord){
+			return invitationRecord.set('is_used',1).save();
+		}).then(function(invitationRecord){
+			invitationRecord = invitationRecord.toJSON();
+			var options = {
+				method: "post",
+				url: "/user/signup",
+				payload:
+				{
+					network: 				"email",
+					username: 				"dating-with-node-api",
+					email: 					"somemeail@test.com",
+					password: 				"testpassword",
+					invitationcode: 		invitationRecord.code
+				}
+			};
+			server.inject(options, function(response) {
+				var result = response.result;
+				Code.expect(response.statusCode).to.equal(409);
+				done();
 			});
 		});
 	});
 	lab.test("create user with auto generated username", function(done) {
-		models.Invitationcode.add().then(function(result){
-			result = result.toJSON();
+		models.Invitation.add({
+			user_id:1,
+			email: "autogenerateusername@test.com"
+		}).then(function(invitationRecord){
+			invitationRecord = invitationRecord.toJSON();
 			var options = {
 				method: "post",
 				url: "/user/signup",
@@ -296,7 +302,7 @@ lab.experiment("method:post, url:/user ", function() {
 					network: 				"email",
 					email: 					"autogenerateusername@test.com",
 					password: 				"testpassword",
-					invitationcode: 		result.code
+					invitationcode: 		invitationRecord.code
 				}
 			};
 			server.inject(options, function(response) {

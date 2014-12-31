@@ -40,11 +40,6 @@ lab.experiment("method:post, url:/invite ", function() {
 			  // ... all Invitations have been destroyed				
 			});
 		});
-		models.Invitationcode.findAll().then(function (collection) {
-			collection.invokeThen('destroy').then(function() {
-			  // ... all Invitations codes have been destroyed
-			});
-		});
 		//logout
 		payload = {
 			method: "get",
@@ -67,7 +62,10 @@ lab.experiment("method:post, url:/invite ", function() {
 			}
 		};
 		for (var i=0; i<config.invitation.systemMax; i++){
-			models.Invitationcode.add();
+			models.Invitation.add({
+				user_id:1,
+				email: "randomeemail" + i + "@gmail.com"
+			});
 		}
 		server.inject(payload, function(response) {
 			result = response.result;
@@ -86,19 +84,14 @@ lab.experiment("method:post, url:/invite ", function() {
 			}
 		};
 
-		models.Invitationcode.add().then(function(result){
-			result = result.toJSON();
-			var data = {
-				invitationcode_id:result.id,
-				inviter_user_id:1,
-				email:'testemail@email.com'
-			};
-			models.Invitation.add(data).then(function(result){
-				server.inject(payload, function(response) {
-					result = response.result;
-					Code.expect(response.statusCode).to.equal(400);
-					done();
-				});
+		models.Invitation.add({
+			user_id:1,
+			email: "testemail@email.com"
+		}).then(function(invitationRecord){
+			server.inject(payload, function(response) {
+				result = response.result;
+				Code.expect(response.statusCode).to.equal(400);
+				done();
 			});
 		});
 	});

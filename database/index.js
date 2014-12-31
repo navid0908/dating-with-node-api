@@ -22,7 +22,6 @@ models = {
 		self.Drug = require('./models/drug');
 		self.Education = require('./models/education');
 		self.Invitation = require('./models/invitation');
-		self.Invitationcode = require('./models/invitationcode');
 		self.Location = require('./models/location');
 		self.Logvisit = require('./models/logvisit');
 		self.Photo = require('./models/photo');
