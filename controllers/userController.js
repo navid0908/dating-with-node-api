@@ -177,11 +177,11 @@ exports.signUp = {
 	{
 		assign: "isInvitationcodeValid",
 		method: function(request, reply){
-			return models.Invitation.findOne({
-					invitationcode:request.payload.invitationcode,
-					is_used:0
-				}).then(function(result){
-					if(!result){
+			return models.Invitation.findByInvitationCode(request.payload.invitationcode).then(function(invitation){
+					if(!invitation){ //we could not locate the invitation code they entered.
+						return reply(Boom.conflict('Invalid invitation code'));
+					}
+					if(invitation && invitation.isUsed()){ //this invitation code was already used.
 						return reply(Boom.conflict('Invalid invitation code'));
 					}
 					return reply();
@@ -209,11 +209,10 @@ exports.signUp = {
 					network: request.payload.network
 			};
 
-		return models.Invitation.findOne({code:request.payload.invitationcode, is_used:0}).then(function(invitationRecord){
+		return models.Invitation.findByInvitationCode(request.payload.invitationcode).then(function(invitationRecord){
 			return models.Base.transaction(function (t) {
 					options.transacting = t;
-					invitationRecord.set('is_used',1);
-					invitationRecord.save(null,options).then(function (invitationRecord){
+					invitationRecord.markUsed().save(null,options).then(function (invitationRecord){
 						return models.User.add(data,options);
 					}).then(function (userRecord){
 						user = userRecord.toJSON();

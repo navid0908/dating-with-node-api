@@ -13,8 +13,17 @@ var Invitation;
 				created_at : new Date()
 			}
 			return defaults;
+		},
+		isUsed : function(){
+			return this.get('is_used') == 1;
+		},
+		markUsed : function(){
+			return this.set('is_used', 1);
 		}
 	},{
+		findByInvitationCode : function(code, options){
+			return baseModel.Model.findOne.call(this, {code:code}, options);
+		},
 		add: function (data, options) {
 			if(!data.email){
 				return Promise.reject('email is undefined');

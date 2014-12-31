@@ -266,7 +266,7 @@ lab.experiment("method:post, url:/user ", function() {
 			user_id:1,
 			email: "testemail@email.com",
 		}).then(function(invitationRecord){
-			return invitationRecord.set('is_used',1).save();
+			return invitationRecord.markUsed().save();
 		}).then(function(invitationRecord){
 			invitationRecord = invitationRecord.toJSON();
 			var options = {
