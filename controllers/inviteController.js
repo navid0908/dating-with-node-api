@@ -50,9 +50,9 @@ exports.invite = {
 					return Promise.reject('That user has already been invited');
 				}
 			});
-		}).then(function (){			
+		}).then(function (){
 			return models.Base.transaction(function (t) {
-				var options = {};				
+				var options = {};
 				options.transacting = t;
 				models.Invitationcode.add(options).then(function(invitationcode){
 					invitationcode = invitationcode.toJSON();

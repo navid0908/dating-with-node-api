@@ -138,7 +138,8 @@ exports.signUp = {
             network: Joi.string().valid(config.login.validNetworks).required(),
             username: Joi.string().min(3).max(30),
             email: Joi.string().email().max(60),
-            password: Joi.string().min(6).max(60)
+            password: Joi.string().min(6).max(60),
+            invitationcode: Joi.string().min(6).max(60).required(),
         }
 	},
 	pre: [
@@ -173,29 +174,59 @@ exports.signUp = {
 			}
 		}
 	},
+	{
+		assign: "isInvitationcodeValid",
+		method: function(request, reply){
+			return models.Invitationcode.findOne({
+					invitationcode:request.payload.invitationcode,
+					is_used:0
+				}).then(function(result){
+					if(!result){
+						return reply(Boom.conflict('Invalid invitation code'));
+					}
+					return reply();
+				});
+		}
+	},
 	],
 	handler: function (request, reply) {
+		var data;
 		var user;
-		var newUser;
+		var options = {};
+
 		if(request.payload.network == 'email' && !request.payload.email){
 			//If they failed to provide an email address during registration.
 			return reply(Boom.badRequest('email is required'));
 		}
+
 		if(! request.payload.username){
 			request.payload.username = internals.generateUsername(12);
 		}
-		newUser = {	username: request.payload.username,
+
+		data = {	username: request.payload.username,
 					email: request.payload.email.toLowerCase(),
 					password: request.payload.password,
 					network: request.payload.network
-		};
-		models.User.add(newUser).then(function (userRecord) {
-			user = userRecord.toJSON();
-			return internals.sendWelcomeEmail(request, user);
-		}).then(function () {
-            return reply ({user: [user]});
-		}).catch(function (error) {
-			return reply(Boom.badRequest(error));
-		});
+			};
+
+		return models.Invitationcode.findOne({code:request.payload.invitationcode, is_used:0}).then(function(invitationRecord){
+			return models.Base.transaction(function (t) {
+					options.transacting = t;
+					invitationRecord.set('is_used',1);
+					invitationRecord.save(null,options).then(function (invitationRecord){
+						return models.User.add(data,options);
+					}).then(function (userRecord){
+						user = userRecord.toJSON();
+						return internals.sendWelcomeEmail(request, user);
+					}).then(function (){
+						return t.commit();
+					}).then(function (){
+						return reply ({user: [user]});
+					}).catch(function (error) {
+						t.rollback(error);
+						return reply(Boom.badRequest(error));
+					});
+				});
+			});
 	}
 };
