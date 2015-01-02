@@ -136,6 +136,7 @@ module.exports = {
         maxAllowedAttempts : 5,
     },
     invitations : {
-        systemMax: 1000
+        systemMax: 1000,
+        userMax: 5
     }
 }

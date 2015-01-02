@@ -24,6 +24,11 @@ var Invitation;
 		findByInvitationCode : function(code, options){
 			return baseModel.Model.findOne.call(this, {code:code}, options);
 		},
+		countOfInvitesSent : function(user_id){
+			return baseModel.Model.findAll.call(this, {user_id:user_id}).then(function(collection){
+				return collection.length;
+			});
+		},
 		add: function (data, options) {
 			if(!data.email){
 				return Promise.reject('email is undefined');

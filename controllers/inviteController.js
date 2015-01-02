@@ -39,10 +39,17 @@ exports.invite = {
 	},
 	handler : function (request, reply){
 		// Have we reached a system max of the allowed number of invites ?
-		models.Invitation.count().then(function (result){
-			if(result && result >= config.invitation.systemMax ){
+		return models.Invitation.count().then(function (result){
+			if(result >= config.invitation.systemMax ){
 				return Promise.reject('No more invitations are allowed');
 			}
+		}).then(function (){
+			// Have we reached a user max of the allowed number of invites?
+			return models.Invitation.countOfInvitesSent(request.auth.credentials.user.id).then(function(result){
+				if(result >= config.invitation.userMax){
+					return Promise.reject('No more invitations are allowed for this user');
+				}
+			});
 		}).then(function (){
 			// Has the user already been invited?
 			return models.Invitation.findOne({email: request.payload.email}).then(function(result){

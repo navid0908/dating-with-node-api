@@ -73,6 +73,28 @@ lab.experiment("method:post, url:/invite ", function() {
 			done();
 	    });
 	});
+	lab.test("invitation to join fails due to userMax", function(done) {
+		payload = {
+			method: "post",
+			url: "/invite",
+			headers : {cookie:cookie},
+			payload:
+			{
+				email : "testemail@email.com"
+			}
+		};
+		for (var i=0; i<config.invitation.userMax; i++){
+			models.Invitation.add({
+				user_id:1,
+				email: "randomeemail" + i + "@gmail.com"
+			});
+		}
+		server.inject(payload, function(response) {
+			result = response.result;
+			Code.expect(response.statusCode).to.equal(400);
+			done();
+	    });
+	});
 	lab.test("invitation to join fails due to user invite already sent", function(done) {
 		payload = {
 			method: "post",
