@@ -177,7 +177,10 @@ exports.signUp = {
 	{
 		assign: "isInvitationcodeValid",
 		method: function(request, reply){
-			return models.Invitation.findByInvitationCode(request.payload.invitationcode).then(function(invitation){
+			if(request.payload.invitationcode == models.Invitation.notInvited){
+				return reply();
+			}else{
+				return models.Invitation.findByInvitationCode(request.payload.invitationcode).then(function(invitation){
 					if(!invitation){ //we could not locate the invitation code they entered.
 						return reply(Boom.conflict('Invalid invitation code'));
 					}
@@ -186,6 +189,7 @@ exports.signUp = {
 					}
 					return reply();
 				});
+			}
 		}
 	},
 	],
@@ -209,23 +213,53 @@ exports.signUp = {
 					network: request.payload.network
 			};
 
-		return models.Invitation.findByInvitationCode(request.payload.invitationcode).then(function(invitationRecord){
-			return models.Base.transaction(function (t) {
-					options.transacting = t;
-					invitationRecord.markUsed().save(null,options).then(function (invitationRecord){
-						return models.User.add(data,options);
-					}).then(function (userRecord){
-						user = userRecord.toJSON();
-						return internals.sendWelcomeEmail(request, user);
-					}).then(function (){
-						return t.commit();
-					}).then(function (){
-						return reply ({user: [user]});
-					}).catch(function (error) {
-						t.rollback(error);
-						return reply(Boom.badRequest(error));
-					});
+		return models.Base.transaction(function (t) {
+			options.transacting = t;
+			var current = Promise.resolve();
+
+			if(request.payload.invitationcode == models.Invitation.notInvited){
+				data.status = 'pending';
+			}else{
+				data.status = 'active';
+				current = models.Invitation.findByInvitationCode(request.payload.invitationcode).then(function(invitationRecord){
+					return invitationRecord.markUsed().save(null,options);
 				});
+			}
+			current.then(function(){
+					return models.User.add(data,options);
+			}).then(function (userRecord){
+				user = userRecord.toJSON();
+				return internals.sendWelcomeEmail(request, user);
+			}).then(function (){
+				return t.commit();
+			}).then(function (){
+				return reply ({user: [user]});
+			}).catch(function (error) {
+				t.rollback(error);
+				return reply(Boom.badRequest(error));
 			});
+			}).catch(function (error) {
+					console.log('shit');
+					console.log(error);
+					return reply(Boom.badRequest(error));
+				});
+		// return models.Invitation.findByInvitationCode(request.payload.invitationcode).then(function(invitationRecord){
+		// 	return models.Base.transaction(function (t) {
+		// 			options.transacting = t;
+		// 			invitationRecord.markUsed().save(null,options).then(function (invitationRecord){
+		// 				return models.User.add(data,options);
+		// 			}).then(function (userRecord){
+		// 				user = userRecord.toJSON();
+		// 				return internals.sendWelcomeEmail(request, user);
+		// 			}).then(function (){
+		// 				return t.commit();
+		// 			}).then(function (){
+		// 				return reply ({user: [user]});
+		// 			}).catch(function (error) {
+		// 				t.rollback(error);
+		// 				return reply(Boom.badRequest(error));
+		// 			});
+		// 		});
+		// 	});
 	}
 };

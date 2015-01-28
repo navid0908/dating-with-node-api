@@ -21,6 +21,8 @@ var Invitation;
 			return this.set('is_used', 1);
 		}
 	},{
+		notInvited : 'nocode',
+
 		findByInvitationCode : function(code, options){
 			return baseModel.Model.findOne.call(this, {code:code}, options);
 		},

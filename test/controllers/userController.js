@@ -288,7 +288,7 @@ lab.experiment("method:post, url:/user ", function() {
 			});
 		});
 	});
-	lab.test("create user with auto generated username", function(done) {
+	lab.test("create user with auto generated username and valid invalidation code", function(done) {
 		models.Invitation.add({
 			user_id:1,
 			email: "autogenerateusername@test.com"
@@ -307,14 +307,38 @@ lab.experiment("method:post, url:/user ", function() {
 			};
 			server.inject(options, function(response) {
 				var result = response.result;
-				console.log(response.result);
 				Code.expect(response.statusCode).to.equal(200);
+				Code.expect(result.user[0].status).to.equal('active');
 
 				// clean up
 				models.User.findOne({email: 'autogenerateusername@test.com'}).then(function (userRecord) {
 					models.User.destroy({id:userRecord.id});
 					done();
 				});
+			});
+		});
+	});
+	lab.test("create user with invitation code that places user in pending status.", function(done) {
+		var options = {
+			method: "post",
+			url: "/user/signup",
+			payload:
+			{
+				network: 				"email",
+				email: 					"autogenerateusername@test.com",
+				password: 				"testpassword",
+				invitationcode: 		models.Invitation.notInvited
+			}
+		};
+		server.inject(options, function(response) {
+			var result = response.result;
+			Code.expect(response.statusCode).to.equal(200);
+			Code.expect(result.user[0].status).to.equal('pending');
+
+			// clean up
+			models.User.findOne({email: 'autogenerateusername@test.com'}).then(function (userRecord) {
+				models.User.destroy({id:userRecord.id});
+				done();
 			});
 		});
 	});
@@ -338,20 +362,24 @@ lab.experiment("method:put, url:/user/{id} ", function() {
 			user = userRecord.toJSON();
 
 			//setup payload to login for newly created user.
-			payloadRequest = { method: "post",url: "/auth/login",
-						payload: {
-							network: 'email',
-							email: user.email,
-							password: 'testpassword'
-						}
-					};
+			payloadRequest = {
+				method: "post",url: "/auth/login",
+				payload: {
+					network: 'email',
+					email: user.email,
+					password: 'testpassword',
+				}
+			};
+			return payloadRequest;
+		}).then(function (payloadRequest) {
 			//perform login action and store the cookie.
 			server.inject(payloadRequest, function(response) {
 				Code.expect("set-cookie" in response.headers).to.equal(true);
 				tmp = response.headers['set-cookie'][0].match(/(?:[^\x00-\x20\(\)<>@\,;\:\\"\/\[\]\?\=\{\}\x7F]+)\s*=\s*(?:([^\x00-\x20\"\,\;\\\x7F]*))/);
 				cookie = tmp[0];
-				done();
 			});
+		}).then(function () {
+			done();
 		});
 	});
 	lab.afterEach(function (done) {

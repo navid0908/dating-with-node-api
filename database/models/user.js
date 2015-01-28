@@ -18,6 +18,13 @@ var User;
 
     User = baseModel.Model.extend({
         tableName: 'user',
+        defaults : function(){
+            return {
+                // default values for when the record is created.
+                status: '',
+                group_id : 0
+             }
+        },
         hasTimestamps: true,
         columnMappings: {network:'social_login_type'},
         toJson: function(options){
