@@ -33,9 +33,9 @@ module.exports = {
                     scheme: 'bell',
                     options: {
                         provider: 'facebook',
-                        password: '', //random generated password
-                        clientId: "",
-                        clientSecret: "",
+                        password: 'random-password', //random generated password
+                        clientId: 'random-client-id',
+                        clientSecret: 'random-client-secret',
                         isSecure: false     // Terrible idea but required if not using HTTPS
                     }
                 },
@@ -44,9 +44,9 @@ module.exports = {
                     scheme: 'bell',
                     options: {
                         provider: 'instagram',
-                        password: '', //random generated password
-                        clientId: "",
-                        clientSecret: "",
+                        password: 'random-password', //random generated password
+                        clientId: 'random-client-id',
+                        clientSecret: 'random-client-secret',
                         isSecure: false     // Terrible idea but required if not using HTTPS
                     }
                 },
@@ -55,9 +55,9 @@ module.exports = {
                     scheme: 'bell',
                     options: {
                         provider: 'twitter',
-                        password: '', //random generated password
-                        clientId: "",
-                        clientSecret: "",
+                        password: 'random-password', //random generated password
+                        clientId: 'random-client-id',
+                        clientSecret: 'random-client-secret',
                         isSecure: false     // Terrible idea but required if not using HTTPS
                     }
                 },
@@ -66,9 +66,9 @@ module.exports = {
                     scheme: 'bell',
                     options: {
                         provider: 'google',
-                        password: '', //random generated password
-                        clientId: "",
-                        clientSecret: "",
+                        password: 'random-password', //random generated password
+                        clientId: 'random-client-id',
+                        clientSecret: 'random-client-secret',
                         isSecure: false     // Terrible idea but required if not using HTTPS
                     }
                 },
@@ -76,10 +76,10 @@ module.exports = {
                     name: 'session',
                     scheme: 'cookie',
                     options: {
-                        password: '', //random generated password
+                        password: 'random-password', //random generated password
                         cookie: "dating-with-node",
                         redirectTo: "/auth/login",
-                        isSecure: false isSecure: false     // Terrible idea but required if not using HTTPS
+                        isSecure: false     // Terrible idea but required if not using HTTPS
                     }
                 }]
         }
