@@ -285,11 +285,12 @@ lab.experiment("method:post, url:/user ", function() {
 			server.inject(options, function(response) {
 				var result = response.result;
 				Code.expect(response.statusCode).to.equal(409);
+				models.Invitation.destroy({id:invitationRecord.id});
 				done();
 			});
 		});
 	});
-	lab.test("create user with auto generated username and valid invalidation code", function(done) {
+	lab.test("create user with auto generated username and valid invitation code", function(done) {
 		models.Invitation.add({
 			user_id:1,
 			email: "autogenerateusername@test.com"
@@ -311,9 +312,14 @@ lab.experiment("method:post, url:/user ", function() {
 				Code.expect(response.statusCode).to.equal(200);
 				Code.expect(result.user[0].status).to.equal('active');
 
+				models.Invitation.findOne({id:invitationRecord.id}).then(function (invitationRecord){
+					Code.expect(invitationRecord.get('is_used')).to.equal(1);
+				})
 				// clean up
 				models.User.findOne({email: 'autogenerateusername@test.com'}).then(function (userRecord) {
 					models.User.destroy({id:userRecord.id});
+					//removing invitation record for testing purposes but it is kept.
+					models.Invitation.destroy({id:invitationRecord.id});
 					done();
 				});
 			});
