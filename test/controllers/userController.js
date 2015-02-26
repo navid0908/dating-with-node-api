@@ -3,6 +3,7 @@
 	var server = require("../../");
 	var models = require('../../database');
 	var async = require('async');
+	var util = require('../../utils/auth');
 
 	// Test shortcuts
 	var lab = exports.lab = Lab.script();
@@ -372,22 +373,16 @@ lab.experiment("method:put, url:/user/{id} ", function() {
 			};
 
 			//perform login action and store the cookie.
-			server.inject(payloadRequest, function(response) {
-				Code.expect("set-cookie" in response.headers).to.equal(true);
-				tmp = response.headers['set-cookie'][0].match(/(?:[^\x00-\x20\(\)<>@\,;\:\\"\/\[\]\?\=\{\}\x7F]+)\s*=\s*(?:([^\x00-\x20\"\,\;\\\x7F]*))/);
-				cookie = tmp[0];
+			util.login(payloadRequest, function(err, result) {
+				cookie = result;
 				done();
 			});
 		});
 	});
 	lab.afterEach(function (done) {
-		//setup payload to logout user.
-		payloadRequest = { method: "get",url: "/auth/logout", headers : {cookie:cookie}};
-
-		//perform log out action
-		server.inject(payloadRequest, function(response) {
-	        Code.expect(response.statusCode).to.equal(200);
-	        // remove dummy user
+		//logout
+		util.logout(cookie, function(err, result) {
+			// remove dummy user
 			models.User.destroy({id:user.id}).then(function () {
 				done();
 			});

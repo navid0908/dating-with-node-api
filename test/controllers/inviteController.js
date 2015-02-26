@@ -4,6 +4,7 @@ var server = require("../../");
 var models = require('../../database');
 var async = require('async');
 var config = require("../../config/config");
+var util = require('../../utils/auth');
 
 // Test shortcuts
 var lab = exports.lab = Lab.script();
@@ -26,12 +27,10 @@ lab.experiment("method:post, url:/invite ", function() {
 			}
 		};
 		//perform login action and store the cookie.
-		server.inject(payload, function(response) {
-			Code.expect("set-cookie" in response.headers).to.equal(true);
-			tmp = response.headers['set-cookie'][0].match(/(?:[^\x00-\x20\(\)<>@\,;\:\\"\/\[\]\?\=\{\}\x7F]+)\s*=\s*(?:([^\x00-\x20\"\,\;\\\x7F]*))/);
-			cookie = tmp[0];
+		util.login(payload, function(err, result) {
+			cookie = result;
 			done();
-		});		
+		});
 	});
 	lab.afterEach(function (done) {
 		// clean up
@@ -41,13 +40,7 @@ lab.experiment("method:post, url:/invite ", function() {
 			});
 		});
 		//logout
-		payload = {
-			method: "get",
-			url: "/auth/logout",
-			headers : {cookie:cookie}
-		};
-		server.inject(payload, function(response) {
-			Code.expect(response.statusCode).to.equal(200);
+		util.logout(cookie, function(err, result) {
 			done();
 		});
 	});
