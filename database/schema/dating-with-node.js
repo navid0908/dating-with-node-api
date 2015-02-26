@@ -131,6 +131,13 @@ var Schema = {
             email: {type: 'string', maxlength: 60, nullable: false, unique:true},
             is_used: {type: 'integer', maxlength: 1, fieldtype: 'tinyint', nullable: false, defaultTo: 0},
             created_at: {type: 'dateTime', nullable: false},
+        },
+        settings: {
+            id: {type: 'increments', nullable: false, primary: true},
+            user_id: {type: 'integer', nullable: true, unsigned: true, references: 'user.id'},
+            name: {type: 'string', maxlength: 60, nullable: false},
+            value: {type: 'string', maxlength: 60, nullable: false},
+            created_at: {type: 'dateTime', nullable: false},
         }
     };
 module.exports = Schema;
