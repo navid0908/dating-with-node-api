@@ -352,7 +352,6 @@ lab.experiment("method:post, url:/user ", function() {
 });
 
 lab.experiment("method:put, url:/user/{id} ", function() {
-	var tmp;
 	var cookie;
 	var payloadRequest;
 	var user = {
@@ -388,7 +387,6 @@ lab.experiment("method:put, url:/user/{id} ", function() {
 	lab.afterEach(function (done) {
 		//logout
 		util.logout(cookie, function(err, result) {
-			// remove dummy user
 			models.User.destroy({id:user.id}).then(function () {
 				done();
 			});
