@@ -87,16 +87,17 @@ exports.update = {
 			if(userRecord){
 				return userRecord;
 			}
-			return Promise.reject('Unable to find user record.');
+			throw Promise.reject('Unable to find user record.');
 		}).then(function (userRecord) {
 			if(request.payload.username && request.payload.username != userRecord.get('username')){
 				//they entered a username that is different from their logged in username.
 				//make sure its unique.
-				return models.User.isUsernameUnique(request.payload.username).then(function (isUnique) {
-					return userRecord
-				}).catch(function (error) {
-					//'email is already taken'
-					return Promise.reject(error);
+				return models.User.isUsernameUnique(request.payload.username).then(function (result) {
+					if(result){
+						return userRecord;
+					}else{ //result is an error that was thrown.
+						return Promise.reject(result);
+					}
 				});
 			}
 			return userRecord;
@@ -104,11 +105,12 @@ exports.update = {
 			if(request.payload.email && request.payload.email != userRecord.get('email')){
 				//they entered an email that is different from their logged in email.
 				//make sure its unique.
-				return models.User.isEmailUnique(request.payload.email).then(function (isUnique) {
-					return userRecord
-				}).catch(function (error) {
-					//'email is already taken'
-					return Promise.reject(error);
+				return models.User.isEmailUnique(request.payload.email).then(function (result) {
+					if(result){
+						return userRecord;
+					}else{ //result is an error that was thrown.
+						return Promise.reject(result);
+					}
 				});
 			}
 			return userRecord;
