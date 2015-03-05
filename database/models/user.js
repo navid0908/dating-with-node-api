@@ -22,7 +22,8 @@ var User;
             return {
                 // default values for when the record is created.
                 status: '',
-                group_id : 0
+                group_id : 0, //@TODO: come up with various groups levels for users (standard, paid, admin, multiple roles?)
+                social_login_type: 'email'
              }
         },
         hasTimestamps: true,

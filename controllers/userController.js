@@ -189,11 +189,23 @@ exports.signUp = {
 					if(invitation && invitation.isUsed()){ //this invitation code was already used.
 						return reply(Boom.conflict('Invalid invitation code'));
 					}
-					return reply();
+					return reply(invitation);
 				});
 			}
 		}
 	},
+	{
+		assign: "DoesUsersEmailMatchInvitationEmail",
+		method: function(request, reply){
+			var invitationRecord = request.pre.isInvitationcodeValid;
+			invitationRecord = invitationRecord.toJSON();
+			if(invitationRecord && invitationRecord.email !==request.payload.email){
+				return reply(Boom.badRequest('User registering is not the person that was invited.'));
+			}
+			reply();
+		}
+	},
+
 	],
 	handler: function (request, reply) {
 		var data;
@@ -209,10 +221,10 @@ exports.signUp = {
 			request.payload.username = internals.generateUsername(12);
 		}
 
-		data = {	username: request.payload.username,
+		data = {	username: request.payload.username.toLowerCase(),
 					email: request.payload.email.toLowerCase(),
 					password: request.payload.password,
-					network: request.payload.network
+					network: request.payload.network.toLowerCase()
 			};
 
 		return models.Base.transaction(function (t) {

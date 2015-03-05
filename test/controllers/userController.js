@@ -8,6 +8,11 @@
 	// Test shortcuts
 	var lab = exports.lab = Lab.script();
 
+/* 
+	***
+		@description: The purpose here is to test registration failure due to parameters being invalid.
+	***
+*/
 	lab.experiment("method:post, url:/user Registration fails due to invalid/missing parameters", function() {
 		lab.test("create user with missing parameters - network", function(done) {
 			var options = {
@@ -203,25 +208,29 @@
 			});
 		});		
 	});
-
+/* 
+	***
+		@description: The purpose here is to test registration failure due to existing records or invalid referral.
+	***
+*/
 	lab.experiment("method:post, url:/user  Registration fails due to existing records", function() {
-		var userData ={
+		var userDataPayload ={
 					username:'testjohndoe',
 					email: 'testjohndoe@test.com',
 					password: 'testjohndoe'
 				};
+		var userData = null;
 		lab.beforeEach(function (done) {
 			//setup test records
-			models.User.add(userData).then(function (userRecord) {
+			models.User.add(userDataPayload).then(function (userRecord) {
+				userData = userRecord.toJSON();
 				done();
 			});
 		});
 		lab.afterEach(function (done) {
 			// clean up
-			models.User.findOne({username: userData.username}).then(function (userRecord) {
-				models.User.destroy({id:userRecord.get('id')}).then(function () {
-					done();
-				});
+			models.User.destroy({id:userData.id}).then(function () {
+				done();
 			});
 		});
 		lab.test("create user with existing username in system", function(done) {
@@ -231,9 +240,9 @@
 				payload:
 				{
 					network: 				"email",
-					username: 				userData.username,
+					username: 				userDataPayload.username,
 					email: 					"randomemail@test.com",
-					password: 				userData.password,
+					password: 				userDataPayload.password,
 					invitationcode: 		"some-uuid-number-here"
 				}
 			};
@@ -251,8 +260,8 @@
 				{
 					network: 				"email",
 					username: 				"dating-with-node-api",
-					email: 					userData.email,
-					password: 				userData.password,
+					email: 					userDataPayload.email,
+					password: 				userDataPayload.password,
 					invitationcode: 		"some-uuid-number-here"
 				}
 			};
@@ -264,7 +273,7 @@
 		});
 		lab.test("create user with used invitationcode", function(done) {
 			models.Invitation.add({
-				user_id:1,
+				user_id:userData.id,
 				email: "testemail@email.com",
 			}).then(function(invitationRecord){
 				return invitationRecord.markUsed().save();
@@ -291,8 +300,41 @@
 				});
 			});
 		});
+		lab.test("create user account whose email does not match email of the invitation", function(done) {
+			//userData.id (testjohndoe@test.com) is invitting testemail@email.com
+			models.Invitation.add({
+				user_id:userData.id,
+				email: "testemail@email.com",
+			}).then(function(invitationRecord){
+				invitationRecord = invitationRecord.toJSON();
+				var options = {
+					method: "post",
+					url: "/user/signup",
+					payload:
+					{
+						network: 				"email",
+						username: 				"dating-with-node-api",
+						email: 					"somemeail@test.com",
+						password: 				"testpassword",
+						invitationcode: 		invitationRecord.code
+					}
+				};
+				server.inject(options, function(response) {
+					var result = response.result;
+					Code.expect(response.statusCode).to.equal(400);
+					models.Invitation.destroy({id:invitationRecord.id}).then(function () {
+						done();
+					});
+				});
+			});
+		});
 	});
-	lab.experiment("method:post, url:/user  Registration succeeds", function() {		
+/*
+	***
+		@description: The purpose here is to test successful registration.
+	***
+*/
+	lab.experiment("method:post, url:/user  Successful Registration:", function() {
 		lab.test("create user with auto generated username and valid invitation code", function(done) {
 			models.Invitation.add({
 				user_id:1,
@@ -344,6 +386,7 @@
 			};
 			server.inject(options, function(response) {			
 				var result = response.result;
+				console.log(result);
 				Code.expect(response.statusCode).to.equal(200);
 				Code.expect(result.user[0].status).to.equal('pending');
 
@@ -355,10 +398,13 @@
 			});
 		});
 	});
-
+/*
+	***
+		@description: The purpose here is to test successful user update.
+	***
+*/
 	lab.experiment("method:put, url:/user/{id} ", function() {
 		var cookie;
-		var payloadRequest;
 		var user = {
 					email: 'autogenerateusername212@test.com',
 					username: 'autogenerateuser2nam2e1',
@@ -371,7 +417,7 @@
 				user = userRecord.toJSON();
 
 				//setup payload
-				payloadRequest = {
+				return {
 					method: "post",url: "/auth/login",
 					payload: {
 						network: 'email',
@@ -379,7 +425,6 @@
 						password: 'testpassword',
 					}
 				};
-				return payloadRequest;
 			}).then(function(payloadRequest){
 				//perform login action and store the cookie.
 				util.login(payloadRequest, function(err, result) {
@@ -390,14 +435,13 @@
 		});
 		lab.afterEach(function (done) {
 			//logout
-			util.logout(cookie, function(err, result) {
-				models.User.destroy({id:user.id}).then(function () {
-					done();
-				});
+			util.logout(cookie, function(err, result) {});
+			models.User.destroy({id:user.id}).then(function () {
+				done();
 			});
 		});
 	    lab.test("update user's username with authenticated user", function(done) {
-			payloadRequest = {
+			var payloadRequest = {
 				method: "put",
 				url: "/user/" + user.id,
 				payload: {
