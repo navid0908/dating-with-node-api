@@ -386,7 +386,6 @@
 			};
 			server.inject(options, function(response) {			
 				var result = response.result;
-				console.log(result);
 				Code.expect(response.statusCode).to.equal(200);
 				Code.expect(result.user[0].status).to.equal('pending');
 

@@ -198,9 +198,11 @@ exports.signUp = {
 		assign: "DoesUsersEmailMatchInvitationEmail",
 		method: function(request, reply){
 			var invitationRecord = request.pre.isInvitationcodeValid;
-			invitationRecord = invitationRecord.toJSON();
-			if(invitationRecord && invitationRecord.email !==request.payload.email){
-				return reply(Boom.badRequest('User registering is not the person that was invited.'));
+			if(invitationRecord){
+				invitationRecord = invitationRecord.toJSON();
+				if(invitationRecord.email !==request.payload.email){
+					return reply(Boom.badRequest('User registering is not the person that was invited.'));
+				}
 			}
 			reply();
 		}
