@@ -219,7 +219,7 @@ exports.signUp = {
 			return reply(Boom.badRequest('email is required'));
 		}
 
-		if(! request.payload.username){
+		if(!request.payload.username){
 			request.payload.username = internals.generateUsername(12);
 		}
 
@@ -234,9 +234,9 @@ exports.signUp = {
 			var current = Promise.resolve();
 
 			if(request.payload.invitationcode == models.Invitation.notInvited){
-				data.status = 'pending';
+				data.status = models.Invitation.statusPending;
 			}else{
-				data.status = 'active';
+				data.status = models.Invitation.statusActive;
 				current = models.Invitation.findByInvitationCode(request.payload.invitationcode).then(function(invitationRecord){
 					return invitationRecord.markUsed().save(null,options);
 				});
@@ -250,32 +250,10 @@ exports.signUp = {
 				return t.commit();
 			}).then(function (){
 				return reply ({user: [user]});
-			}).catch(function (error) {
-				t.rollback(error);
-				return reply(Boom.badRequest(error));
 			});
-			}).catch(function (error) {
-					console.log('shit');
-					console.log(error);
-					return reply(Boom.badRequest(error));
-				});
-		// return models.Invitation.findByInvitationCode(request.payload.invitationcode).then(function(invitationRecord){
-		// 	return models.Base.transaction(function (t) {
-		// 			options.transacting = t;
-		// 			invitationRecord.markUsed().save(null,options).then(function (invitationRecord){
-		// 				return models.User.add(data,options);
-		// 			}).then(function (userRecord){
-		// 				user = userRecord.toJSON();
-		// 				return internals.sendWelcomeEmail(request, user);
-		// 			}).then(function (){
-		// 				return t.commit();
-		// 			}).then(function (){
-		// 				return reply ({user: [user]});
-		// 			}).catch(function (error) {
-		// 				t.rollback(error);
-		// 				return reply(Boom.badRequest(error));
-		// 			});
-		// 		});
-		// 	});
+		}).catch(function (error) {
+			t.rollback(error);
+			return reply(Boom.badRequest(error));
+		});
 	}
 };

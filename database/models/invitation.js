@@ -22,6 +22,8 @@ var Invitation;
 		}
 	},{
 		notInvited : 'nocode',
+		statusPending: 'pending',
+		statusActive: 'active',
 
 		findByInvitationCode : function(code, options){
 			return baseModel.Model.findOne.call(this, {code:code}, options);

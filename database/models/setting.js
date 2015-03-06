@@ -6,8 +6,10 @@ var datingWithNode = require('./base');
 var Setting;
 
 	Setting = datingWithNode.Model.extend({
-		tableName: 'setting'
+		tableName: 'setting',
+		hasTimestamps: false
 	},{
+		CONST_USER_MAX_INVITE: 'user_max_invite',
 	    /**
 	    * ### findBySettingName - Finds a user setting by the setting name
 	    *

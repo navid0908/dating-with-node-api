@@ -27,6 +27,13 @@ internals.sendInviteEmail = function(request){
 		}
 	});	
 };
+// internals.userMax = function(user_id){
+// 	var max = internals config.invitation.userMax;
+// 		models.Setting.findBySettingName({
+// 			user_id: user_id,
+// 			name: models.Setting.CONST_USER_MAX_INVITE
+// 		})
+// }
 
 exports.invite = {
 	tags : ['invite'],
