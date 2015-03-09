@@ -27,13 +27,14 @@ internals.sendInviteEmail = function(request){
 		}
 	});	
 };
-// internals.userMax = function(user_id){
-// 	var max = internals config.invitation.userMax;
-// 		models.Setting.findBySettingName({
-// 			user_id: user_id,
-// 			name: models.Setting.CONST_USER_MAX_INVITE
-// 		})
-// }
+internals.getUserMax = function(user_id){
+	return models.Setting.findBySettingName({
+			user_id: user_id,
+			name: models.Setting.CONST_USER_MAX_INVITE
+		}).then(function(value){
+			return parseInt(value) || config.invitation.userMax;
+		});
+}
 
 exports.invite = {
 	tags : ['invite'],
@@ -45,6 +46,7 @@ exports.invite = {
 		}
 	},
 	handler : function (request, reply){
+		internals.getUserMax(1)
 		// Have we reached a system max of the allowed number of invites ?
 		return models.Invitation.count().then(function (result){
 			if(result >= config.invitation.systemMax ){

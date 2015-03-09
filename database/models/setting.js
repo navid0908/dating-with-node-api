@@ -2,10 +2,10 @@
 * @description - The purpose of this model is to lookup various user settings
 */
 
-var datingWithNode = require('./base');
+var baseModel = require('./base');
 var Setting;
 
-	Setting = datingWithNode.Model.extend({
+	Setting = baseModel.Model.extend({
 		tableName: 'setting',
 		hasTimestamps: false
 	},{
@@ -18,14 +18,20 @@ var Setting;
 	    * @extends baseModel.Model.findOne
 	    */		
 		findBySettingName : function(data, options){
+			var that = this;
 			if(!data.user_id){
 				return Promise.reject('user is undefined');
 			}
 			if(!data.name){
 				return Promise.reject('setting name is undefined');
 			}
-			return baseModel.Model.findOne.call(this, {name:data.name, user_id: data.user_id}, options);
+			return baseModel.Model.findOne.call(this, {name:data.name, user_id: data.user_id}, options).then(function(record){
+				if(record){
+					return record.get('value');
+				}
+				return null;
+			});
 		}
 	});
 
-module.exports = datingWithNode.model('Setting', Setting);
+module.exports = baseModel.model('Setting', Setting);
