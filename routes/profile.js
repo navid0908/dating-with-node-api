@@ -1,15 +1,9 @@
 // API Server Endpoints
-
+var controllers = require("../controllers");
 module.exports = exports = [
     {
-        method: 'get',
-        path: '/profiles',
-        config: {
-            handler: function(request, reply) {
-                reply([]);
-            },
-            description: "Obtain user profile",
-            tags: ['user', 'profile']
-        }
-    }
+        method: 'put',
+        path: '/profile/{id}',
+        config: controllers.profileController.update
+    },
 ];

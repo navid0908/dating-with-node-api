@@ -62,7 +62,7 @@
 		});
 
 		lab.test("invitation to join fails due to systemMax", function(done) {
-			for (var i=0; i<config.invitation.systemMax; i++){
+			for (var i=1; i<config.invitation.systemMax+1; i++){
 				models.Invitation.add({
 					user_id:userRecordJson.id,
 					email: "randomeemail" + i + "@gmail.com"
@@ -83,7 +83,7 @@
 		    });
 		});
 		lab.test("invitation to join fails due to userMax", function(done) {
-			for (var i=0; i<config.invitation.userMax; i++){
+			for (var i=1; i<config.invitation.userMax+1; i++){
 				models.Invitation.add({
 					user_id:userRecordJson.id,
 					email: "randomeemail" + i + "@gmail.com"

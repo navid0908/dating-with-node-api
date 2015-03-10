@@ -46,7 +46,8 @@ exports.invite = {
 		}
 	},
 	handler : function (request, reply){
-		internals.getUserMax(1)
+		var countUserInvitesSent = null;
+		var userMax = null;
 		// Have we reached a system max of the allowed number of invites ?
 		return models.Invitation.count().then(function (result){
 			if(result >= config.invitation.systemMax ){
@@ -54,18 +55,27 @@ exports.invite = {
 			}
 		}).then(function (){
 			// Have we reached a user max of the allowed number of invites?
-			return models.Invitation.countOfInvitesSent(request.auth.credentials.user.id).then(function(result){
-				if(result >= config.invitation.userMax){
-					return Promise.reject('No more invitations are allowed for this user');
-				}
-			});
+			return models.Invitation.countOfInvitesSent(request.auth.credentials.user.id)
+
+		}).then(function (result){
+			countUserInvitesSent = result;
+			return internals.getUserMax(request.auth.credentials.user.id);
+
+		}).then(function (result){
+			userMax = result;
+
+			if(countUserInvitesSent >= userMax){
+				return Promise.reject('No more invitations are allowed for this user');
+			}
 		}).then(function (){
 			// Has the user already been invited?
-			return models.Invitation.findOne({email: request.payload.email}).then(function(result){
-				if(result){
-					return Promise.reject('That user has already been invited');
-				}
-			});
+			return models.Invitation.findOne({email: request.payload.email});
+
+		}).then(function (result){
+			if(result){
+				return Promise.reject('That user has already been invited');
+			}
+
 		}).then(function (){
 			var data = {
 				email:request.payload.email,

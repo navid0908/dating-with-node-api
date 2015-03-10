@@ -108,7 +108,7 @@ var Schema = {
             height: {type: 'decimal', nullable: true},
             gender: {type: 'string', maxlength: 1, nullable: true},
             orientation: {type: 'string', maxlength: 1, nullable: true},
-            birthday: {type: 'dateTime', nullable: false},
+            birthday: {type: 'dateTime', nullable: true},
             created_at: {type: 'dateTime', nullable: false},
             updated_at: {type: 'dateTime', nullable: true},
         },
