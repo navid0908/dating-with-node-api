@@ -119,7 +119,26 @@
 				});
 			});
 			done();
-		});		
+		});
+		lab.test("update user's profile with invalid bodytype", function(done) {
+			var bodytypes = [0,11];
+			var payloadRequest;
+			var pastDate = new Date();
+			bodytypes.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						bodytype:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(400);
+				});
+			});
+			done();
+		});
 	});
 
 /*
