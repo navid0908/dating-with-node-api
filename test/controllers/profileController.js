@@ -3,7 +3,7 @@
 	var server = require("../../");
 	var models = require('../../database');
 	var async = require('async');
-	var util = require('../../utils/auth');
+	var util = require('../utils/auth');
 
 	// Test shortcuts
 	var lab = exports.lab = Lab.script();

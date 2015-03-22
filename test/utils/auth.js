@@ -1,6 +1,6 @@
 	var Lab = require("lab");
 	var Code = require('code');   // assertion library
-	var server = require("../");
+	var server = require("../../");
 		
 	function login(payload, callback) {
 		server.inject(payload, function(response) {

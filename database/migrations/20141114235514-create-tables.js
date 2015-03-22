@@ -4,7 +4,7 @@ var _ = require('lodash');
 var schema = require("../schema/dating-with-node");
 var fixtures = require("../fixtures/dating-with-node");
 var utils = require("../utils");
-var sequence = require('../../utils/sequence');
+var sequence = require('../utils/sequence');
 
 function loadTables(tableNames,knex){
  	return _.map(tableNames, function (tableName) {
