@@ -4,6 +4,7 @@
 	var models = require('../../database');
 	var async = require('async');
 	var util = require('../utils/auth');
+	var date = require('../utils/date');
 
 	// Test shortcuts
 	var lab = exports.lab = Lab.script();
@@ -65,7 +66,7 @@
 				done();
 			});
 		});
-		lab.test("update user's profile with invalid orientation", function(done) {
+		lab.test("with invalid orientation", function(done) {
 			var orientations = ['X','x','m','f','M','F','S','G','B','L'];
 			var payloadRequest;
 			orientations.forEach(function(entry){
@@ -83,7 +84,7 @@
 			});
 			done();
 		});
-		lab.test("update user's profile with invalid gender", function(done) {
+		lab.test("with invalid gender", function(done) {
 			var genders = ['X','x','M','F','S','G','B','L'];
 			var payloadRequest;
 			genders.forEach(function(entry){
@@ -101,16 +102,21 @@
 			});
 			done();
 		});
-		lab.test("update user's profile with invalid birthday", function(done) {
-			var genders = ['X','x','M','F','S','G','B','L'];
+		lab.test("with invalid birthday", function(done) {
+			var dobs = [
+				Date.parse('01-01-1939'),
+				Date.parse('01/01/2001'),
+				Date.parse('01/01/2002'),
+				Date.parse('01/01/2003'),
+				Date.parse('01/01/2004'),
+			];
 			var payloadRequest;
-			var pastDate = new Date();
-			genders.forEach(function(entry){
+			dobs.forEach(function(entry){
 				payloadRequest = {
 					method: "put",
 					url: "/profile/" + userRecord.id,
 					payload: {
-						birthday:entry,
+						birthday:entry.valueOf(),
 					},
 					headers : {cookie:cookie}
 				};
@@ -120,10 +126,9 @@
 			});
 			done();
 		});
-		lab.test("update user's profile with invalid bodytype", function(done) {
-			var bodytypes = [0,11];
+		lab.test("with invalid bodytype", function(done) {
+			var bodytypes = [-11,-5,0,11];
 			var payloadRequest;
-			var pastDate = new Date();
 			bodytypes.forEach(function(entry){
 				payloadRequest = {
 					method: "put",
@@ -146,7 +151,8 @@
 		@description: The purpose here is to test successful profile update
 	***
 */
-	lab.experiment("method:put, url:/profile/{id} - Profile update succeeds for ", function() {
+
+	lab.experiment("method:put, url:/profile/{id} - Profile update succeeds ", function() {
 		var cookie;
 		var user = {
 					email: 'profiletestsuccess@test.com',
@@ -190,7 +196,7 @@
 				done();
 			});
 		});
-		lab.test("update user's profile with valid orientation", function(done) {
+		lab.test("with valid orientation", function(done) {
 			var orientations = ['s', 'g', 'b'];
 			var payloadRequest;
 			orientations.forEach(function(entry){
@@ -208,7 +214,7 @@
 			});
 			done();
 		});
-		lab.test("update user's profile with valid gender", function(done) {
+		lab.test("with valid gender", function(done) {
 			var genders = ['m', 'f'];
 			var payloadRequest;
 			genders.forEach(function(entry){
@@ -225,5 +231,48 @@
 				});
 			});
 			done();
-		});		
-	});	
+		});
+		lab.test("with valid birthday", function(done) {
+			var dobs = [
+				Date.parse('01-01-1940'),
+				Date.parse('01-02-1940'),
+				Date.parse('01-02-1950'),
+				Date.parse('01-02-1980'),
+				Date.parse('01-02-1990'),
+				Date.parse('12/29/1999'),
+			];
+			var payloadRequest;
+			dobs.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						birthday:entry.valueOf(),
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(200);
+				});
+			});
+			done();
+		});
+		lab.test("with valid bodytype", function(done) {
+			var bodytypes = [1,2,3,4,5,6,7,8,9,10];
+			var payloadRequest;
+			bodytypes.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						bodytype:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(200);
+				});
+			});
+			done();
+		});
+	});

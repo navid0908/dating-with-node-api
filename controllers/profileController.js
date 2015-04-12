@@ -19,9 +19,29 @@ exports.update = {
             gender: Joi.any().valid(['m','f']),
             orientation: Joi.any().valid(['s','g', 'b']),
             birthday:Joi.date().min(config.profile.birthday_min).max(config.profile.birthday_max),
-            bodytype: Joi.number().min(1).max(10)
+            bodytype: Joi.number().min(1)
         }
-	},	
+	},
+	pre: [{
+		assign: "isValiMaxLength",
+		method: function (request, reply){
+			var current = Promise.resolve();
+
+			if(request.payload.bodytype){
+				current = models.Bodytype.count().then(function (result){
+					if(request.payload.bodytype > result){
+						return Promise.reject('Bodytype is not in valid range.');
+					}
+					return Promise.resolve(result);
+				});
+			}
+			current.then(function(){
+				reply();
+			}).catch(function (error) {
+				reply(Boom.badRequest(error));
+			});
+		}
+	}],
 	handler: function (request, reply) {
 		reply();
 	}

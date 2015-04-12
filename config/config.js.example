@@ -134,6 +134,11 @@ module.exports = {
     },
     login: {
         maxAllowedAttempts : 5,
+        validNetworks: ['facebook','instagram','twitter', 'google', 'email']
+    },
+    profile: {
+        birthday_min: '01-01-1940',
+        birthday_max: '01-01-2000',
     },
     invitations : {
         systemMax: 1000,
