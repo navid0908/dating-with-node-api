@@ -105,6 +105,7 @@ var Schema = {
             activelevel_id: {type: 'integer', nullable: true, unsigned: true, references: 'activelevel.id'},
             astrologicalsign_id: {type: 'integer', nullable: true, unsigned: true, references: 'astrologicalsign.id'},
             profession_id: {type: 'integer', nullable: true, unsigned: true, references: 'profession.id'},
+            relationshipstatus_id: {type: 'integer', nullable: true, unsigned: true, references: 'relationshipstatus.id'},
             height: {type: 'decimal', nullable: true},
             gender: {type: 'string', maxlength: 1, nullable: true},
             orientation: {type: 'string', maxlength: 1, nullable: true},

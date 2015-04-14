@@ -127,14 +127,242 @@
 			done();
 		});
 		lab.test("with invalid bodytype", function(done) {
-			var bodytypes = [-11,-5,0,11];
+			var ranges = [-11,-5,0,11];
 			var payloadRequest;
-			bodytypes.forEach(function(entry){
+			ranges.forEach(function(entry){
 				payloadRequest = {
 					method: "put",
 					url: "/profile/" + userRecord.id,
 					payload: {
 						bodytype:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(400);
+				});
+			});
+			done();
+		});
+		lab.test("with invalid diet", function(done) {
+			var ranges = [-11,-5,0,7,11];
+			var payloadRequest;
+			ranges.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						diet:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(400);
+				});
+			});
+			done();
+		});
+		lab.test("with invalid diet and valid smoke", function(done) {
+			var payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						diet:7,
+						smoke:4
+					},
+					headers : {cookie:cookie}
+				};
+			server.inject(payloadRequest, function(response) {
+				Code.expect(response.statusCode).to.equal(400);
+				done();
+			});
+		});
+		lab.test("with invalid smoke and valid diet", function(done) {
+			var payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						smoke:6,
+						diet:5
+					},
+					headers : {cookie:cookie}
+				};
+			server.inject(payloadRequest, function(response) {
+				Code.expect(response.statusCode).to.equal(400);
+				done();
+			});
+		});
+		lab.test("with invalid smoke", function(done) {
+			var ranges = [-11,-5,0,6,11];
+			var payloadRequest;
+			ranges.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						smoke:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(400);
+				});
+			});
+			done();
+		});
+		lab.test("with invalid drug", function(done) {
+			var ranges = [-11,-5,0,4,11];
+			var payloadRequest;
+			ranges.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						drug:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(400);
+				});
+			});
+			done();
+		});
+		lab.test("with invalid drink", function(done) {
+			var ranges = [-11,-5,0,6,11];
+			var payloadRequest;
+			ranges.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						drink:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(400);
+				});
+			});
+			done();
+		});
+		lab.test("with invalid education", function(done) {
+			var ranges = [-11,-5,0,8,11];
+			var payloadRequest;
+			ranges.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						education:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(400);
+				});
+			});
+			done();
+		});
+		lab.test("with invalid children", function(done) {
+			var ranges = [-11,-5,0,4,11];
+			var payloadRequest;
+			ranges.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						children:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(400);
+				});
+			});
+			done();
+		});
+		lab.test("with invalid activelevel", function(done) {
+			var ranges = [-11,-5,0,6,11];
+			var payloadRequest;
+			ranges.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						activelevel:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(400);
+				});
+			});
+			done();
+		});
+		lab.test("with invalid astrologicalsign", function(done) {
+			var ranges = [-11,-5,0,13,21];
+			var payloadRequest;
+			ranges.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						astrologicalsign:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(400);
+				});
+			});
+			done();
+		});
+		lab.test("with invalid profession", function(done) {
+			var ranges = [-11,-5,0,21,31];
+			var payloadRequest;
+			ranges.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						profession:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(400);
+				});
+			});
+			done();
+		});
+		lab.test("with invalid relationshipstatus", function(done) {
+			var ranges = [-11,-5,0,7,11];
+			var payloadRequest;
+			ranges.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						relationshipstatus:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(400);
+				});
+			});
+			done();
+		});
+		lab.test("with invalid height", function(done) {
+			var ranges = [80,89,90,215,220,156.6678];
+			var payloadRequest;
+			ranges.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						height:entry,
 					},
 					headers : {cookie:cookie}
 				};
@@ -151,7 +379,6 @@
 		@description: The purpose here is to test successful profile update
 	***
 */
-
 	lab.experiment("method:put, url:/profile/{id} - Profile update succeeds ", function() {
 		var cookie;
 		var user = {
@@ -258,14 +485,212 @@
 			done();
 		});
 		lab.test("with valid bodytype", function(done) {
-			var bodytypes = [1,2,3,4,5,6,7,8,9,10];
+			var ranges = [1,2,3,4,5,6,7,8,9,10];
 			var payloadRequest;
-			bodytypes.forEach(function(entry){
+			ranges.forEach(function(entry){
 				payloadRequest = {
 					method: "put",
 					url: "/profile/" + userRecord.id,
 					payload: {
 						bodytype:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(200);
+				});
+			});
+			done();
+		});
+		lab.test("with valid diet", function(done) {
+			var ranges = [1,2,3,4,5,6];
+			var payloadRequest;
+			ranges.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						diet:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(200);
+				});
+			});
+			done();
+		});
+		lab.test("with valid smoke", function(done) {
+			var ranges = [1,2,3,4,5];
+			var payloadRequest;
+			ranges.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						smoke:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(200);
+				});
+			});
+			done();
+		});
+		lab.test("with valid drug", function(done) {
+			var ranges = [1,2,3];
+			var payloadRequest;
+			ranges.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						drug:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(200);
+				});
+			});
+			done();
+		});
+		lab.test("with valid drink", function(done) {
+			var ranges = [1,2,3,4,5];
+			var payloadRequest;
+			ranges.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						drink:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(200);
+				});
+			});
+			done();
+		});
+		lab.test("with valid education", function(done) {
+			var ranges = [1,2,3,4,5,6,7];
+			var payloadRequest;
+			ranges.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						education:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(200);
+				});
+			});
+			done();
+		});
+		lab.test("with valid children", function(done) {
+			var ranges = [1,2,3];
+			var payloadRequest;
+			ranges.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						children:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(200);
+				});
+			});
+			done();
+		});
+		lab.test("with valid activelevel", function(done) {
+			var ranges = [1,2,3,4,5];
+			var payloadRequest;
+			ranges.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						activelevel:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(200);
+				});
+			});
+			done();
+		});
+		lab.test("with valid astrologicalsign", function(done) {
+			var ranges = [1,2,3,4,5,6,7,8,9,10,11,12];
+			var payloadRequest;
+			ranges.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						astrologicalsign:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(200);
+				});
+			});
+			done();
+		});
+		lab.test("with valid profession", function(done) {
+			var ranges = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+			var payloadRequest;
+			ranges.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						profession:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(200);
+				});
+			});
+			done();
+		});
+		lab.test("with valid relationshipstatus", function(done) {
+			var ranges = [1,2,3,4,5,6];
+			var payloadRequest;
+			ranges.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						relationshipstatus:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(200);
+				});
+			});
+			done();
+		});
+		lab.test("with valid height", function(done) {
+			var ranges = [152.5,180.22];
+			var payloadRequest;
+			ranges.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id,
+					payload: {
+						height:entry,
 					},
 					headers : {cookie:cookie}
 				};
