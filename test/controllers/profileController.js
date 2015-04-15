@@ -701,3 +701,84 @@
 			done();
 		});
 	});
+/*
+	***
+		@description: The purpose here is to test profile get
+	***
+*/
+	lab.experiment("method:get, url:/profile - ", function() {
+		var cookie;
+		var user = {
+					email: 'profiletestget2@test.com',
+					username: 'profiletestget2',
+					password: 'testpassword',
+					network: 'email'
+				};
+		var profile = {
+					gender: 'm',
+					orientation: 's',
+		};
+		var userRecord;
+		lab.beforeEach(function (done) {
+			//setup test record
+			models.User.add(user).then(function (result) {
+				userRecord = result.toJSON();
+				return userRecord;
+			}).then(function (result) {
+				profile.user_id = result.id;
+				return models.Profile.add(profile);
+			}).then(function (result) {
+				//setup payload
+				return {
+					method: "post",url: "/auth/login",
+					payload: {
+						network: 'email',
+						email: user.email,
+						password: user.password,
+					}
+				};
+			}).then(function(payloadRequest){
+				//perform login action and store the cookie.
+				util.login(payloadRequest, function(err, result) {
+					cookie = result;
+					done();
+				});
+			});
+		});
+		lab.afterEach(function (done) {
+			//logout
+			util.logout(cookie, function(err, result) {});
+			models.Profile.findAll().
+			then(function (collection) {
+				// ... all Profiles have been destroyed
+				return collection.invokeThen('destroy');
+			}).then(function() {
+				return models.User.destroy({id:userRecord.id})
+			}).then(function() {
+				done();
+			});
+		});
+		lab.test("Profile get fails for invalid profile id", function(done) {
+			var payloadRequest = {
+				method: "get",
+				url: "/profile?id="+123456789,
+				headers : {cookie:cookie}
+			};
+			server.inject(payloadRequest, function(response) {
+				Code.expect(response.statusCode).to.equal(404);
+				done();
+			});
+		});
+		lab.test("Profile get succeeds for valid profile id", function(done) {
+			var payloadRequest = {
+				method: "get",
+				url: "/profile?id="+userRecord.id,
+				headers : {cookie:cookie}
+			};
+			server.inject(payloadRequest, function(response) {
+				Code.expect(response.statusCode).to.equal(200);
+				Code.expect(response.result.hasOwnProperty('profile')).to.be.a.boolean();
+				done();
+			});
+		});
+	});

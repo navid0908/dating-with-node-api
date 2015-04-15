@@ -10,6 +10,30 @@ var	_ = require('lodash');
 // private internal properties/functions
 var internals = {};
 
+exports.get = {
+	tags: ['profile', 'user', 'get'],
+	description: "This gets a user profile on the system",
+	auth: 'session',
+	validate: {
+		query: {
+			id : Joi.number().min(1),
+		}
+	},
+	handler: function (request, reply) {
+		if(request.query.id){
+			return models.Profile.findOne({user_id: request.query.id}).then(function(result){
+				if(result){
+					return reply ({profile: [result.toJSON()]});
+				}else{
+					return reply(Boom.notFound('User profile not found'));
+				}
+			});
+		}else{
+			return reply(Boom.notFound('User id not provided'));
+		}
+	}
+};
+
 exports.update = {
 	tags: ['profile', 'user', 'update'],
 	description: "This updates a user on the system",
