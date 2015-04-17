@@ -315,4 +315,26 @@ lab.experiment("Lookup", function() {
 			done();
 		});
 	});
+	lab.test("/question endpoint", function(done) {
+		var options = {
+			method: "GET",
+			url: "/lookup/question"
+		};
+		server.inject(options, function(response) {
+			var result = response.result;
+
+			Code.expect(response.statusCode).to.equal(200);
+			Code.expect(response.result).to.be.instanceof(Object);
+			Code.expect(result.hasOwnProperty('question')).to.be.a.boolean();
+
+			var rows = result.question;
+			Code.expect(rows).to.have.length(10);
+
+			_.each(rows, function(row){
+				Code.expect(row.hasOwnProperty('id')).to.be.a.boolean();
+				Code.expect(row.hasOwnProperty('description')).to.be.a.boolean();
+			});
+			done();
+		});
+	});
 });

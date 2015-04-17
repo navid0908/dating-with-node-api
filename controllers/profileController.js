@@ -40,22 +40,22 @@ exports.update = {
 	auth: 'session',
 	validate: {
 		payload: {
-            bodytype: Joi.number().min(1),
-            diet: Joi.number().min(1),
-            smoke: Joi.number().min(1),
-            drug: Joi.number().min(1),
-            drink: Joi.number().min(1),
-            education: Joi.number().min(1),
-            children: Joi.number().min(1),
-            activelevel: Joi.number().min(1),
-            astrologicalsign: Joi.number().min(1),
-            profession: Joi.number().min(1),
-            relationshipstatus: Joi.number().min(1),
-            height: Joi.number().precision(2).min(91).max(213), //3feet - 7feet.
-            gender: Joi.any().valid(['m','f']),
-            orientation: Joi.any().valid(['s','g', 'b']),
-            birthday:Joi.date().min(config.profile.birthday_min).max(config.profile.birthday_max)
-        }
+			bodytype: Joi.number().min(1),
+			diet: Joi.number().min(1),
+			smoke: Joi.number().min(1),
+			drug: Joi.number().min(1),
+			drink: Joi.number().min(1),
+			education: Joi.number().min(1),
+			children: Joi.number().min(1),
+			activelevel: Joi.number().min(1),
+			astrologicalsign: Joi.number().min(1),
+			profession: Joi.number().min(1),
+			relationshipstatus: Joi.number().min(1),
+			height: Joi.number().precision(2).min(91).max(213), //3feet - 7feet.
+			gender: Joi.any().valid(['m','f']),
+			orientation: Joi.any().valid(['s','g', 'b']),
+			birthday:Joi.date().min(config.profile.birthday_min).max(config.profile.birthday_max)
+		}
 	},
 	pre: [{
 		assign: "isValidMaxLength",
@@ -169,6 +169,31 @@ exports.update = {
 			});
 		}
 	}],
+	handler: function (request, reply) {
+		reply();
+	}
+};
+exports.updateAnswer = {
+	tags: ['profile', 'user', 'update', 'answer'],
+	description: "This updates a user's answers on his profile.",
+	auth: 'session',
+	validate: {
+		payload: {
+			id: Joi.number().min(1).required(),
+			answer: Joi.string().min(1).required(),
+		}
+	},
+	pre: [{
+		assign: "isValidMaxLength",
+		method: function (request, reply){
+			models.Question.count().then(function (result){
+				if(request.payload.id > result){
+					return Boom.badRequest('Question id is not in valid range.');
+				}
+				return reply();
+			});
+		}}
+	],
 	handler: function (request, reply) {
 		reply();
 	}

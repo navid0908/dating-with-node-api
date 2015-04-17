@@ -15,6 +15,7 @@ var phototype = {};
 var profession = {};
 var relationshipstatus = {};
 var smoke = {};
+var question = {};
 
 activelevel = {
 	get : {
@@ -225,6 +226,21 @@ smoke = {
 	}
 };
 
+question = {
+	get : {
+		tags: ['lookup', 'question'],
+		description: "Lookup for various questions related to a user's profile",
+		handler: function (request, reply) {
+			models.Question.findAll().then(function(result){
+				if(result){
+					return reply({question: result.toJSON()});
+				}
+				return Boom.notFound('Questions not found');
+			});
+		}
+	}
+};
+
 exports.activelevel = activelevel;
 exports.astrologicalsign = astrologicalsign;
 exports.bodytype = bodytype;
@@ -239,5 +255,6 @@ exports.phototype = phototype;
 exports.profession = profession;
 exports.relationshipstatus = relationshipstatus;
 exports.smoke = smoke;
+exports.question = question;
 
 

@@ -71,4 +71,9 @@ module.exports = exports = [
         path: '/lookup/smoke',
         config: controllers.lookupController.smoke.get
     },
+    {
+        method: 'get',
+        path: '/lookup/question',
+        config: controllers.lookupController.question.get
+    },
 ];

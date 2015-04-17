@@ -11,4 +11,9 @@ module.exports = exports = [
 		path: '/profile/{id}',
 		config: controllers.profileController.update
 	},
+	{
+		method: 'put',
+		path: '/profile/{id}/answer',
+		config: controllers.profileController.updateAnswer
+	},
 ];

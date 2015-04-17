@@ -56,6 +56,10 @@ var Schema = {
             id: {type: 'increments', nullable: false, primary: true},
             description: {type: 'string', maxlength: 45, nullable: false},
         },
+        question :{
+            id: {type: 'increments', nullable: false, primary: true},
+            description: {type: 'string', maxlength: 100, nullable: false},
+        },
         authattempt: {
             id: {type: 'increments', nullable: false, primary: true},
             email: {type: 'string', maxlength: 60, nullable: true},
@@ -110,6 +114,14 @@ var Schema = {
             gender: {type: 'string', maxlength: 1, nullable: true},
             orientation: {type: 'string', maxlength: 1, nullable: true},
             birthday: {type: 'dateTime', nullable: true},
+            created_at: {type: 'dateTime', nullable: false},
+            updated_at: {type: 'dateTime', nullable: true},
+        },
+        profileanswer: {
+            id: {type: 'increments', nullable: false, primary: true},
+            profile_id: {type: 'integer', nullable: true, unsigned: true, references: 'profile.id'},
+            question_id: {type: 'integer', nullable: true, unsigned: true, references: 'question.id'},
+            answer: {type: 'text', nullable: true},
             created_at: {type: 'dateTime', nullable: false},
             updated_at: {type: 'dateTime', nullable: true},
         },

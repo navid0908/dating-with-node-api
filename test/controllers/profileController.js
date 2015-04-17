@@ -372,6 +372,25 @@
 			});
 			done();
 		});
+		lab.test("with invalid questionid", function(done) {
+			var ranges = [-11,-5,0,11,22];
+			var payloadRequest;
+			ranges.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id + "/answer",
+					payload: {
+						id:entry,
+						answer:'this is a test answer for a random question that does not exist'
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(400);
+				});
+			});
+			done();
+		});
 	});
 
 /*
@@ -691,6 +710,25 @@
 					url: "/profile/" + userRecord.id,
 					payload: {
 						height:entry,
+					},
+					headers : {cookie:cookie}
+				};
+				server.inject(payloadRequest, function(response) {
+					Code.expect(response.statusCode).to.equal(200);
+				});
+			});
+			done();
+		});
+		lab.test("with valid questionid", function(done) {
+			var ranges = [1];
+			var payloadRequest;
+			ranges.forEach(function(entry){
+				payloadRequest = {
+					method: "put",
+					url: "/profile/" + userRecord.id + "/answer",
+					payload: {
+						id:entry,
+						answer:"My Self Summary: What I can say is that I am blah and blah is blah."
 					},
 					headers : {cookie:cookie}
 				};
