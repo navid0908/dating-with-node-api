@@ -170,7 +170,69 @@ exports.update = {
 		}
 	}],
 	handler: function (request, reply) {
-		reply();
+		models.User.findOne({id: request.auth.credentials.user.id}).then(function (userRecord) {
+			if(userRecord){
+				return userRecord;
+			}
+		}).then(function (userRecord) {
+			return models.Profile.findOne({user_id: userRecord.get('id')});
+		}).then(function (profileRecord) {
+			if(profileRecord){
+				return profileRecord;
+			}
+			return models.Profile.forge({user_id: request.auth.credentials.user.id});
+		}).then(function (profileRecord) {
+			if(request.payload.bodytype){
+				profileRecord.set('bodytype_id', request.payload.bodytype);
+			}
+			if(request.payload.diet){
+				profileRecord.set('diet_id', request.payload.diet);
+			}
+			if(request.payload.smoke){
+				profileRecord.set('smoke_id',request.payload.smoke);
+			}
+			if(request.payload.drug){
+				profileRecord.set('drug_id',request.payload.drug);
+			}
+			if(request.payload.drink){
+				profileRecord.set('drink_id',request.payload.drink);
+			}
+			if(request.payload.education){
+				profileRecord.set('education_id',request.payload.education);
+			}
+			if(request.payload.children){
+				profileRecord.set('children_id',request.payload.children);
+			}
+			if(request.payload.activelevel){
+				profileRecord.set('activelevel_id',request.payload.activelevel);
+			}
+			if(request.payload.astrologicalsign){
+				profileRecord.set('astrologicalsign_id',request.payload.astrologicalsign);
+			}
+			if(request.payload.profession){
+				profileRecord.set('profession_id', request.payload.profession);
+			}
+			if(request.payload.relationshipstatus){
+				profileRecord.set('relationshipstatus_id',request.payload.relationshipstatus);
+			}
+			if(request.payload.height){
+				profileRecord.set('height',request.payload.height);
+			}
+			if(request.payload.gender){
+				profileRecord.set('gender',request.payload.gender.toLowerCase());
+			}
+			if(request.payload.orientation){
+				profileRecord.set('orientation',request.payload.orientation.toLowerCase());
+			}
+			if(request.payload.birthday){
+				profileRecord.set('birthday',request.payload.birthday.toLowerCase());
+			}
+			return profileRecord.save(null);
+		}).then(function (profileRecord) {
+			return reply ({profile: [profileRecord.toJSON()]});
+        }).catch(function (error) {
+			return reply(Boom.conflict(error));
+		});
 	}
 };
 exports.updateAnswer = {

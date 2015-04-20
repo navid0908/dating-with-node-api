@@ -5,6 +5,7 @@
 	var async = require('async');
 	var util = require('../utils/auth');
 	var date = require('../utils/date');
+	var	Promise = require('bluebird');
 
 	// Test shortcuts
 	var lab = exports.lab = Lab.script();
@@ -56,15 +57,17 @@
 		lab.afterEach(function (done) {
 			//logout
 			util.logout(cookie, function(err, result) {});
-			models.Profile.findAll().
-			then(function (collection) {
-				// ... all Profiles have been destroyed
-				return collection.invokeThen('destroy');
+			models.Profile.findOne({user_id:userRecord.id}).
+			then(function (profileRecord) {
+				return profileRecord.destroy({id:profileRecord.get('id')});
 			}).then(function() {				  
 				return models.User.destroy({id:userRecord.id})
 			}).then(function() {
 				done();
 			});
+
+
+
 		});
 		lab.test("with invalid orientation", function(done) {
 			var orientations = ['X','x','m','f','M','F','S','G','B','L'];
@@ -400,9 +403,10 @@
 */
 	lab.experiment("method:put, url:/profile/{id} - Profile update succeeds ", function() {
 		var cookie;
+		var random = Math.floor((Math.random() * 1000) + 1);
 		var user = {
-					email: 'profiletestsuccess@test.com',
-					username: 'profiletestsuccess',
+					email: 'profiletestsuccess'+random+'@test.com',
+					username: 'profiletestsuccess'+random,
 					password: 'testpassword',
 					network: 'email'
 				};
@@ -432,15 +436,15 @@
 		lab.afterEach(function (done) {
 			//logout
 			util.logout(cookie, function(err, result) {});
-			models.Profile.findAll().
-			then(function (collection) {
-				// ... all Profiles have been destroyed
-				return collection.invokeThen('destroy');
-			}).then(function() {				  
-				return models.User.destroy({id:userRecord.id})
-			}).then(function() {
-				done();
-			});
+			return models.Profile.findOne({user_id:userRecord.id}).then(function (profileRecord) {
+					if(profileRecord){
+						return profileRecord.destroy({id:profileRecord.get('id')});
+					}
+				}).then(function() {
+					return models.User.destroy({id:userRecord.id});
+				}).then(function() {
+					done();
+				});
 		});
 		lab.test("with valid orientation", function(done) {
 			var orientations = ['s', 'g', 'b'];
@@ -786,10 +790,9 @@
 		lab.afterEach(function (done) {
 			//logout
 			util.logout(cookie, function(err, result) {});
-			models.Profile.findAll().
-			then(function (collection) {
-				// ... all Profiles have been destroyed
-				return collection.invokeThen('destroy');
+			models.Profile.findOne({user_id:userRecord.id}).
+			then(function (profileRecord) {
+				return profileRecord.destroy({id:profileRecord.get('id')});
 			}).then(function() {
 				return models.User.destroy({id:userRecord.id})
 			}).then(function() {
