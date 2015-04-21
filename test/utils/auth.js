@@ -2,12 +2,18 @@
 	var Code = require('code');   // assertion library
 	var server = require("../../");
 		
+	function extractCookie(data){
+		var tmp = data.match(/(?:[^\x00-\x20\(\)<>@\,;\:\\"\/\[\]\?\=\{\}\x7F]+)\s*=\s*(?:([^\x00-\x20\"\,\;\\\x7F]*))/);
+		if(tmp.length == 2){
+			return tmp[0];
+		}
+		return null;
+	}
 	function login(payload, callback) {
 		server.inject(payload, function(response) {
 			Code.expect(response.statusCode).to.equal(200);
 			Code.expect("set-cookie" in response.headers).to.equal(true);
-			var tmp = response.headers['set-cookie'][0].match(/(?:[^\x00-\x20\(\)<>@\,;\:\\"\/\[\]\?\=\{\}\x7F]+)\s*=\s*(?:([^\x00-\x20\"\,\;\\\x7F]*))/);			
-			callback(null,tmp[0]);
+			callback(null,extractCookie(response.headers['set-cookie'][0]));
 		});
 	}
 	function logout(cookie, callback) {
@@ -25,5 +31,6 @@
 
 module.exports = {
 	login: login,
-	logout: logout
+	logout: logout,
+	extractCookie: extractCookie
 }
