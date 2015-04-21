@@ -17,6 +17,13 @@
 			});
 		});
 	}
+	function loginAsPromise(payload) {
+		return getServerResponseAsPromise(payload).then(function(response){
+			Code.expect(response.statusCode).to.equal(200);
+			Code.expect("set-cookie" in response.headers).to.equal(true);
+			return extractCookie(response.headers['set-cookie'][0]);
+		});
+	}
 	function login(payload, callback) {
 		server.inject(payload, function(response) {
 			Code.expect(response.statusCode).to.equal(200);
@@ -41,5 +48,6 @@ module.exports = {
 	login : login,
 	logout : logout,
 	extractCookie : extractCookie,
-	getServerResponseAsPromise : getServerResponseAsPromise
+	getServerResponseAsPromise : getServerResponseAsPromise,
+	loginAsPromise : loginAsPromise
 }
