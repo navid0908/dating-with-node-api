@@ -225,7 +225,7 @@ exports.update = {
 				profileRecord.set('orientation',request.payload.orientation.toLowerCase());
 			}
 			if(request.payload.birthday){
-				profileRecord.set('birthday',request.payload.birthday.toLowerCase());
+				profileRecord.set('birthday',request.payload.birthday);
 			}
 			return profileRecord.save(null);
 		}).then(function (profileRecord) {
@@ -257,6 +257,28 @@ exports.updateAnswer = {
 		}}
 	],
 	handler: function (request, reply) {
-		reply();
+		var profile = null;
+		models.Profile.findOne({user_id: request.auth.credentials.user.id}).then(function (profileRecord) {
+			if(profileRecord){
+				return profileRecord;
+			}
+			return models.Profile.forge({user_id: request.auth.credentials.user.id}).save(null);
+		}).then(function (profileRecord) {
+			profile = profileRecord;
+			return models.Profileanswer.findOne({profile_id: profileRecord.get('id')});
+		}).then(function (profileAnswerRecord) {
+			if(profileAnswerRecord){
+				return profileAnswerRecord;
+			}
+			return models.Profileanswer.forge({profile_id: profile.get('id')});
+		}).then(function (profileAnswerRecord) {
+			profileAnswerRecord.set('question_id', request.payload.id);
+			profileAnswerRecord.set('answer', request.payload.answer);
+			return profileAnswerRecord.save(null);
+		}).then(function (profileAnswerRecord) {
+			return reply ({profileanswer: [profileAnswerRecord.toJSON()]});
+        }).catch(function (error) {
+			return reply(Boom.conflict(error));
+		});
 	}
 };

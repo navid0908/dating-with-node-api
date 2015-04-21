@@ -65,9 +65,6 @@
 			}).then(function() {
 				done();
 			});
-
-
-
 		});
 		lab.test("with invalid orientation", function(done) {
 			var orientations = ['X','x','m','f','M','F','S','G','B','L'];
@@ -395,7 +392,6 @@
 			done();
 		});
 	});
-
 /*
 	***
 		@description: The purpose here is to test successful profile update
@@ -404,86 +400,109 @@
 	lab.experiment("method:put, url:/profile/{id} - Profile update succeeds ", function() {
 		var cookie;
 		var random = Math.floor((Math.random() * 1000) + 1);
-		var user = {
-					email: 'profiletestsuccess'+random+'@test.com',
-					username: 'profiletestsuccess'+random,
+		var user;
+		lab.beforeEach(function (done) {
+			user = {
+					email: 'profiletest'+random+'@test.com',
+					username: 'profiletest'+random,
 					password: 'testpassword',
 					network: 'email'
 				};
-		var userRecord;		
-		lab.beforeEach(function (done) {
-			//setup test record
 			models.User.add(user).then(function (result) {
-				userRecord = result.toJSON();
-
+				user.id = result.get('id');
 				//setup payload
 				return {
 					method: "post",url: "/auth/login",
 					payload: {
-						network: 'email',
+						network: user.network,
 						email: user.email,
-						password: user.password,
+						password: user.password
 					}
 				};
-			}).then(function(payloadRequest){
-				//perform login action and store the cookie.
-				util.login(payloadRequest, function(err, result) {
-					cookie = result;
-					done();
-				});
+			}).then(function(payload){
+				return util.loginAsPromise(payload);
+			}).then(function(response){
+				cookie = response;
+				done();
 			});
 		});
 		lab.afterEach(function (done) {
+			var payload = {
+				method: "get",
+				url: "/auth/logout",
+				headers : {cookie:cookie}
+			};
+
 			//logout
-			util.logout(cookie, function(err, result) {});
-			return models.Profile.findOne({user_id:userRecord.id}).then(function (profileRecord) {
-					if(profileRecord){
-						return profileRecord.destroy({id:profileRecord.get('id')});
-					}
-				}).then(function() {
-					return models.User.destroy({id:userRecord.id});
-				}).then(function() {
-					done();
-				});
+			util.logoutAsPromise(cookie).then(function(){
+				return models.Profile.findOne({user_id:user.id});
+			}).then(function (profileRecord) {
+				if(profileRecord){
+					return models.Profileanswer.findOne({profile_id:profileRecord.get('id')}).then(function(profileAnswer){
+						if(profileAnswer){
+							return models.Profileanswer.destroy({id:profileAnswer.get('id')});
+						}
+						return true;
+					}).then(function(){
+						return models.Profile.destroy({id:profileRecord.get('id')});
+					});
+				}
+				throw Promise.reject('Unable to find profile record.');
+			}).then(function() {
+				return models.User.destroy({id:user.id});
+			}).then(function() {
+				done();
+			});
 		});
 		lab.test("with valid orientation", function(done) {
-			var orientations = ['s', 'g', 'b'];
+			var promises = [];
+			var ranges = ['s', 'g', 'b'];
 			var payloadRequest;
-			orientations.forEach(function(entry){
+			ranges.forEach(function(entry){
 				payloadRequest = {
 					method: "put",
-					url: "/profile/" + userRecord.id,
+					url: "/profile/" + user.id,
 					payload: {
 						orientation:entry,
 					},
 					headers : {cookie:cookie}
 				};
-				server.inject(payloadRequest, function(response) {
+				promises.push(util.getServerResponseAsPromise(payloadRequest));
+			});
+			Promise.all(promises).then(function(dataArr) {
+				dataArr.forEach(function(response) {
 					Code.expect(response.statusCode).to.equal(200);
 				});
+			}).finally(function(){
+				return done();
 			});
-			done();
 		});
 		lab.test("with valid gender", function(done) {
-			var genders = ['m', 'f'];
+			var promises = [];
+			var ranges = ['m', 'f'];
 			var payloadRequest;
-			genders.forEach(function(entry){
+			ranges.forEach(function(entry){
 				payloadRequest = {
 					method: "put",
-					url: "/profile/" + userRecord.id,
+					url: "/profile/" + user.id,
 					payload: {
 						gender:entry,
 					},
 					headers : {cookie:cookie}
 				};
-				server.inject(payloadRequest, function(response) {
+				promises.push(util.getServerResponseAsPromise(payloadRequest));
+			});
+			Promise.all(promises).then(function(dataArr) {
+				dataArr.forEach(function(response) {
 					Code.expect(response.statusCode).to.equal(200);
 				});
+			}).finally(function(){
+				return done();
 			});
-			done();
 		});
 		lab.test("with valid birthday", function(done) {
-			var dobs = [
+			var promises = [];
+			var ranges = [
 				Date.parse('01-01-1940'),
 				Date.parse('01-02-1940'),
 				Date.parse('01-02-1950'),
@@ -492,255 +511,324 @@
 				Date.parse('12/29/1999'),
 			];
 			var payloadRequest;
-			dobs.forEach(function(entry){
+			ranges.forEach(function(entry){
 				payloadRequest = {
 					method: "put",
-					url: "/profile/" + userRecord.id,
+					url: "/profile/" + user.id,
 					payload: {
 						birthday:entry.valueOf(),
 					},
 					headers : {cookie:cookie}
 				};
-				server.inject(payloadRequest, function(response) {
+				promises.push(util.getServerResponseAsPromise(payloadRequest));
+			});
+			Promise.all(promises).then(function(dataArr) {
+				dataArr.forEach(function(response) {
 					Code.expect(response.statusCode).to.equal(200);
 				});
+			}).finally(function(){
+				return done();
 			});
-			done();
 		});
 		lab.test("with valid bodytype", function(done) {
+			var promises = [];
 			var ranges = [1,2,3,4,5,6,7,8,9,10];
 			var payloadRequest;
 			ranges.forEach(function(entry){
 				payloadRequest = {
 					method: "put",
-					url: "/profile/" + userRecord.id,
+					url: "/profile/" + user.id,
 					payload: {
 						bodytype:entry,
 					},
 					headers : {cookie:cookie}
 				};
-				server.inject(payloadRequest, function(response) {
+				promises.push(util.getServerResponseAsPromise(payloadRequest));
+			});
+			Promise.all(promises).then(function(dataArr) {
+				dataArr.forEach(function(response) {
 					Code.expect(response.statusCode).to.equal(200);
 				});
+			}).finally(function(){
+				return done();
 			});
-			done();
 		});
 		lab.test("with valid diet", function(done) {
+			var promises = [];
 			var ranges = [1,2,3,4,5,6];
 			var payloadRequest;
 			ranges.forEach(function(entry){
 				payloadRequest = {
 					method: "put",
-					url: "/profile/" + userRecord.id,
+					url: "/profile/" + user.id,
 					payload: {
 						diet:entry,
 					},
 					headers : {cookie:cookie}
 				};
-				server.inject(payloadRequest, function(response) {
+				promises.push(util.getServerResponseAsPromise(payloadRequest));
+			});
+			Promise.all(promises).then(function(dataArr) {
+				dataArr.forEach(function(response) {
 					Code.expect(response.statusCode).to.equal(200);
 				});
+			}).finally(function(){
+				return done();
 			});
-			done();
 		});
 		lab.test("with valid smoke", function(done) {
+			var promises = [];
 			var ranges = [1,2,3,4,5];
 			var payloadRequest;
 			ranges.forEach(function(entry){
 				payloadRequest = {
 					method: "put",
-					url: "/profile/" + userRecord.id,
+					url: "/profile/" + user.id,
 					payload: {
 						smoke:entry,
 					},
 					headers : {cookie:cookie}
 				};
-				server.inject(payloadRequest, function(response) {
+				promises.push(util.getServerResponseAsPromise(payloadRequest));
+			});
+			Promise.all(promises).then(function(dataArr) {
+				dataArr.forEach(function(response) {
 					Code.expect(response.statusCode).to.equal(200);
 				});
+			}).finally(function(){
+				return done();
 			});
-			done();
 		});
 		lab.test("with valid drug", function(done) {
+			var promises = [];
 			var ranges = [1,2,3];
 			var payloadRequest;
 			ranges.forEach(function(entry){
 				payloadRequest = {
 					method: "put",
-					url: "/profile/" + userRecord.id,
+					url: "/profile/" + user.id,
 					payload: {
 						drug:entry,
 					},
 					headers : {cookie:cookie}
 				};
-				server.inject(payloadRequest, function(response) {
+				promises.push(util.getServerResponseAsPromise(payloadRequest));
+			});
+			Promise.all(promises).then(function(dataArr) {
+				dataArr.forEach(function(response) {
 					Code.expect(response.statusCode).to.equal(200);
 				});
+			}).finally(function(){
+				return done();
 			});
-			done();
 		});
 		lab.test("with valid drink", function(done) {
+			var promises = [];
 			var ranges = [1,2,3,4,5];
 			var payloadRequest;
 			ranges.forEach(function(entry){
 				payloadRequest = {
 					method: "put",
-					url: "/profile/" + userRecord.id,
+					url: "/profile/" + user.id,
 					payload: {
 						drink:entry,
 					},
 					headers : {cookie:cookie}
 				};
-				server.inject(payloadRequest, function(response) {
+				promises.push(util.getServerResponseAsPromise(payloadRequest));
+			});
+			Promise.all(promises).then(function(dataArr) {
+				dataArr.forEach(function(response) {
 					Code.expect(response.statusCode).to.equal(200);
 				});
+			}).finally(function(){
+				return done();
 			});
-			done();
 		});
 		lab.test("with valid education", function(done) {
+			var promises = [];
 			var ranges = [1,2,3,4,5,6,7];
 			var payloadRequest;
 			ranges.forEach(function(entry){
 				payloadRequest = {
 					method: "put",
-					url: "/profile/" + userRecord.id,
+					url: "/profile/" + user.id,
 					payload: {
 						education:entry,
 					},
 					headers : {cookie:cookie}
 				};
-				server.inject(payloadRequest, function(response) {
+				promises.push(util.getServerResponseAsPromise(payloadRequest));
+			});
+			Promise.all(promises).then(function(dataArr) {
+				dataArr.forEach(function(response) {
 					Code.expect(response.statusCode).to.equal(200);
 				});
+			}).finally(function(){
+				return done();
 			});
-			done();
 		});
 		lab.test("with valid children", function(done) {
+			var promises = [];
 			var ranges = [1,2,3];
 			var payloadRequest;
 			ranges.forEach(function(entry){
 				payloadRequest = {
 					method: "put",
-					url: "/profile/" + userRecord.id,
+					url: "/profile/" + user.id,
 					payload: {
 						children:entry,
 					},
 					headers : {cookie:cookie}
 				};
-				server.inject(payloadRequest, function(response) {
+				promises.push(util.getServerResponseAsPromise(payloadRequest));
+			});
+			Promise.all(promises).then(function(dataArr) {
+				dataArr.forEach(function(response) {
 					Code.expect(response.statusCode).to.equal(200);
 				});
+			}).finally(function(){
+				return done();
 			});
-			done();
 		});
 		lab.test("with valid activelevel", function(done) {
+			var promises = [];
 			var ranges = [1,2,3,4,5];
 			var payloadRequest;
 			ranges.forEach(function(entry){
 				payloadRequest = {
 					method: "put",
-					url: "/profile/" + userRecord.id,
+					url: "/profile/" + user.id,
 					payload: {
 						activelevel:entry,
 					},
 					headers : {cookie:cookie}
 				};
-				server.inject(payloadRequest, function(response) {
+				promises.push(util.getServerResponseAsPromise(payloadRequest));
+			});
+			Promise.all(promises).then(function(dataArr) {
+				dataArr.forEach(function(response) {
 					Code.expect(response.statusCode).to.equal(200);
 				});
+			}).finally(function(){
+				return done();
 			});
-			done();
 		});
 		lab.test("with valid astrologicalsign", function(done) {
+			var promises = [];
 			var ranges = [1,2,3,4,5,6,7,8,9,10,11,12];
 			var payloadRequest;
 			ranges.forEach(function(entry){
 				payloadRequest = {
 					method: "put",
-					url: "/profile/" + userRecord.id,
+					url: "/profile/" + user.id,
 					payload: {
 						astrologicalsign:entry,
 					},
 					headers : {cookie:cookie}
 				};
-				server.inject(payloadRequest, function(response) {
+				promises.push(util.getServerResponseAsPromise(payloadRequest));
+			});
+			Promise.all(promises).then(function(dataArr) {
+				dataArr.forEach(function(response) {
 					Code.expect(response.statusCode).to.equal(200);
 				});
+			}).finally(function(){
+				return done();
 			});
-			done();
 		});
 		lab.test("with valid profession", function(done) {
+			var promises = [];
 			var ranges = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
 			var payloadRequest;
 			ranges.forEach(function(entry){
 				payloadRequest = {
 					method: "put",
-					url: "/profile/" + userRecord.id,
+					url: "/profile/" + user.id,
 					payload: {
 						profession:entry,
 					},
 					headers : {cookie:cookie}
 				};
-				server.inject(payloadRequest, function(response) {
+				promises.push(util.getServerResponseAsPromise(payloadRequest));
+			});
+			Promise.all(promises).then(function(dataArr) {
+				dataArr.forEach(function(response) {
 					Code.expect(response.statusCode).to.equal(200);
 				});
+			}).finally(function(){
+				return done();
 			});
-			done();
 		});
 		lab.test("with valid relationshipstatus", function(done) {
+			var promises = [];
 			var ranges = [1,2,3,4,5,6];
 			var payloadRequest;
 			ranges.forEach(function(entry){
 				payloadRequest = {
 					method: "put",
-					url: "/profile/" + userRecord.id,
+					url: "/profile/" + user.id,
 					payload: {
 						relationshipstatus:entry,
 					},
 					headers : {cookie:cookie}
 				};
-				server.inject(payloadRequest, function(response) {
+				promises.push(util.getServerResponseAsPromise(payloadRequest));
+			});
+			Promise.all(promises).then(function(dataArr) {
+				dataArr.forEach(function(response) {
 					Code.expect(response.statusCode).to.equal(200);
 				});
+			}).finally(function(){
+				return done();
 			});
-			done();
 		});
 		lab.test("with valid height", function(done) {
+			var promises = [];
 			var ranges = [152.5,180.22];
 			var payloadRequest;
 			ranges.forEach(function(entry){
 				payloadRequest = {
 					method: "put",
-					url: "/profile/" + userRecord.id,
+					url: "/profile/" + user.id,
 					payload: {
-						height:entry,
+						height:entry
 					},
 					headers : {cookie:cookie}
 				};
-				server.inject(payloadRequest, function(response) {
+				promises.push(util.getServerResponseAsPromise(payloadRequest));
+			});
+			Promise.all(promises).then(function(dataArr) {
+				dataArr.forEach(function(response) {
 					Code.expect(response.statusCode).to.equal(200);
 				});
+			}).finally(function(){
+				return done();
 			});
-			done();
 		});
 		lab.test("with valid questionid", function(done) {
+			var promises = [];
 			var ranges = [1];
 			var payloadRequest;
 			ranges.forEach(function(entry){
 				payloadRequest = {
 					method: "put",
-					url: "/profile/" + userRecord.id + "/answer",
+					url: "/profile/" + user.id + "/answer",
 					payload: {
-						id:entry,
+						id: entry,
 						answer:"My Self Summary: What I can say is that I am blah and blah is blah."
 					},
 					headers : {cookie:cookie}
 				};
-				server.inject(payloadRequest, function(response) {
+				promises.push(util.getServerResponseAsPromise(payloadRequest));
+			});
+			Promise.all(promises).then(function(dataArr) {
+				dataArr.forEach(function(response) {
 					Code.expect(response.statusCode).to.equal(200);
 				});
+			}).finally(function(){
+				return done();
 			});
-			done();
 		});
 	});
 /*
