@@ -1,3 +1,4 @@
+	var	Promise = require('bluebird');
 	var Lab = require("lab");
 	var Code = require('code');   // assertion library
 	var server = require("../../");
@@ -8,6 +9,13 @@
 			return tmp[0];
 		}
 		return null;
+	}
+	function getServerResponseAsPromise(payload){
+		return new Promise(function(resolve, reject) {
+			server.inject(payload, function(response) {
+				resolve(response); // we get the data here, so resolve the Promise
+			});
+		});
 	}
 	function login(payload, callback) {
 		server.inject(payload, function(response) {
@@ -30,7 +38,8 @@
 	}
 
 module.exports = {
-	login: login,
-	logout: logout,
-	extractCookie: extractCookie
+	login : login,
+	logout : logout,
+	extractCookie : extractCookie,
+	getServerResponseAsPromise : getServerResponseAsPromise
 }
