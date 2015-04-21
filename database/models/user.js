@@ -79,8 +79,8 @@ var User;
         add: function (data, options) {
             var self = this;
             var userData =  _.clone(data);
-            userData = this.mapData(data);
-            userData = this.filterData(data);
+            userData = this.mapData(userData);
+            userData = this.filterData(userData);
             options = this.filterOptions(options, 'add');
 
             // Generate a new password hash
