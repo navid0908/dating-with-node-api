@@ -31,6 +31,17 @@
 			callback(null,extractCookie(response.headers['set-cookie'][0]));
 		});
 	}
+	function logoutAsPromise(cookie){
+		//logout
+		var payload = {
+			method: "get",
+			url: "/auth/logout",
+			headers : {cookie:cookie}
+		};
+		return getServerResponseAsPromise(payload).then(function(response){
+			return Code.expect(response.statusCode).to.equal(200);
+		});
+	}
 	function logout(cookie, callback) {
 		//logout
 		var payload = {
@@ -49,5 +60,6 @@ module.exports = {
 	logout : logout,
 	extractCookie : extractCookie,
 	getServerResponseAsPromise : getServerResponseAsPromise,
-	loginAsPromise : loginAsPromise
+	loginAsPromise : loginAsPromise,
+	logoutAsPromise : logoutAsPromise,
 }
