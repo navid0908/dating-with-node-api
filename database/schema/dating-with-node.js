@@ -97,7 +97,7 @@ var Schema = {
         },
         profile: {
             id: {type: 'increments', nullable: false, primary: true},
-            user_id: {type: 'integer', nullable: true, unsigned: true, references: 'user.id'},
+            user_id: {type: 'integer', nullable: true, unsigned: true, references: 'user.id', unique: true},
             location_id: {type: 'integer', nullable: true, unsigned: true, references: 'location.id'},
             bodytype_id: {type: 'integer', nullable: true, unsigned: true, references: 'bodytype.id'},
             diet_id: {type: 'integer', nullable: true, unsigned: true, references: 'diet.id'},
