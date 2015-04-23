@@ -444,7 +444,11 @@
 						}
 						return true;
 					}).then(function(){
-						return models.Profile.destroy({id:profileRecord.get('id')});
+						// @TODO for some reason the below destroy does not work
+						// return models.Profile.destroy({id:profileRecord.get('id')});
+						return models.Profile.findAll({id:profileRecord.get('id')});
+					}).then(function(collection){
+						return collection.invokeThen('destroy');
 					});
 				}
 				throw Promise.reject('Unable to find profile record.');
