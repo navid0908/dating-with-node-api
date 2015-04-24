@@ -180,8 +180,11 @@ exports.update = {
 			if(profileRecord){
 				return profileRecord;
 			}
-			return models.Profile.forge({user_id: request.auth.credentials.user.id});
+			return models.Profile.forge({user_id:request.auth.credentials.user.id});
 		}).then(function (profileRecord) {
+			if(profileRecord && !profileRecord.get('user_id')){
+				profileRecord.set('user_id', request.auth.credentials.user.id);
+			}
 			if(request.payload.bodytype){
 				profileRecord.set('bodytype_id', request.payload.bodytype);
 			}

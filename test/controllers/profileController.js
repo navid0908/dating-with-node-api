@@ -6,6 +6,7 @@
 	var util = require('../utils/auth');
 	var date = require('../utils/date');
 	var	Promise = require('bluebird');
+	var _ = require("lodash");
 
 	// Test shortcuts
 	var lab = exports.lab = Lab.script();
@@ -460,7 +461,8 @@
 		});
 		lab.test("with valid orientation", function(done) {
 			var promises = [];
-			var ranges = ['s', 'g', 'b'];
+			var response = null;
+			var ranges = ['g', 's', 'b'];
 			var payloadRequest;
 			ranges.forEach(function(entry){
 				payloadRequest = {
@@ -471,7 +473,17 @@
 					},
 					headers : {cookie:cookie}
 				};
-				promises.push(util.getServerResponseAsPromise(payloadRequest));
+				response = util.getServerResponseAsPromise(payloadRequest);
+				promises.push(response);
+
+				response.then(function(){
+					//confirm it was saved
+					models.Profile.findOne({user_id:user.id}).then(function(result){
+						//@NOTE: due to async nature of node, we're checking for the value stored in the db against
+						//@NOTE: the ranges above as we don't know which will get evaulated first.
+						Code.expect(true).to.equal(_.contains(ranges,result.get('orientation')));
+					});
+				});
 			});
 			Promise.all(promises).then(function(dataArr) {
 				dataArr.forEach(function(response) {
@@ -483,6 +495,7 @@
 		});
 		lab.test("with valid gender", function(done) {
 			var promises = [];
+			var response = null;
 			var ranges = ['m', 'f'];
 			var payloadRequest;
 			ranges.forEach(function(entry){
@@ -494,7 +507,17 @@
 					},
 					headers : {cookie:cookie}
 				};
-				promises.push(util.getServerResponseAsPromise(payloadRequest));
+				response = util.getServerResponseAsPromise(payloadRequest);
+				promises.push(response);
+
+				response.then(function(){
+					//confirm it was saved
+					models.Profile.findOne({user_id:user.id}).then(function(result){
+						//@NOTE: due to async nature of node, we're checking for the value stored in the db against
+						//@NOTE: the ranges above as we don't know which will get evaulated first.
+						Code.expect(true).to.equal(_.contains(ranges,result.get('gender')));
+					});
+				});
 			});
 			Promise.all(promises).then(function(dataArr) {
 				dataArr.forEach(function(response) {
@@ -506,6 +529,7 @@
 		});
 		lab.test("with valid birthday", function(done) {
 			var promises = [];
+			var response = null;
 			var ranges = [
 				Date.parse('01-01-1940'),
 				Date.parse('01-02-1940'),
@@ -524,7 +548,17 @@
 					},
 					headers : {cookie:cookie}
 				};
-				promises.push(util.getServerResponseAsPromise(payloadRequest));
+				response = util.getServerResponseAsPromise(payloadRequest);
+				promises.push(response);
+
+				response.then(function(){
+					//confirm it was saved
+					models.Profile.findOne({user_id:user.id}).then(function(result){
+						//@NOTE: due to async nature of node, we're checking for the value stored in the db against
+						//@NOTE: the ranges above as we don't know which will get evaulated first.
+						Code.expect(true).to.equal(_.contains(ranges,Date.parse(result.get('birthday'))));
+					});
+				});
 			});
 			Promise.all(promises).then(function(dataArr) {
 				dataArr.forEach(function(response) {
@@ -536,6 +570,7 @@
 		});
 		lab.test("with valid bodytype", function(done) {
 			var promises = [];
+			var response = null;
 			var ranges = [1,2,3,4,5,6,7,8,9,10];
 			var payloadRequest;
 			ranges.forEach(function(entry){
@@ -547,7 +582,17 @@
 					},
 					headers : {cookie:cookie}
 				};
-				promises.push(util.getServerResponseAsPromise(payloadRequest));
+				response = util.getServerResponseAsPromise(payloadRequest);
+				promises.push(response);
+
+				response.then(function(){
+					//confirm it was saved
+					models.Profile.findOne({user_id:user.id}).then(function(result){
+						//@NOTE: due to async nature of node, we're checking for the value stored in the db against
+						//@NOTE: the ranges above as we don't know which will get evaulated first.
+						Code.expect(true).to.equal(_.contains(ranges,result.get('bodytype_id')));
+					});
+				});
 			});
 			Promise.all(promises).then(function(dataArr) {
 				dataArr.forEach(function(response) {
@@ -559,6 +604,7 @@
 		});
 		lab.test("with valid diet", function(done) {
 			var promises = [];
+			var response = null;
 			var ranges = [1,2,3,4,5,6];
 			var payloadRequest;
 			ranges.forEach(function(entry){
@@ -570,7 +616,17 @@
 					},
 					headers : {cookie:cookie}
 				};
-				promises.push(util.getServerResponseAsPromise(payloadRequest));
+				response = util.getServerResponseAsPromise(payloadRequest);
+				promises.push(response);
+
+				response.then(function(){
+					//confirm it was saved
+					models.Profile.findOne({user_id:user.id}).then(function(result){
+						//@NOTE: due to async nature of node, we're checking for the value stored in the db against
+						//@NOTE: the ranges above as we don't know which will get evaulated first.
+						Code.expect(true).to.equal(_.contains(ranges,result.get('diet_id')));
+					});
+				});
 			});
 			Promise.all(promises).then(function(dataArr) {
 				dataArr.forEach(function(response) {
@@ -582,6 +638,7 @@
 		});
 		lab.test("with valid smoke", function(done) {
 			var promises = [];
+			var response = null;
 			var ranges = [1,2,3,4,5];
 			var payloadRequest;
 			ranges.forEach(function(entry){
@@ -593,7 +650,17 @@
 					},
 					headers : {cookie:cookie}
 				};
-				promises.push(util.getServerResponseAsPromise(payloadRequest));
+				response = util.getServerResponseAsPromise(payloadRequest);
+				promises.push(response);
+
+				response.then(function(){
+					//confirm it was saved
+					models.Profile.findOne({user_id:user.id}).then(function(result){
+						//@NOTE: due to async nature of node, we're checking for the value stored in the db against
+						//@NOTE: the ranges above as we don't know which will get evaulated first.
+						Code.expect(true).to.equal(_.contains(ranges,result.get('smoke_id')));
+					});
+				});
 			});
 			Promise.all(promises).then(function(dataArr) {
 				dataArr.forEach(function(response) {
@@ -605,6 +672,7 @@
 		});
 		lab.test("with valid drug", function(done) {
 			var promises = [];
+			var response = null;
 			var ranges = [1,2,3];
 			var payloadRequest;
 			ranges.forEach(function(entry){
@@ -616,7 +684,17 @@
 					},
 					headers : {cookie:cookie}
 				};
-				promises.push(util.getServerResponseAsPromise(payloadRequest));
+				response = util.getServerResponseAsPromise(payloadRequest);
+				promises.push(response);
+
+				response.then(function(){
+					//confirm it was saved
+					models.Profile.findOne({user_id:user.id}).then(function(result){
+						//@NOTE: due to async nature of node, we're checking for the value stored in the db against
+						//@NOTE: the ranges above as we don't know which will get evaulated first.
+						Code.expect(true).to.equal(_.contains(ranges,result.get('drug_id')));
+					});
+				});
 			});
 			Promise.all(promises).then(function(dataArr) {
 				dataArr.forEach(function(response) {
@@ -628,6 +706,7 @@
 		});
 		lab.test("with valid drink", function(done) {
 			var promises = [];
+			var response = null;
 			var ranges = [1,2,3,4,5];
 			var payloadRequest;
 			ranges.forEach(function(entry){
@@ -639,7 +718,17 @@
 					},
 					headers : {cookie:cookie}
 				};
-				promises.push(util.getServerResponseAsPromise(payloadRequest));
+				response = util.getServerResponseAsPromise(payloadRequest);
+				promises.push(response);
+
+				response.then(function(){
+					//confirm it was saved
+					models.Profile.findOne({user_id:user.id}).then(function(result){
+						//@NOTE: due to async nature of node, we're checking for the value stored in the db against
+						//@NOTE: the ranges above as we don't know which will get evaulated first.
+						Code.expect(true).to.equal(_.contains(ranges,result.get('drink_id')));
+					});
+				});
 			});
 			Promise.all(promises).then(function(dataArr) {
 				dataArr.forEach(function(response) {
@@ -651,6 +740,7 @@
 		});
 		lab.test("with valid education", function(done) {
 			var promises = [];
+			var response = null;
 			var ranges = [1,2,3,4,5,6,7];
 			var payloadRequest;
 			ranges.forEach(function(entry){
@@ -662,7 +752,17 @@
 					},
 					headers : {cookie:cookie}
 				};
-				promises.push(util.getServerResponseAsPromise(payloadRequest));
+				response = util.getServerResponseAsPromise(payloadRequest);
+				promises.push(response);
+
+				response.then(function(){
+					//confirm it was saved
+					models.Profile.findOne({user_id:user.id}).then(function(result){
+						//@NOTE: due to async nature of node, we're checking for the value stored in the db against
+						//@NOTE: the ranges above as we don't know which will get evaulated first.
+						Code.expect(true).to.equal(_.contains(ranges,result.get('education_id')));
+					});
+				});
 			});
 			Promise.all(promises).then(function(dataArr) {
 				dataArr.forEach(function(response) {
@@ -674,6 +774,7 @@
 		});
 		lab.test("with valid children", function(done) {
 			var promises = [];
+			var response = null;
 			var ranges = [1,2,3];
 			var payloadRequest;
 			ranges.forEach(function(entry){
@@ -685,7 +786,17 @@
 					},
 					headers : {cookie:cookie}
 				};
-				promises.push(util.getServerResponseAsPromise(payloadRequest));
+				response = util.getServerResponseAsPromise(payloadRequest);
+				promises.push(response);
+
+				response.then(function(){
+					//confirm it was saved
+					models.Profile.findOne({user_id:user.id}).then(function(result){
+						//@NOTE: due to async nature of node, we're checking for the value stored in the db against
+						//@NOTE: the ranges above as we don't know which will get evaulated first.
+						Code.expect(true).to.equal(_.contains(ranges,result.get('children_id')));
+					});
+				});
 			});
 			Promise.all(promises).then(function(dataArr) {
 				dataArr.forEach(function(response) {
@@ -697,6 +808,7 @@
 		});
 		lab.test("with valid activelevel", function(done) {
 			var promises = [];
+			var response = null;
 			var ranges = [1,2,3,4,5];
 			var payloadRequest;
 			ranges.forEach(function(entry){
@@ -708,7 +820,17 @@
 					},
 					headers : {cookie:cookie}
 				};
-				promises.push(util.getServerResponseAsPromise(payloadRequest));
+				response = util.getServerResponseAsPromise(payloadRequest);
+				promises.push(response);
+
+				response.then(function(){
+					//confirm it was saved
+					models.Profile.findOne({user_id:user.id}).then(function(result){
+						//@NOTE: due to async nature of node, we're checking for the value stored in the db against
+						//@NOTE: the ranges above as we don't know which will get evaulated first.
+						Code.expect(true).to.equal(_.contains(ranges,result.get('activelevel_id')));
+					});
+				});
 			});
 			Promise.all(promises).then(function(dataArr) {
 				dataArr.forEach(function(response) {
@@ -720,6 +842,7 @@
 		});
 		lab.test("with valid astrologicalsign", function(done) {
 			var promises = [];
+			var response = null;
 			var ranges = [1,2,3,4,5,6,7,8,9,10,11,12];
 			var payloadRequest;
 			ranges.forEach(function(entry){
@@ -731,7 +854,17 @@
 					},
 					headers : {cookie:cookie}
 				};
-				promises.push(util.getServerResponseAsPromise(payloadRequest));
+				response = util.getServerResponseAsPromise(payloadRequest);
+				promises.push(response);
+
+				response.then(function(){
+					//confirm it was saved
+					models.Profile.findOne({user_id:user.id}).then(function(result){
+						//@NOTE: due to async nature of node, we're checking for the value stored in the db against
+						//@NOTE: the ranges above as we don't know which will get evaulated first.
+						Code.expect(true).to.equal(_.contains(ranges,result.get('astrologicalsign_id')));
+					});
+				});
 			});
 			Promise.all(promises).then(function(dataArr) {
 				dataArr.forEach(function(response) {
@@ -743,6 +876,7 @@
 		});
 		lab.test("with valid profession", function(done) {
 			var promises = [];
+			var response = null;
 			var ranges = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
 			var payloadRequest;
 			ranges.forEach(function(entry){
@@ -754,7 +888,17 @@
 					},
 					headers : {cookie:cookie}
 				};
-				promises.push(util.getServerResponseAsPromise(payloadRequest));
+				response = util.getServerResponseAsPromise(payloadRequest);
+				promises.push(response);
+
+				response.then(function(){
+					//confirm it was saved
+					models.Profile.findOne({user_id:user.id}).then(function(result){
+						//@NOTE: due to async nature of node, we're checking for the value stored in the db against
+						//@NOTE: the ranges above as we don't know which will get evaulated first.
+						Code.expect(true).to.equal(_.contains(ranges,result.get('profession_id')));
+					});
+				});
 			});
 			Promise.all(promises).then(function(dataArr) {
 				dataArr.forEach(function(response) {
@@ -766,6 +910,7 @@
 		});
 		lab.test("with valid relationshipstatus", function(done) {
 			var promises = [];
+			var response = null;
 			var ranges = [1,2,3,4,5,6];
 			var payloadRequest;
 			ranges.forEach(function(entry){
@@ -777,7 +922,17 @@
 					},
 					headers : {cookie:cookie}
 				};
-				promises.push(util.getServerResponseAsPromise(payloadRequest));
+				response = util.getServerResponseAsPromise(payloadRequest);
+				promises.push(response);
+
+				response.then(function(){
+					//confirm it was saved
+					models.Profile.findOne({user_id:user.id}).then(function(result){
+						//@NOTE: due to async nature of node, we're checking for the value stored in the db against
+						//@NOTE: the ranges above as we don't know which will get evaulated first.
+						Code.expect(true).to.equal(_.contains(ranges,result.get('relationshipstatus_id')));
+					});
+				});
 			});
 			Promise.all(promises).then(function(dataArr) {
 				dataArr.forEach(function(response) {
@@ -789,6 +944,7 @@
 		});
 		lab.test("with valid height", function(done) {
 			var promises = [];
+			var response = null;
 			var ranges = [152.5,180.22];
 			var payloadRequest;
 			ranges.forEach(function(entry){
@@ -800,7 +956,17 @@
 					},
 					headers : {cookie:cookie}
 				};
-				promises.push(util.getServerResponseAsPromise(payloadRequest));
+				response = util.getServerResponseAsPromise(payloadRequest);
+				promises.push(response);
+
+				response.then(function(){
+					//confirm it was saved
+					models.Profile.findOne({user_id:user.id}).then(function(result){
+						//@NOTE: due to async nature of node, we're checking for the value stored in the db against
+						//@NOTE: the ranges above as we don't know which will get evaulated first.
+						Code.expect(true).to.equal(_.contains(ranges,result.get('height')));
+					});
+				});
 			});
 			Promise.all(promises).then(function(dataArr) {
 				dataArr.forEach(function(response) {
@@ -812,6 +978,7 @@
 		});
 		lab.test("with valid questionid", function(done) {
 			var promises = [];
+			var response = null;
 			var ranges = [1];
 			var payloadRequest;
 			ranges.forEach(function(entry){
@@ -824,7 +991,17 @@
 					},
 					headers : {cookie:cookie}
 				};
-				promises.push(util.getServerResponseAsPromise(payloadRequest));
+				response = util.getServerResponseAsPromise(payloadRequest);
+				promises.push(response);
+
+				response.then(function(){
+					//confirm it was saved
+					models.Profileanswer.findOne({user_id:user.id}).then(function(result){
+						//@NOTE: due to async nature of node, we're checking for the value stored in the db against
+						//@NOTE: the ranges above as we don't know which will get evaulated first.
+						Code.expect(true).to.equal(_.contains(ranges,result.get('question_id')));
+					});
+				});
 			});
 			Promise.all(promises).then(function(dataArr) {
 				dataArr.forEach(function(response) {
