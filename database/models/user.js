@@ -8,6 +8,7 @@ var bcryptGenSalt  = Promise.promisify(bcrypt.genSalt);
 var bcryptHash     = Promise.promisify(bcrypt.hash);
 var bcryptCompare  = Promise.promisify(bcrypt.compare);
 var User;
+var Profile = require('./profile');
     function generatePasswordHash(password) {
         // Generate a new salt
             return bcryptGenSalt(bcryptSaltLen).then(function (salt) {
@@ -18,6 +19,8 @@ var User;
 
     User = baseModel.Model.extend({
         tableName: 'user',
+        hasTimestamps: true,
+        columnMappings: {network:'social_login_type'},
         defaults : function(){
             return {
                 // default values for when the record is created.
@@ -26,8 +29,9 @@ var User;
                 social_login_type: 'email'
              }
         },
-        hasTimestamps: true,
-        columnMappings: {network:'social_login_type'},
+        profile : function(){
+            return this.hasOne(Profile);
+        },
         toJson: function(options){
             var attrs = baseModel.Model.prototype.toJSON.call(this, options);
 
