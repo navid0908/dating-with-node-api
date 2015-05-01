@@ -11,7 +11,8 @@ var Photo;
         defaults: function() {
             return {
                 // default values for when the record is created.
-                status: 'ative',
+                is_primary: 0,
+                phototype_id: 1
             }
         },
         user : function(){

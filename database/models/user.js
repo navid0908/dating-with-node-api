@@ -8,7 +8,7 @@ var bcryptGenSalt  = Promise.promisify(bcrypt.genSalt);
 var bcryptHash     = Promise.promisify(bcrypt.hash);
 var bcryptCompare  = Promise.promisify(bcrypt.compare);
 var User;
-var Profile = require('./profile');
+
     function generatePasswordHash(password) {
         // Generate a new salt
             return bcryptGenSalt(bcryptSaltLen).then(function (salt) {
@@ -30,7 +30,12 @@ var Profile = require('./profile');
              }
         },
         profile : function(){
+            var Profile = require('./profile');
             return this.hasOne(Profile);
+        },
+        photos : function(){
+            var Photos = require('./photo');
+            return this.hasMany(Photos);
         },
         toJson: function(options){
             var attrs = baseModel.Model.prototype.toJSON.call(this, options);
