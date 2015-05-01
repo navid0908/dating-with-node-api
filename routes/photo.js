@@ -6,9 +6,9 @@ module.exports = exports = [
 		path: '/photo',
 		config: controllers.photoController.get
 	},
-	// {
-	// 	method: 'put',
-	// 	path: '/photo/{id}',
-	// 	config: controllers.photoController.update
-	// },
+	{
+		method: 'put',
+		path: '/photo/{id}',
+		config: controllers.photoController.update
+	},
 ];
