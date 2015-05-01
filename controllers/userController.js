@@ -2,7 +2,6 @@ var models = require('../database');
 var	Joi = require('joi');
 var	Boom = require('boom');
 var	Crypto = require('crypto');
-var async = require('async');
 var Promise = require('bluebird');
 var config = require('../config/config');
 var _ = require('lodash');

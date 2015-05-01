@@ -1,5 +1,4 @@
 var models = require('../database');
-var async = require('async');
 var config = require('../config/config');
 var	Boom = require('boom');
 var	Joi = require('joi');
