@@ -19,6 +19,12 @@ var Photo;
             var User = require('./user');
             return this.belongsTo('User');
         },
+        /**
+         * [unsetOldPrimaryPhoto This function makes any exisiting primary photo to not primary.]
+         */
+        unsetOldPrimaryPhoto: function(){
+            return baseModel.knex(this.tableName).update({is_primary:0}).where({user_id:this.id});
+        }
     });
 
 module.exports = baseModel.model('Photo', Photo);

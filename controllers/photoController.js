@@ -2,6 +2,9 @@ var models = require('../database');
 var Joi = require('joi');
 var	Boom = require('boom');
 var	Promise = require('bluebird');
+var fs = require('fs');
+var uuid = require('node-uuid');
+var	config = require('../config/config');
 
 // private internal functions
 var internals = {};
@@ -31,31 +34,83 @@ exports.get = {
 	}
 };
 
+exports.add = {
+	tags: ['photos', 'user', 'add'],
+	description: "This adds a photo for a given user on the system",
+	auth: 'session',
+	payload: {
+		maxBytes: 1024 * 1024 * 10, // 1B (1024) * 1K (1024) = 1MB * 10 = 10mb
+		output: 'stream', // We need to pipe the file to S3
+		parse: true
+	},
+	validate: {
+		payload: {
+			id : Joi.number().integer().min(1),
+			primary: Joi.number().integer().min(0).max(1),
+			caption: Joi.string().min(1).max(140),
+			file: Joi.object({
+				hapi: Joi.object({
+					headers: Joi.object({
+						'content-type' : Joi.string().valid(['image/jpeg']).required(),
+					})
+				})
+			}).options({ allowUnknown: true })
+		}
+	},
+	handler: function (request, reply) {
+		if(request.payload.file){
+			var current = Promise.resolve();
+
+			// Create a new uuid so that there is no naming collision
+			var newFilename = config.general.public_upload_path + uuid.v1() + '.jpg';
+
+			// Set the location for the file to be placed.
+			var fileOut = fs.createWriteStream(newFilename);
+
+			request.payload.file.pipe(fileOut);
+
+			current.then(function(){
+				return models.Photo.forge({user_id: request.auth.credentials.user.id});
+			}).then(function(photo){
+				if (request.payload.caption){
+					photo.set('caption', request.payload.caption);
+				}
+				if (request.payload.primary){
+					photo.set('is_primary', request.payload.primary);
+				}
+				if (request.payload.primary){
+					photo.set('filepath', newFilename);
+				}
+				return photo.save(null);
+			}).then(function(photo){
+				reply({photo: photo.toJSON()});
+			})
+		}
+	}
+};
+
 exports.update = {
 	tags: ['photos', 'user', 'update'],
 	description: "This updates a photo for a given user on the system",
 	auth: 'session',
 	validate: {
 		payload: {
-			id : Joi.number().min(1),
 			primary: Joi.any().valid(0,1),
 			caption: Joi.string().min(1).max(140),
-			image: [Joi.string(), Joi.number()],
 		}
 	},
 	handler: function (request, reply) {
-		if(request.payload.id){
-			return models.Photo.forge({id: request.payload.id}).fetch().then(function(photo) {
-				if (photo && photo.length > 0){
+		if(request.params.id){
+			return models.Photo.forge({id: request.params.id}).fetch().then(function(photo) {
+				if (photo){
 					if (request.payload.primary){
 						photo.set('is_primary', request.payload.primary);
+						if(request.payload.primary == 1){
+							photo.unsetOldPrimaryPhoto();
+						}
 					}
 					if (request.payload.caption){
 						photo.set('caption', request.payload.caption);
-					}
-					if (request.payload.image){
-						//@TODO:Needs to be implemented
-						return Promise.reject('Needs to be implemented');
 					}
 					return photo.save(null);
 				}

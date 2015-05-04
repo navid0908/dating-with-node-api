@@ -143,5 +143,8 @@ module.exports = {
     invitations : {
         systemMax: 1000,
         userMax: 5
+    },
+    general: {
+        public_upload_path : './test/data/photos/uploads/'
     }
 }
