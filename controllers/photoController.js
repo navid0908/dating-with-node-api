@@ -69,22 +69,27 @@ exports.add = {
 
 			request.payload.file.pipe(fileOut);
 
-			current.then(function(){
-				return models.Photo.forge({user_id: request.auth.credentials.user.id});
-			}).then(function(photo){
-				if (request.payload.caption){
-					photo.set('caption', request.payload.caption);
-				}
-				if (request.payload.primary){
-					photo.set('is_primary', request.payload.primary);
-				}
-				if (request.payload.primary){
-					photo.set('filepath', newFilename);
-				}
-				return photo.save(null);
-			}).then(function(photo){
-				reply({photo: photo.toJSON()});
-			})
+			request.payload.file.on('error', function(err){
+				return reply(Boom.badRequest('Unable to save photo to drive.'));
+			});
+			request.payload.file.on('end', function(err){
+				current.then(function(){
+					return models.Photo.forge({user_id: request.auth.credentials.user.id});
+				}).then(function(photo){
+					if (request.payload.caption){
+						photo.set('caption', request.payload.caption);
+					}
+					if (request.payload.primary){
+						photo.set('is_primary', request.payload.primary);
+					}
+					if (request.payload.primary){
+						photo.set('filepath', newFilename);
+					}
+					return photo.save(null);
+				}).then(function(photo){
+					reply({photo: photo.toJSON()});
+				})
+			});
 		}
 	}
 };
