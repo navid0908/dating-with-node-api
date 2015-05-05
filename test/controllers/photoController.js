@@ -79,10 +79,10 @@
 				done();
 			});
 		});
-		lab.test("with invalid id", function(done) {
+		lab.test("with invalid username", function(done) {
 			var payloadRequest = {
 				method: "get",
-				url: "/photo?id=" + user.id + 1010101010101010,
+				url: "/photo/somerandomeusername",
 				headers : {cookie:cookie}
 			};
 			server.inject(payloadRequest, function(response) {
@@ -148,7 +148,7 @@
 				return models.Photo.findOne({user_id:user.id});
 			}).then(function (photoRecord) {
 				if(photoRecord){
-					return models.Photo.destroy({id:photoRecord.get('id')});					
+					return models.Photo.destroy({id:photoRecord.get('id')});
 				}
 			}).then(function() {
 				return models.User.destroy({id:user.id});
@@ -156,10 +156,10 @@
 				done();
 			});
 		});
-		lab.test("with valid id", function(done) {
+		lab.test("with valid username", function(done) {
 			var payloadRequest = {
 				method: "get",
-				url: "/photo?id=" + user.id,
+				url: "/photo/" + user.username,
 				headers : {cookie:cookie}
 			};
 			server.inject(payloadRequest, function(response) {
@@ -557,9 +557,11 @@
 
 			//logout
 			util.logoutAsPromise(cookie).then(function(){
-				return models.Photo.findAll({user_id:user.id});
-			}).then(function(collection){
-				return collection.invokeThen('destroy');
+				return models.Photo.findOne({user_id:user.id});
+			}).then(function (photoRecord) {
+				if(photoRecord){
+					return models.Photo.destroy({id:photoRecord.get('id')});
+				}
 			}).then(function() {
 				return models.User.destroy({id:user.id});
 			}).then(function() {
@@ -633,7 +635,8 @@
 		});
 		lab.test("with valid primary option - 1 and makes other primary photo 0", function(done) {
 			var promises = [];
-			for (var i=0; i<10; i++){
+			var i;
+			for (i=0; i<10; i++){
 				promises.push(
 					models.Photo.add(
 					{
@@ -653,10 +656,16 @@
 					},
 					headers : {cookie:cookie}
 				};
-				server.inject(payloadRequest, function(response) {
+				util.getServerResponseAsPromise(payloadRequest).then(function(response){
 					Code.expect(response.statusCode).to.equal(200);
+					return models.Photo.findAll({user_id:user.id});
+				}).then(function(collection){
+					if(collection){
+						return collection.invokeThen('destroy');
+					}
+				}).then(function(){
 					done();
-				});
+				})
 			})
 		});
 		lab.test("with valid primary option - 0", function(done) {

@@ -14,22 +14,30 @@ exports.get = {
 	description: "This gets photos for a given user on the system",
 	auth: 'session',
 	validate: {
-		query: {
-			id : Joi.number().min(1),
+		params: {
+			username : Joi.string().min(1).max(30),
 		}
 	},
 	handler: function (request, reply) {
-		if(request.query.id){
-			return models.User.forge({id: request.query.id}).photos().fetch().then(function(photos) {
+		var current = Promise.resolve();
+		if(request.params.username){
+			current = models.User.findOne({username: request.params.username});
+			current.then(function(user) {
+				if(user){
+					//return user.photos();
+					return models.Photo.findAll({user_id: user.get('id')});
+				}
+				return Promise.reject('User profile not found');
+			}).then(function(photos){
 				if (photos && photos.length > 0){
 					return reply({photos:photos.toJSON()});
 				}
-				return Promise.reject('User profile not found');
+				return Promise.reject('User has no photos');
 			}).catch(function(err) {
 				return reply(Boom.notFound(err));
 			});
 		}else{
-			return reply(Boom.notFound('User id not provided'));
+			return reply(Boom.notFound('username not provided'));
 		}
 	}
 };

@@ -3,7 +3,7 @@ var controllers = require("../controllers");
 module.exports = exports = [
 	{
 		method: 'get',
-		path: '/photo',
+		path: '/photo/{username}',
 		config: controllers.photoController.get
 	},
 	{
