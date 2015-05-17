@@ -79,7 +79,7 @@
 				done();
 			});
 		});
-		lab.test("test failure with invalid username", function(done) {
+		lab.test("test get failure with invalid username", function(done) {
 			var payloadRequest = {
 				method: "get",
 				url: "/photo/somerandomeusername",
@@ -100,7 +100,34 @@
 				Code.expect(response.statusCode).to.equal(200);
 				done();
 			});
-		});		
+		});
+		lab.test("test valid amount of photos returned for valid username", function(done) {
+			var promises = [];
+			var max = 10;
+
+			//create dummy photo records
+			for (var i=0; i<max; i++){
+				promises.push(models.Photo.add({ user_id: user.id, filepath: '/somelocation.jpg', caption: 'somecaption'}));
+			}
+
+			Promise.all(promises).then(function(result){
+				var payload = {
+					method: "get",
+					url: "/photo/" + user.username,
+					headers : {cookie:cookie}
+				};
+				util.getServerResponseAsPromise(payload).then(function(response){
+					Code.expect(response.statusCode).to.equal(200);
+					Code.expect(response.result).to.be.instanceof(Object);
+					Code.expect(response.result.photos).to.have.length(max+1); //the additional 1 is because a photo is added in the beforeTest
+					return models.Photo.findAll({user_id:user.id});
+				}).then(function(collection){
+					return collection.invokeThen('destroy');
+				}).then(function(){
+					done();
+				});
+			});
+		});
 	});
 	
 
