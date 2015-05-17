@@ -16,10 +16,10 @@
 	var lab = exports.lab = Lab.script();
 /*
 	***
-		@description: The purpose here is to test failure of get
+		@description: The purpose here is to test http get
 	***
 */
-	lab.experiment("method:get, url:/photo - Photo get fails ", function() {
+	lab.experiment("method:get, url:/photo ", function() {
 		var user;
 		var random;
 		var cookie;
@@ -79,7 +79,7 @@
 				done();
 			});
 		});
-		lab.test("with invalid username", function(done) {
+		lab.test("test failure with invalid username", function(done) {
 			var payloadRequest = {
 				method: "get",
 				url: "/photo/somerandomeusername",
@@ -90,73 +90,7 @@
 				done();
 			});
 		});
-	});
-/*
-	***
-		@description: The purpose here is to test successful photo get
-	***
-*/
-	lab.experiment("method:get, url:/photo - Photo get succeeds ", function() {		
-		var user;
-		var random;
-		var cookie;
-		lab.beforeEach(function (done) {
-			random = Math.floor((Math.random() * 1000) + 1);
-			user = {
-					email: 'phototest'+random+'@test.com',
-					username: 'phototest'+random,
-					password: 'testpassword',
-					network: 'email'
-				};
-			models.User.add(user).then(function (result) {
-				user.id = result.get('id');
-				return user;
-			}).then(function (user) {
-				var photo = {
-					user_id: user.id,
-					filepath: '/somelocation.jpg',
-            		caption: 'somecaption'
-            	};
-            	models.Photo.add(photo);
-            	return user;
-			}).then(function (user) {
-				//setup payload
-				return {
-					method: "post",url: "/auth/login",
-					payload: {
-						network: user.network,
-						email: user.email,
-						password: user.password
-					}
-				};
-			}).then(function(payload){
-				return util.loginAsPromise(payload);
-			}).then(function(response){
-				cookie = response;
-				done();
-			});
-		});
-		lab.afterEach(function (done) {
-			var payload = {
-				method: "get",
-				url: "/auth/logout",
-				headers : {cookie:cookie}
-			};
-
-			//logout
-			util.logoutAsPromise(cookie).then(function(){
-				return models.Photo.findOne({user_id:user.id});
-			}).then(function (photoRecord) {
-				if(photoRecord){
-					return models.Photo.destroy({id:photoRecord.get('id')});
-				}
-			}).then(function() {
-				return models.User.destroy({id:user.id});
-			}).then(function() {
-				done();
-			});
-		});
-		lab.test("with valid username", function(done) {
+		lab.test("test success with valid username", function(done) {
 			var payloadRequest = {
 				method: "get",
 				url: "/photo/" + user.username,
@@ -166,15 +100,16 @@
 				Code.expect(response.statusCode).to.equal(200);
 				done();
 			});
-		});
+		});		
 	});
+	
 
 /*
 	***
-		@description: The purpose here is to test failure of photo add
+		@description: The purpose here is to test uploading a photo (photo post)
 	***
 */
-	lab.experiment("method:post, url:/photo - Photo add fails ", function() {
+	lab.experiment("method:post, url:/photo ", function() {
 		var user;
 		var random;
 		var cookie;
@@ -234,7 +169,7 @@
 				done();
 			});
 		});
-		lab.test("with invalid image type", function(done) {
+		lab.test("test failure of photo upload with invalid image type", function(done) {
 			var headers = null;
 			var payloadRequest = null;
 			var image = {
@@ -264,73 +199,7 @@
 				});
 			});
 		});
-	});
-/*
-	***
-		@description: The purpose here is to test failure of photo add
-	***
-*/
-	lab.experiment("method:post, url:/photo - Photo add success ", function() {
-		var user;
-		var random;
-		var cookie;
-		lab.beforeEach(function (done) {
-			random = Math.floor((Math.random() * 1000) + 1);
-			user = {
-					email: 'photoaddtest'+random+'@test.com',
-					username: 'photoaddtest'+random,
-					password: 'testpassword',
-					network: 'email'
-				};
-			models.User.add(user).then(function (result) {
-				user.id = result.get('id');
-				return user;
-			}).then(function (user) {
-				var photo = {
-					user_id: user.id,
-					filepath: '/somelocation.jpg',
-					caption: 'somecaption'
-				};
-				models.Photo.add(photo);
-				return user;
-			}).then(function (user) {
-				//setup payload
-				return {
-					method: "post",url: "/auth/login",
-					payload: {
-						network: user.network,
-						email: user.email,
-						password: user.password
-					}
-				};
-			}).then(function(payload){
-				return util.loginAsPromise(payload);
-			}).then(function(response){
-				cookie = response;
-				done();
-			});
-		});
-		lab.afterEach(function (done) {
-			var payload = {
-				method: "get",
-				url: "/auth/logout",
-				headers : {cookie:cookie}
-			};
-
-			//logout
-			util.logoutAsPromise(cookie).then(function(){
-				return models.Photo.findOne({user_id:user.id});
-			}).then(function (photoRecord) {
-				if(photoRecord){
-					return models.Photo.destroy({id:photoRecord.get('id')});
-				}
-			}).then(function() {
-				return models.User.destroy({id:user.id});
-			}).then(function() {
-				done();
-			});
-		});
-		lab.test("with valid image type", function(done) {
+		lab.test("test success of photo upload with valid image type", function(done) {
 			var headers = null;
 			var payloadRequest = null;
 			var image = {
@@ -368,10 +237,10 @@
 	});
 /*
 	***
-		@description: The purpose here is to test failure of put
+		@description: The purpose here is to test photo updates
 	***
 */
-	lab.experiment("method:put, url:/photo/{id} - Photo put fails ", function() {
+	lab.experiment("method:put, url:/photo/{id} ", function() {
 		var user;
 		var photo;
 		var random;
@@ -434,7 +303,7 @@
 				done();
 			});
 		});
-		lab.test("with invalid id", function(done) {
+		lab.test("photo update fails with invalid id", function(done) {
 			var payloadRequest = {
 				method: "put",
 				url: "/photo/" + photo.id + 120202020202,
@@ -448,7 +317,7 @@
 				done();
 			});
 		});
-		lab.test("with invalid caption length - greater than max", function(done) {
+		lab.test("photo update fails with invalid caption length - greater than max", function(done) {
 			var caption="";
 			//generate a caption with length 141.
 			for(var i=1; i<=141;i++){
@@ -469,7 +338,7 @@
 				done();
 			});
 		});
-		lab.test("with invalid caption length - less than min", function(done) {
+		lab.test("photo update fails with invalid caption length - less than min", function(done) {
 			var payloadRequest = {
 				method: "put",
 				url: "/photo/" + photo.id,
@@ -484,7 +353,7 @@
 				done();
 			});
 		});
-		lab.test("with invalid primary option", function(done) {
+		lab.test("photo update fails with invalid primary option", function(done) {
 			var payloadRequest = {
 				method: "put",
 				url: "/photo/" + photo.id,
@@ -499,76 +368,7 @@
 				done();
 			});
 		});
-	});
-/*
-	***
-		@description: The purpose here is to test success of put
-	***
-*/
-	lab.experiment("method:put, url:/photo/{id} - Photo put succeeds ", function() {
-		var user;
-		var photo;
-		var random;
-		var cookie;
-		lab.beforeEach(function (done) {
-			random = Math.floor((Math.random() * 1000) + 1);
-			user = {
-					email: 'phototest'+random+'@test.com',
-					username: 'phototest'+random,
-					password: 'testpassword',
-					network: 'email'
-				};
-			models.User.add(user).then(function (result) {
-				user.id = result.get('id');
-				return user;
-			}).then(function (user) {
-				photo = {
-					user_id: user.id,
-					filepath: '/somelocation.jpg',
-					caption: 'somecaption'
-				};
-				models.Photo.add(photo).then(function(result){
-					photo.id = result.get('id');
-				})
-				return user;
-			}).then(function (user) {
-				//setup payload
-				return {
-					method: "post",url: "/auth/login",
-					payload: {
-						network: user.network,
-						email: user.email,
-						password: user.password
-					}
-				};
-			}).then(function(payload){
-				return util.loginAsPromise(payload);
-			}).then(function(response){
-				cookie = response;
-				done();
-			});
-		});
-		lab.afterEach(function (done) {
-			var payload = {
-				method: "get",
-				url: "/auth/logout",
-				headers : {cookie:cookie}
-			};
-
-			//logout
-			util.logoutAsPromise(cookie).then(function(){
-				return models.Photo.findOne({user_id:user.id});
-			}).then(function (photoRecord) {
-				if(photoRecord){
-					return models.Photo.destroy({id:photoRecord.get('id')});
-				}
-			}).then(function() {
-				return models.User.destroy({id:user.id});
-			}).then(function() {
-				done();
-			});
-		});
-		lab.test("with valid id", function(done) {
+		lab.test("photo update succeeds with valid id", function(done) {
 			var payloadRequest = {
 				method: "put",
 				url: "/photo/" + photo.id,
@@ -582,7 +382,7 @@
 				done();
 			});
 		});
-		lab.test("with valid caption length - greater than min but less than max", function(done) {
+		lab.test("photo update succeeds with valid caption length - greater than min but less than max", function(done) {
 			var caption="";
 			//generate a caption with length 140.
 			for(var i=1; i<=140;i++){
@@ -603,7 +403,7 @@
 				done();
 			});
 		});
-		lab.test("with valid caption length - equal to min", function(done) {
+		lab.test("photo update succeeds with valid caption length - equal to min", function(done) {
 			var payloadRequest = {
 				method: "put",
 				url: "/photo/" + photo.id,
@@ -618,7 +418,7 @@
 				done();
 			});
 		});
-		lab.test("with valid primary option - 1", function(done) {
+		lab.test("photo update succeeds with valid primary option - 1", function(done) {
 			var payloadRequest = {
 					method: "put",
 					url: "/photo/" + photo.id,
@@ -633,7 +433,7 @@
 				done();
 			});
 		});
-		lab.test("with valid primary option - 1 and makes other primary photo 0", function(done) {
+		lab.test("photo update succeeds with valid primary option - 1 and makes other primary photo 0", function(done) {
 			var promises = [];
 			var i;
 			for (i=0; i<10; i++){
@@ -668,7 +468,7 @@
 				})
 			})
 		});
-		lab.test("with valid primary option - 0", function(done) {
+		lab.test("photo update succeeds with valid primary option - 0", function(done) {
 			var payloadRequest = {
 				method: "put",
 				url: "/photo/" + photo.id,
