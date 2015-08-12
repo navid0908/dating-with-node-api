@@ -40,9 +40,8 @@
 					filepath: '/somelocation.jpg',
 					caption: 'somecaption'
 				};
-				models.Photo.add(photo);
-				return user;
-			}).then(function (user) {
+				return models.Photo.add(photo);
+			}).then(function (photo) {
 				//setup payload
 				return {
 					method: "post",url: "/auth/login",
@@ -79,7 +78,7 @@
 				done();
 			});
 		});
-		lab.test("test get failure with invalid username", function(done) {
+		lab.test("test failure with invalid username", function(done) {
 			var payloadRequest = {
 				method: "get",
 				url: "/photo/somerandomeusername",
@@ -101,7 +100,7 @@
 				done();
 			});
 		});
-		lab.test("test valid amount of photos returned for valid username", function(done) {
+		lab.test("test success for valid amount of photos returned for valid username", function(done) {
 			var promises = [];
 			var max = 10;
 

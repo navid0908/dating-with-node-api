@@ -34,8 +34,7 @@ var User;
             return this.hasOne(Profile);
         },
         photos : function(){
-            var Photos = require('./photo');
-            return this.hasMany(Photos);
+            return this.hasMany('Photos', 'user_id');
         },
         toJson: function(options){
             var attrs = baseModel.Model.prototype.toJSON.call(this, options);

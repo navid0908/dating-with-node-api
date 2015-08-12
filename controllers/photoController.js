@@ -21,16 +21,15 @@ exports.get = {
 	handler: function (request, reply) {
 		var current = Promise.resolve();
 		if(request.params.username){
-			current = models.User.findOne({username: request.params.username});
-			current.then(function(user) {
+			models.User.findOne({username: request.params.username}).then(function(user) {
 				if(user){
-					//return user.photos();
-					return models.Photo.findAll({user_id: user.get('id')});
+					// return models.Photo.findAll({user_id: user.get('id')});
+					return user.photos().fetch();
 				}
-				return Promise.reject('User profile not found');
-			}).then(function(photos){
-				if (photos && photos.length > 0){
-					return reply({photos:photos.toJSON()});
+				return Promise.reject('User not found');
+			}).then(function(collection){
+				if (collection && collection.length > 0){
+					return reply({photos:collection.toJSON()});
 				}
 				return Promise.reject('User has no photos');
 			}).catch(function(err) {

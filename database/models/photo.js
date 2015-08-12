@@ -4,6 +4,7 @@
 
 var baseModel = require('./base');
 var Photo;
+var Photos;
 
     Photo = baseModel.Model.extend({
         tableName: 'photo',
@@ -15,9 +16,9 @@ var Photo;
                 phototype_id: 1
             }
         },
-        user : function(){
-            var User = require('./user');
-            return this.belongsTo('User');
+        // Relations
+        user_id: function () {
+            return this.belongsTo('User', 'user_id');
         },
         /**
          * [unsetOldPrimaryPhoto This function makes any exisiting primary photo to not primary.]
@@ -27,4 +28,11 @@ var Photo;
         }
     });
 
-module.exports = baseModel.model('Photo', Photo);
+    Photos = baseModel.Collection.extend({
+        model: Photo
+    });
+
+module.exports = {
+    Photo: baseModel.model('Photo', Photo),
+    Photos: baseModel.collection('Photos', Photos)
+};
