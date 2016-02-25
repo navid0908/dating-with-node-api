@@ -64,7 +64,7 @@ lab.experiment("Lookup", function() {
 			Code.expect(result.hasOwnProperty('bodytype')).to.be.a.boolean();
 
 			var rows = result.bodytype;
-			Code.expect(rows).to.have.length(10);
+			Code.expect(rows).to.have.length(5);
 
 			_.each(rows, function(row){
 				Code.expect(row.hasOwnProperty('id')).to.be.a.boolean();
@@ -152,7 +152,7 @@ lab.experiment("Lookup", function() {
 			Code.expect(result.hasOwnProperty('diet')).to.be.a.boolean();
 
 			var rows = result.diet;
-			Code.expect(rows).to.have.length(6);
+			Code.expect(rows).to.have.length(5);
 
 			_.each(rows, function(row){
 				Code.expect(row.hasOwnProperty('id')).to.be.a.boolean();
@@ -174,7 +174,7 @@ lab.experiment("Lookup", function() {
 			Code.expect(result.hasOwnProperty('drink')).to.be.a.boolean();
 
 			var rows = result.drink;
-			Code.expect(rows).to.have.length(5);
+			Code.expect(rows).to.have.length(4);
 
 			_.each(rows, function(row){
 				Code.expect(row.hasOwnProperty('id')).to.be.a.boolean();
@@ -218,7 +218,7 @@ lab.experiment("Lookup", function() {
 			Code.expect(result.hasOwnProperty('education')).to.be.a.boolean();
 
 			var rows = result.education;
-			Code.expect(rows).to.have.length(7);
+			Code.expect(rows).to.have.length(4);
 
 			_.each(rows, function(row){
 				Code.expect(row.hasOwnProperty('id')).to.be.a.boolean();
@@ -284,7 +284,7 @@ lab.experiment("Lookup", function() {
 			Code.expect(result.hasOwnProperty('relationshipstatus')).to.be.a.boolean();
 
 			var rows = result.relationshipstatus;
-			Code.expect(rows).to.have.length(6);
+			Code.expect(rows).to.have.length(3);
 
 			_.each(rows, function(row){
 				Code.expect(row.hasOwnProperty('id')).to.be.a.boolean();
@@ -292,7 +292,7 @@ lab.experiment("Lookup", function() {
 			});
 			done();
 		});
-	});	
+	});
 	lab.test("/smoke endpoint", function(done) {
 		var options = {
 			method: "GET",
@@ -306,7 +306,7 @@ lab.experiment("Lookup", function() {
 			Code.expect(result.hasOwnProperty('smoke')).to.be.a.boolean();
 
 			var rows = result.smoke;
-			Code.expect(rows).to.have.length(5);
+			Code.expect(rows).to.have.length(3);
 
 			_.each(rows, function(row){
 				Code.expect(row.hasOwnProperty('id')).to.be.a.boolean();

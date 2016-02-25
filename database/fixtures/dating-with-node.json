@@ -82,7 +82,7 @@
 		{"code": "PF", "name": "French Polynesia"},
 		{"code": "GA", "name": "Gabon"},
 		{"code": "GM", "name": "Gambia"},
-		{"code":  "/", "name": "Gaza Strip"},
+		{"code": "GS", "name": "Gaza Strip"},
 		{"code": "GE", "name": "Georgia"},
 		{"code": "DE", "name": "Germany"},
 		{"code": "GH", "name": "Ghana"},
@@ -117,7 +117,7 @@
 		{"code": "KZ", "name": "Kazakhstan"},
 		{"code": "KE", "name": "Kenya"},
 		{"code": "KI", "name": "Kiribati"},
-		{"code":   "", "name": "Kosovo"},
+		{"code": "KO", "name": "Kosovo"},
 		{"code": "KW", "name": "Kuwait"},
 		{"code": "KG", "name": "Kyrgyzstan"},
 		{"code": "LA", "name": "Laos"},
@@ -236,38 +236,30 @@
 		{"code": "VE", "name": "Venezuela"},
 		{"code": "VN", "name": "Vietnam"},
 		{"code": "WF", "name": "Wallis and Futuna"},
-		{"code":   "", "name": "West Bank"},
+		{"code": "WB", "name": "West Bank"},
 		{"code": "EH", "name": "Western Sahara"},
 		{"code": "YE", "name": "Yemen"},
 		{"code": "ZM", "name": "Zambia"},
 		{"code": "ZW", "name": "Zimbabwe"}
 	],
 	"bodytype" : [
-		{"description":"Rather not say"},
         {"description":"Thin"},
-        {"description":"Overweight"},
-        {"description":"Skinny"},
         {"description":"Average"},
-        {"description":"Fit"},
         {"description":"Athletic"},
-        {"description":"A little extra"},
         {"description":"Curvy"},
-        {"description":"Full figured"}
+        {"description":"A little fluffy"}
 	],
 	"diet" : [
-		{"description":"Anything"},
 		{"description":"Vegetarian"},
 		{"description":"Vegan"},
-		{"description":"Kosher"},
 		{"description":"Halal"},
+		{"description":"Anything"},
 		{"description":"Other"}
-	],	
+	],
 	"smoke" : [
-		{"description":"Yes"},
+		{"description":"Never"},
 		{"description":"Sometimes"},
-		{"description":"When drinking"},
-		{"description":"Trying to quit"},
-		{"description":"No"}
+		{"description":"Often"}
 	],
 	"drug" : [
 		{"description":"Never"},
@@ -275,7 +267,6 @@
 		{"description":"Often"}
 	],
 	"drink" : [
-		{"description":"Very often"},
 		{"description":"Often"},
 		{"description":"Socially"},
 		{"description":"Rarely"},
@@ -283,12 +274,9 @@
 	],
 	"education" : [
 		{"description":"High school"},
-		{"description":"Two-year college"},
-		{"description":"College/University"},
-		{"description":"Masters"},
-		{"description":"Law School"},
-		{"description":"Med School"},
-		{"description":"PH.D Program"}
+		{"description":"Some college"},
+		{"description":"Undergraduate degree"},
+		{"description":"Graduate degree"}
 	],
 	"children" : [
 		{"description":"Might want kids"},
@@ -341,10 +329,7 @@
 	"relationshipstatus" : [
 		{"description":"Single"},
 		{"description":"Divorced"},
-		{"description":"Widowed"},
-		{"description":"Open Relationship - This site is not for you."},
-		{"description":"Married - This site is not for you."},
-		{"description":"Seeing someone - this site is not for you."}
+		{"description":"Widowed"}
 	],
 	"buzzline" : [
 		{"description":"Hi! Your profile sparked my interest. What do you think of mine?"},
@@ -364,9 +349,9 @@
 		{"description":"I’m really good at"},
 		{"description":"The first things people notice about me"},
 		{"description":"Favorite books, movies, shows, music, and food."},
-		{"description":"The 6 things I could never really do without"},
-		{"description":"I spend a lot of time thinking about"},
-		{"description":"On a typical Friday night, I’m"},
+		{"description":"The six things I can’t live without"},
+		{"description":"Things I thinking about"},
+		{"description":"I spend my off-time doing …"},
 		{"description":"The most private thing I’m willing to admit"},
 		{"description":"I’m looking for"}
 	],
