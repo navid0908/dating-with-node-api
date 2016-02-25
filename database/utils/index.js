@@ -7,12 +7,12 @@ function createTable(tableName, knex) {
     return knex.schema.createTable(tableName, function (t) {
         var columnKeys = _.keys(schema[tableName]);
         _.each(columnKeys, function (columnName) {
-            return addTableColumn(tableName, t, columnName);
+            return addTableColumn(tableName, knex, t, columnName);
         });
     });
 }
 
-function addTableColumn(tableName, table, columnName) {
+function addTableColumn(tableName, knex, table, columnName) {
 	var column;	
 	var columnSpec = schema[tableName][columnName];
 
@@ -22,11 +22,10 @@ function addTableColumn(tableName, table, columnName) {
 	} else if (columnSpec.type === 'string' && columnSpec.hasOwnProperty('maxlength')) {
 		column = table[columnSpec.type](columnName, columnSpec.maxlength);
     } else if (columnSpec.type === 'integer' && columnSpec.hasOwnProperty('fieldtype')) {
-		//column = table.specificType(columnName, columnSpec.fieldtype);
 		column = table['specificType'](columnName, columnSpec.fieldtype);
     } else {
 		column = table[columnSpec.type](columnName);
-    }
+    }	
 	if (columnSpec.hasOwnProperty('nullable') && columnSpec.nullable === true) {
 		column.nullable();
 	} else {
@@ -47,6 +46,9 @@ function addTableColumn(tableName, table, columnName) {
 	}
 	if (columnSpec.hasOwnProperty('defaultTo')) {
 		column.defaultTo(columnSpec.defaultTo);
+	}
+	if (columnSpec.type === 'dateTime' && columnSpec.hasOwnProperty('nullable') && columnSpec.nullable === false) {
+		column.defaultTo(knex.fn.now())
 	}
 }
 
