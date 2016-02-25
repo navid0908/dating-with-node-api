@@ -82,7 +82,7 @@ var User;
         *
         * @param {object} data
         * @param {object} options
-        * @extends baseModel.Model.add to manage all aspects of user signup     
+        * @extends baseModel.Model.add to manage all aspects of user signup
         */
         add: function (data, options) {
             var self = this;
@@ -133,7 +133,7 @@ var User;
                     return user;
                 });
             });
-        },        
+        },
     });
 
 module.exports = baseModel.model('User', User);
