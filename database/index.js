@@ -14,7 +14,6 @@ models = {
 		self.Astrologicalsign = require('./models/astrologicalsign');
 		self.Block = require('./models/block');
 		self.Bodytype = require('./models/bodytype');
-		self.Buzzline = require('./models/buzzline');
 		self.Children = require('./models/children');
 		self.Country = require('./models/country');
 		self.Diet = require('./models/diet');

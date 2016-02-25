@@ -52,10 +52,6 @@ var Schema = {
             id: {type: 'increments', nullable: false, primary: true},
             description: {type: 'string', maxlength: 45, nullable: false},
         },
-        buzzline :{
-            id: {type: 'increments', nullable: false, primary: true},
-            description: {type: 'string', maxlength: 45, nullable: false},
-        },
         question :{
             id: {type: 'increments', nullable: false, primary: true},
             description: {type: 'string', maxlength: 100, nullable: false},

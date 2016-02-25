@@ -330,19 +330,7 @@
 		{"description":"Single"},
 		{"description":"Divorced"},
 		{"description":"Widowed"}
-	],
-	"buzzline" : [
-		{"description":"Hi! Your profile sparked my interest. What do you think of mine?"},
-		{"description":"Hi! I liked your profile and I am interested in you."},
-		{"description":"Would you like to chat sometime? let me know."},
-		{"description":"I'd like to get to know you better, what do you think?"},
-		{"description":"Coffee? Tea? Me?"},
-		{"description":"Seems like I've known you from a past life. Do you feel the same?"},
-		{"description":"They say women don't ask men out. If u aren't one of them, reply!"},
-		{"description":"Hi, I''m looking for some friends. Interested?"},
-		{"description":"I think we''d enjoy writing to each other. Interested?"},
-		{"description":"Hi! If I send you a message, will you reply?"}
-	],
+	],	
 	"question" : [
 		{"description":"Self Summary"},
 		{"description":"What I’m Doing with my life"},
