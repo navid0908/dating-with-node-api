@@ -19,7 +19,6 @@
 				}
 			};
 			server.inject(options, function(response) {
-				console.log(response);
 				var result = response.result;
 				Code.expect(response.statusCode).to.equal(400);
 				done();
@@ -49,8 +48,8 @@
 				// clean up
 				models.Authattempt.findAll({email: testAbuseEmail, ip: ' '}).then(function (collection) {
 					collection.invokeThen('destroy').then(function() {
-				// ... all models in the collection have been destroyed
-				done();
+						// ... all models in the collection have been destroyed
+						done();
 					});
 					Code.expect(collection.length).to.equal(5);
 				});
@@ -96,8 +95,8 @@
 				var result = response.result;
 				Code.expect(result.statusCode).to.equal(400);
 
-					// Lets inspect the db to see if a login attempt record was created
-					// clean up
+				// Lets inspect the db to see if a login attempt record was created
+				// clean up
 				models.Authattempt.findAll({email: 'testemail@test.com', ip: ' '}).then(function (collection) {
 					Code.expect(collection.length).to.equal(1);
 					collection.invokeThen('destroy').then(function() {
@@ -119,15 +118,15 @@
 				}
 			};
 			server.inject(options, function(response) {
-					var result = response.headers;
-					Code.expect("set-cookie" in result).to.equal(true);
+				var result = response.headers;
+				Code.expect("set-cookie" in result).to.equal(true);
 
-					// DB should not have any login attempts as the credentials are valid.
-					// clean up
-					models.Authattempt.findAll({email: 'testemail@test.com', ip: ' '}).then(function (collection) {
-						Code.expect(collection.length).to.equal(0);
-						done();
-					});
+				// DB should not have any login attempts as the credentials are valid.
+				// clean up
+				models.Authattempt.findAll({email: 'testemail@test.com', ip: ' '}).then(function (collection) {
+					Code.expect(collection.length).to.equal(0);
+					done();
 				});
 			});
+		});
 	});

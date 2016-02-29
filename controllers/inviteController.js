@@ -9,7 +9,7 @@ var _ = require('lodash');
 var internals = {};
 
 internals.sendInviteEmail = function(request){
-	return models.User.findOne({id: request.auth.credentials.user.id}).then(function(result){
+	return models.User.findOne({id: request.auth.credentials.id}).then(function(result){
 		if(result){			
 			result = result.toJSON();
 			var payload = {
@@ -32,14 +32,13 @@ internals.getUserMax = function(user_id){
 			user_id: user_id,
 			name: models.Setting.CONST_USER_MAX_INVITE
 		}).then(function(value){
-			return parseInt(value) || config.invitation.userMax;
+			return parseInt(value) || config.invitations.userMax;
 		});
 }
 
 exports.invite = {
 	tags : ['invite'],
 	description : 'Allow members to invite other users to the system',
-	auth: 'session',
 	validate: {
 		payload : {
 			email: Joi.string().email().max(60),
@@ -50,16 +49,16 @@ exports.invite = {
 		var userMax = null;
 		// Have we reached a system max of the allowed number of invites ?
 		return models.Invitation.count().then(function (result){
-			if(result >= config.invitation.systemMax ){
+			if(result >= config.invitations.systemMax ){
 				return Promise.reject('No more invitations are allowed');
 			}
 		}).then(function (){
 			// Have we reached a user max of the allowed number of invites?
-			return models.Invitation.countOfInvitesSent(request.auth.credentials.user.id)
+			return models.Invitation.countOfInvitesSent(request.auth.credentials.id)
 
 		}).then(function (result){
 			countUserInvitesSent = result;
-			return internals.getUserMax(request.auth.credentials.user.id);
+			return internals.getUserMax(request.auth.credentials.id);
 
 		}).then(function (result){
 			userMax = result;
@@ -75,11 +74,10 @@ exports.invite = {
 			if(result){
 				return Promise.reject('That user has already been invited');
 			}
-
 		}).then(function (){
 			var data = {
 				email:request.payload.email,
-				user_id:request.auth.credentials.user.id
+				user_id:request.auth.credentials.id
 			}
 			return models.Invitation.add(data)
 		}).then(function (invitation){

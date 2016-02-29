@@ -59,7 +59,7 @@ exports.login = {
 			var password = request.payload.password;
 			models.User.findByCredentials({email: emailAddress, password:password}).then(function (userRecord) {
 	            if(userRecord){
-	                return reply ({user:userRecord.toJSON()});
+	                return reply (userRecord.toJSON());
 	            }
 	            return reply();
 	        }).catch(function(error){
@@ -91,8 +91,13 @@ exports.login = {
 		}
 	}],
 	handler: function (request, reply) {
-		request.auth.session.set(request.pre.user);
-		return reply([]);
+		request.server.app.cache.set( String(request.pre.user.id), { user: request.pre.user }, 0, (err) => {
+			if (err) {
+				reply(err);
+			}
+        	request.cookieAuth.set({id: request.pre.user.id });
+        	return reply([]);
+    	});
 	}
 };
 exports.logout = {
@@ -100,8 +105,8 @@ exports.logout = {
 	description: "App logut and remove session",
 	auth: 'session',
 	handler: function (request, reply) {
-		request.auth.session.clear();
-		return reply([]);
+		request.cookieAuth.clear();
+		return reply();
 	}
 };
 exports.facebook = {
