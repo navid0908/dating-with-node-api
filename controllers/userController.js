@@ -58,7 +58,6 @@ internals.sendUpdateEmail = function(request, userData){
 exports.update = {
 	tags: ['user', 'update'],
 	description: "This updates a user on the system",
-	auth: 'session',
 	validate: {
 		payload: {
             username: Joi.string().min(3).max(30),
@@ -70,7 +69,7 @@ exports.update = {
 	pre: [{
 		assign: "isValidUser",
 		method: function (request, reply){
-			if(request.auth.credentials.user && request.params.id != request.auth.credentials.user.id ){
+			if(request.auth.credentials && request.params.id != request.auth.credentials.id ){
 				reply(Boom.conflict('User id being updated is not the authenticated user'));
 			}else{
 				reply();
@@ -82,11 +81,11 @@ exports.update = {
 	}],
 	handler: function (request, reply) {
 		var user;
-		models.User.findOne({id: request.auth.credentials.user.id}).then(function (userRecord) {
+		models.User.findOne({id: request.auth.credentials.id}).then(function (userRecord) {
 			if(userRecord){
 				return userRecord;
 			}
-			throw Promise.reject('Unable to find user record.');
+			return Promise.reject('Unable to find user record.');
 		}).then(function (userRecord) {
 			if(request.payload.username && request.payload.username != userRecord.get('username')){
 				//they entered a username that is different from their logged in username.
@@ -98,8 +97,9 @@ exports.update = {
 						return Promise.reject(result);
 					}
 				});
+			}else{
+				return userRecord;
 			}
-			return userRecord;
 		}).then(function (userRecord) {
 			if(request.payload.email && request.payload.email != userRecord.get('email')){
 				//they entered an email that is different from their logged in email.
@@ -132,6 +132,7 @@ exports.update = {
 	}
 };
 exports.signUp = {
+	auth: false,
 	tags: ['user', 'signup'],
 	description: "This creates a user on the system",
 	validate: {
@@ -151,15 +152,16 @@ exports.signUp = {
 	{
 		assign: "isUsernameUnique",
 		method: function (request, reply){
-				if (request.payload.username){
-					models.User.isUsernameUnique(request.payload.username).then(function (isExist) {
-						return reply();
-					}).catch(function (error) {
-						//'Username is already taken'
-						return reply(Boom.conflict(error));
-					});
-				}
+			if (request.payload.username){
+				models.User.isUsernameUnique(request.payload.username).then(function (isExist) {
+					return reply();
+				}).catch(function (error) {
+					//'Username is already taken'
+					return reply(Boom.conflict(error));
+				});
+			}else{
 				return reply();
+			}
 		}
 	},
 	{
@@ -181,11 +183,11 @@ exports.signUp = {
 			if(request.payload.invitationcode == models.Invitation.notInvited){
 				return reply();
 			}else{
-				return models.Invitation.findByInvitationCode(request.payload.invitationcode).then(function(invitation){
+				models.Invitation.findByInvitationCode(request.payload.invitationcode).then(function(invitation){
 					if(!invitation){ //we could not locate the invitation code they entered.
 						return reply(Boom.conflict('Invalid invitation code'));
 					}
-					if(invitation && invitation.isUsed()){ //this invitation code was already used.
+					else if(invitation && invitation.isUsed()){ //this invitation code was already used.
 						return reply(Boom.conflict('Invalid invitation code'));
 					}
 					return reply(invitation);

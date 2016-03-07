@@ -168,20 +168,15 @@ exports.update = {
 		}
 	}],
 	handler: function (request, reply) {
-		models.User.findOne({id: request.auth.credentials.user.id}).then(function (userRecord) {
-			if(userRecord){
-				return userRecord;
-			}
+		models.User.findOne({id: request.auth.credentials.id}).then(function (userRecord) {
+			return (userRecord) ? userRecord : Promise.reject('User not found');
 		}).then(function (userRecord) {
 			return models.Profile.findOne({user_id: userRecord.get('id')});
 		}).then(function (profileRecord) {
-			if(profileRecord){
-				return profileRecord;
-			}
-			return models.Profile.forge({user_id:request.auth.credentials.user.id});
+			return (profileRecord) ? profileRecord : models.Profile.forge({user_id:request.auth.credentials.id});
 		}).then(function (profileRecord) {
 			if(profileRecord && !profileRecord.get('user_id')){
-				profileRecord.set('user_id', request.auth.credentials.user.id);
+				profileRecord.set('user_id', request.auth.credentials.id);
 			}
 			if(request.payload.bodytype){
 				profileRecord.set('bodytype_id', request.payload.bodytype);
@@ -259,19 +254,13 @@ exports.updateAnswer = {
 	],
 	handler: function (request, reply) {
 		var profile = null;
-		models.Profile.findOne({user_id: request.auth.credentials.user.id}).then(function (profileRecord) {
-			if(profileRecord){
-				return profileRecord;
-			}
-			return models.Profile.forge({user_id: request.auth.credentials.user.id}).save(null);
+		models.Profile.findOne({user_id: request.auth.credentials.id}).then(function (profileRecord) {
+			return (profileRecord) ? profileRecord : models.Profile.forge({user_id: request.auth.credentials.id}).save(null);
 		}).then(function (profileRecord) {
 			profile = profileRecord;
 			return models.Profileanswer.findOne({profile_id: profileRecord.get('id')});
 		}).then(function (profileAnswerRecord) {
-			if(profileAnswerRecord){
-				return profileAnswerRecord;
-			}
-			return models.Profileanswer.forge({profile_id: profile.get('id')});
+			return (profileAnswerRecord) ? profileAnswerRecord : models.Profileanswer.forge({profile_id: profile.get('id')});
 		}).then(function (profileAnswerRecord) {
 			profileAnswerRecord.set('question_id', request.payload.id);
 			profileAnswerRecord.set('answer', request.payload.answer);

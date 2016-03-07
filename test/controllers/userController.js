@@ -20,14 +20,14 @@
 				url: "/user/signup",
 				payload:
 				{
-					username: 				"testusername",
-					email: 					"testemail",
-					password: 				"testpassword",
+					username: "testusername",
+					email: "testemail",
+					password: "testpassword",
+					invitationcode: "some-uuid-number-here"
 				}
 			};
 			server.inject(options, function(response) {
 				var result = response.result;
-				//console.log(result);
 				Code.expect(response.statusCode).to.equal(400); // we didn't pass network in the payload.
 				done();
 			});
@@ -38,10 +38,10 @@
 				url: "/user/signup",
 				payload:
 				{
-					username: 				"testusername",
-					email: 					"testemail",
-					password: 				"testpassword",
-					network: 				"email"
+					username: "testusername",
+					email: "testemail",
+					password: "testpassword",
+					network: "email"
 				}
 			};
 			server.inject(options, function(response) {
@@ -51,85 +51,81 @@
 				done();
 			});
 		});
-		lab.test("create user with invalid parameter - short username", function(done) {
+		lab.test("create user with invalid parameter - username too short", function(done) {
 			var options = {
 				method: "post",
 				url: "/user/signup",
 				payload:
 				{
-					network: 				"email",
-					username: 				"us", //this will fail the min requirement.
-					email: 					"john@john.com",
-					password: 				"testpassword",
-					invitationcode: 		"some-uuid-number-here"
+					network: "email",
+					username: "us", //this will fail the min requirement.
+					email: "john@john.com",
+					password: "testpassword",
+					invitationcode: "some-uuid-number-here"
 				}
 			};
 			server.inject(options, function(response) {
 				var result = response.result;
-				//console.log(result);
 				Code.expect(response.statusCode).to.equal(400);
 				done();
 			});
 		});
-		lab.test("create user with invalid parameter - large username", function(done) {
-		    var options = {
+		lab.test("create user with invalid parameter - username too big", function(done) {
+			var options = {
 				method: "post",
 				url: "/user/signup",
 				payload:
 				{
-					network: 				"email",
-					username: 				"iamtypinginaverylongusernamethatshouldfailvalidation!31232132423", //too big
-					email: 					"john@john.com",
-					password: 				"testpassword",
-					invitationcode: 		"some-uuid-number-here"
+					network: "email",
+					username: "iamtypinginaverylongusernamethatshouldfailvalidation!31232132423", //too big
+					email: "john@john.com",
+					password: "testpassword",
+					invitationcode: "some-uuid-number-here"
 				}
 			};
 			server.inject(options, function(response) {
 				var result = response.result;
-				//console.log(result);
 				Code.expect(response.statusCode).to.equal(400);
 				done();
 			});
 	    });
-	    lab.test("create user with invalid parameter - bad email", function(done) {
-		    var options = {
-		        method: "post",
-		        url: "/user/signup",
-		        payload:
-		        {
-					network: 				"email",
-					username: 				"someusername",
-					email: 					"john@", //invalid email
-					password: 				"testpassword",
-					invitationcode: 		"some-uuid-number-here"
-		        }
-		    };
-		    server.inject(options, function(response) {
+		lab.test("create user with invalid parameter - bad email", function(done) {
+			var options = {
+				method: "post",
+				url: "/user/signup",
+				payload: {
+					network: "email",
+					username: "someusername",
+					email: "john@", //invalid email
+					password: "testpassword",
+					invitationcode: "some-uuid-number-here"
+				}
+			};
+			server.inject(options, function(response) {
 				var result = response.result;
-				//console.log(result);
 				Code.expect(response.statusCode).to.equal(400);
 				done();
-		    });
-	    });
+			});
+		});
 	    lab.test("create user with invalid parameter - short password", function(done) {
-		    var options = {
-		        method: "post",
-		        url: "/user/signup",
-		        payload:
-		        {
-	                network: 				"email",
-	                username: 				"someusername",
-	                email: 					"john@john.com",
-	                password: 				"some1", //too short
-	                invitationcode: 		"some-uuid-number-here"
-		        }
-		    };
+			var options = {
+				method: "post",
+				url: "/user/signup",
+				payload:
+				{
+					network: "email",
+					username: "someusername",
+					email: "john@john.com",
+					password: "some1", //too short
+					invitationcode: "some-uuid-number-here"
+				}
+			};
 			server.inject(options, function(response) {
 				var result = response.result;
 				// console.log(result);
 				Code.expect(response.statusCode).to.equal(400);
 				done();
-		    });
+			});
 		});
 		lab.test("create user with an invalid network", function(done) {
 			var options = {
@@ -137,11 +133,11 @@
 				url: "/user/signup",
 				payload:
 				{
-					network: 				"yahoo",
-					username: 				"admin",
-					email: 					"testemail@test.com",
-					password: 				"testpassword",
-					invitationcode: 		"some-uuid-number-here"
+					network: "yahoo",
+					username: "admin",
+					email: "testemail@test.com",
+					password: "testpassword",
+					invitationcode: "some-uuid-number-here"
 				}
 			};
 			server.inject(options, function(response) {
@@ -156,11 +152,11 @@
 				url: "/user/signup",
 				payload:
 				{
-					network: 				"email",
-					username: 				"admin",
-					email: 					"testemail@test.com",
-					password: 				"testpassword",
-					invitationcode: 		"some-uuid-number-here"
+					network: "email",
+					username: "admin",
+					email: "testemail@test.com",
+					password: "testpassword",
+					invitationcode: "some-uuid-number-here"
 		        }
 		    };
 			server.inject(options, function(response) {
@@ -175,11 +171,11 @@
 				url: "/user/signup",
 				payload:
 				{
-					network: 				"email",
+					network: "email",
 					username:               "support",
 					email:                  "testemail@test.com",
 					password:               "testpassword",
-					invitationcode: 		"some-uuid-number-here"
+					invitationcode: "some-uuid-number-here"
 				}
 			};
 			server.inject(options, function(response) {
@@ -194,11 +190,11 @@
 				url: "/user/signup",
 				payload:
 				{
-					network: 				"email",
-					username: 				"dating-with-node-api",
-					email: 					"somemeail@test.com",
-					password: 				"testpassword",
-					invitationcode: 		"some-uuid-number-that-does-not-exist"
+					network: "email",
+					username: "dating-with-node-api",
+					email: "somemeail@test.com",
+					password: "testpassword",
+					invitationcode: "some-uuid-number-that-does-not-exist"
 				}
 			};
 			server.inject(options, function(response) {
@@ -214,15 +210,15 @@
 	***
 */
 	lab.experiment("method:post, url:/user  Registration fails due to existing records", function() {
-		var userDataPayload ={
-					username:'testjohndoe',
-					email: 'testjohndoe@test.com',
-					password: 'testjohndoe'
-				};
+		var user ={
+				username:'testjohndoe',
+				email: 'testjohndoe@test.com',
+				password: 'testjohndoe'
+		};
 		var userData = null;
 		lab.beforeEach(function (done) {
 			//setup test records
-			models.User.add(userDataPayload).then(function (userRecord) {
+			models.User.add(user).then(function (userRecord) {
 				userData = userRecord.toJSON();
 				done();
 			});
@@ -239,11 +235,11 @@
 				url: "/user/signup",
 				payload:
 				{
-					network: 				"email",
-					username: 				userDataPayload.username,
-					email: 					"randomemail@test.com",
-					password: 				userDataPayload.password,
-					invitationcode: 		"some-uuid-number-here"
+					network: "email",
+					username: user.username,
+					email: "randomemail@test.com",
+					password: user.password,
+					invitationcode: "some-uuid-number-here"
 				}
 			};
 			server.inject(options, function(response) {
@@ -258,11 +254,11 @@
 				url: "/user/signup",
 				payload:
 				{
-					network: 				"email",
-					username: 				"dating-with-node-api",
-					email: 					userDataPayload.email,
-					password: 				userDataPayload.password,
-					invitationcode: 		"some-uuid-number-here"
+					network: "email",
+					username: "dating-with-node-api",
+					email: user.email,
+					password: user.password,
+					invitationcode: "some-uuid-number-here"
 				}
 			};
 			server.inject(options, function(response) {
@@ -284,11 +280,11 @@
 					url: "/user/signup",
 					payload:
 					{
-						network: 				"email",
-						username: 				"dating-with-node-api",
-						email: 					"somemeail@test.com",
-						password: 				"testpassword",
-						invitationcode: 		invitationRecord.code
+						network: "email",
+						username: "dating-with-node-api",
+						email: "somemeail@test.com",
+						password: "testpassword",
+						invitationcode: invitationRecord.code
 					}
 				};
 				server.inject(options, function(response) {
@@ -312,11 +308,11 @@
 					url: "/user/signup",
 					payload:
 					{
-						network: 				"email",
-						username: 				"dating-with-node-api",
-						email: 					"somemeail@test.com",
-						password: 				"testpassword",
-						invitationcode: 		invitationRecord.code
+						network: "email",
+						username: "dating-with-node-api",
+						email: "somemeail@test.com",
+						password: "testpassword",
+						invitationcode: invitationRecord.code
 					}
 				};
 				server.inject(options, function(response) {
@@ -335,41 +331,59 @@
 	***
 */
 	lab.experiment("method:post, url:/user  Successful Registration:", function() {
+		var user_being_invited_email = 'autogenerateusername@test.com';
+		var user = {
+			email: 'test-user-controller-signup@test.com',
+			username: 'test-user-controller-signup',
+			password: 'testpassword',
+			network: 'email'
+		};
+		var userRecord;
+		var invitationRecord;
+		lab.beforeEach(function (done) {
+			//setup test record
+			models.User.add(user).then(function (result) {
+				userRecord = result.toJSON();
+				return userRecord;
+			}).then(function (result) {
+				return models.Invitation.add({user_id:result.id, email: user_being_invited_email});
+			}).then(function(inviteRecord){
+				invitationRecord = inviteRecord.toJSON();
+				done();
+			})
+		});
+		lab.afterEach(function (done) {
+			models.Invitation.findOne({id:invitationRecord.id}).then(function (invitationRecord){
+				//removing invitation record for testing purposes but it's kept even after the user registers.
+				return models.Invitation.destroy({id:invitationRecord.id});
+			}).then(function() {
+				return models.User.destroy({id:userRecord.id})
+			}).then(function() {
+				done();
+			});
+		});
+
 		lab.test("create user with auto generated username and valid invitation code", function(done) {
-			models.Invitation.add({
-				user_id:1,
-				email: "autogenerateusername@test.com"
-			}).then(function(invitationRecord){
-				invitationRecord = invitationRecord.toJSON();
-				var options = {
-					method: "post",
-					url: "/user/signup",
-					payload:
-					{
-						network: 				"email",
-						email: 					"autogenerateusername@test.com",
-						password: 				"testpassword",
-						invitationcode: 		invitationRecord.code
-					}
-				};
-				server.inject(options, function(response) {
-					var result = response.result;
-					Code.expect(response.statusCode).to.equal(200);
-					Code.expect(result.user[0].status).to.equal('active');
-
-					models.Invitation.findOne({id:invitationRecord.id}).then(function (invitationRecord){
-						Code.expect(invitationRecord.get('is_used')).to.equal(1);
-
-						//removing invitation record for testing purposes but it's kept even after the user registers.
-						models.Invitation.destroy({id:invitationRecord.id});
-
-					}).then(function(){
-						return models.User.findOne({email: 'autogenerateusername@test.com'});
-					}).then(function (userRecord) {
-						models.User.destroy({id:userRecord.get('id')});
-						done();
-					});
-				});
+			var options = {
+				method: "post",
+				url: "/user/signup",
+				payload:
+				{
+					network: "email",
+					email: user_being_invited_email,
+					password: "testpassword",
+					invitationcode: invitationRecord.code
+				}
+			};
+			server.inject(options, function(response) {
+				var result = response.result;
+				Code.expect(response.statusCode).to.equal(200);
+				Code.expect(result.user[0].status).to.equal('active');
+				models.User.findOne({email:user_being_invited_email}).then(function (userRecord) {
+					return userRecord.destroy({id:userRecord.get('id')});
+				}).then(function(){
+					done();
+				})
 			});
 		});
 		lab.test("create user with invitation code that places user in pending status.", function(done) {
@@ -378,22 +392,21 @@
 				url: "/user/signup",
 				payload:
 				{
-					network: 				"email",
-					email: 					"autogenerateusername@test.com",
-					password: 				"testpassword",
-					invitationcode: 		models.Invitation.notInvited
+					network: "email",
+					email: "some-email@test.com",
+					password: "testpassword",
+					invitationcode: models.Invitation.notInvited
 				}
 			};
-			server.inject(options, function(response) {			
+			server.inject(options, function(response) {
 				var result = response.result;
 				Code.expect(response.statusCode).to.equal(200);
 				Code.expect(result.user[0].status).to.equal('pending');
-
-				// clean up
-				models.User.findOne({email: 'autogenerateusername@test.com'}).then(function (userRecord) {
-					models.User.destroy({id:userRecord.id});
+				models.User.findOne({email:options.payload.email}).then(function (userRecord) {
+					return userRecord.destroy({id:userRecord.get('id')});
+				}).then(function(){
 					done();
-				});
+				})
 			});
 		});
 	});
@@ -404,53 +417,56 @@
 */
 	lab.experiment("method:put, url:/user/{id} ", function() {
 		var cookie;
+		var payload;
+		var userRecordJson;
 		var user = {
-					email: 'autogenerateusername212@test.com',
-					username: 'autogenerateuser2nam2e1',
-					password: 'testpassword',
-					network: 'email'
-				};		
+			email: 'test-user-controller-signup-success@test.com',
+			username: 'test-invite-controller',
+			password: 'testpassword',
+			network: 'email'
+		};
 		lab.beforeEach(function (done) {
 			//setup test record
 			models.User.add(user).then(function (userRecord) {
-				user = userRecord.toJSON();
+				userRecordJson = userRecord.toJSON();
 
 				//setup payload
 				return {
 					method: "post",url: "/auth/login",
 					payload: {
-						network: 'email',
+						network: user.network,
 						email: user.email,
-						password: 'testpassword',
+						password: user.password,
 					}
 				};
-			}).then(function(payloadRequest){
-				//perform login action and store the cookie.
-				util.login(payloadRequest, function(err, result) {
-					cookie = result;
-					done();
-				});
+			}).then(function(payload){
+				return util.loginAsPromise(payload);
+			}).then(function(response){
+				cookie = response;
+				done();
 			});
 		});
+
 		lab.afterEach(function (done) {
-			//logout
 			util.logout(cookie, function(err, result) {});
-			models.User.destroy({id:user.id}).then(function () {
+			models.User.destroy({id:userRecordJson.id}).then(function() {
 				done();
 			});
 		});
 	    lab.test("update user's username with authenticated user", function(done) {
 			var payloadRequest = {
 				method: "put",
-				url: "/user/" + user.id,
+				url: "/user/" + userRecordJson.id,
 				payload: {
-					username:'autogenerateusername1111',
+					username:'user-updating-his-username',
 				},
 				headers : {cookie:cookie}
 			};
-			server.inject(payloadRequest, function(response) {
+			util.getServerResponseAsPromise(payloadRequest).then(function(response){
 				Code.expect(response.statusCode).to.equal(200);
 				done();
+			}).catch(function (error) {
+				console.log(error);
 			});
 	    });
 	});

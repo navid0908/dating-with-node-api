@@ -18,11 +18,6 @@ module.exports = exports = [
     },
     {
         method: 'get',
-        path: '/lookup/buzzline',
-        config: controllers.lookupController.buzzline.get
-    },
-    {
-        method: 'get',
         path: '/lookup/children',
         config: controllers.lookupController.children.get
     },

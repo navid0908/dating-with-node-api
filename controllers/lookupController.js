@@ -61,21 +61,6 @@ bodytype = {
 	}
 };
 
-buzzline = {
-	get : {
-		tags: ['lookup', 'buzzline'],
-		description: "Lookup for various buzz lines",
-		handler: function (request, reply) {
-			models.Buzzline.findAll().then(function(result){
-				if(result){
-					return reply({buzzline: result.toJSON()});
-				}
-				return Boom.notFound('Buzz lines not found');
-			});
-		}
-	}
-};
-
 children = {
 	get : {
 		tags: ['lookup', 'children'],
@@ -244,7 +229,6 @@ question = {
 exports.activelevel = activelevel;
 exports.astrologicalsign = astrologicalsign;
 exports.bodytype = bodytype;
-exports.buzzline = buzzline;
 exports.children = children;
 exports.country = country;
 exports.diet = diet;
