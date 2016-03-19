@@ -71,16 +71,6 @@ module.exports = {
                         clientSecret: 'random-client-secret',
                         isSecure: false     // Terrible idea but required if not using HTTPS
                     }
-                },
-                {
-                    name: 'session',
-                    scheme: 'cookie',
-                    options: {
-                        password: 'random-password', //random generated password
-                        cookie: "dating-with-node",
-                        redirectTo: "/auth/login",
-                        isSecure: false     // Terrible idea but required if not using HTTPS
-                    }
                 }]
         }
 
@@ -92,7 +82,7 @@ module.exports = {
             port: 3306,
             host: '127.0.0.1',
             user: 'root',
-            password: '',
+            password: 'root',
             charset  : 'utf8',
             debug: false
         }

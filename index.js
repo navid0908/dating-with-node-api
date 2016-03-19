@@ -26,7 +26,7 @@ server.register([
 		{ register: require('lout') },
 		{ register: require('hapi-auth-cookie') },
 		{ register: require('./plugins/mailer/'), options: {
-				apiKey: "",
+				apiKey: "Pxxxa7WR1Avq52_xxxxZxxxxx",
 				apiHost: "https://mandrillapp.com/api/1.0/"
 		}}
 	], function(err) {}
@@ -51,12 +51,9 @@ server.auth.strategy('session', 'cookie', true, {
     validateFunc: function (request, session, callback) {
         cache.get(String(session.id), (err, cached) => {
             if (err) {
-            	console.log('shit error');
-            	console.log(err);
                 return callback(err, false);
             }
             if (!cached) {
-            	console.log('shit is not cached');
                 return callback(null, false);
             }
             return callback(null, true, cached.user);
