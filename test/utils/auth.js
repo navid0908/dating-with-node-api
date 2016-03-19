@@ -13,7 +13,7 @@
 	function getServerResponseAsPromise(payload){
 		return new Promise(function(resolve, reject) {
 			server.inject(payload, function(response) {
-				resolve(response); // we get the data here, so resolve the Promise
+				return resolve(response); // we get the data here, so resolve the Promise
 			});
 		});
 	}

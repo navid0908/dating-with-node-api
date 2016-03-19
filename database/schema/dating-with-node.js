@@ -52,10 +52,6 @@ var Schema = {
             id: {type: 'increments', nullable: false, primary: true},
             description: {type: 'string', maxlength: 45, nullable: false},
         },
-        buzzline :{
-            id: {type: 'increments', nullable: false, primary: true},
-            description: {type: 'string', maxlength: 45, nullable: false},
-        },
         question :{
             id: {type: 'increments', nullable: false, primary: true},
             description: {type: 'string', maxlength: 100, nullable: false},
@@ -68,15 +64,15 @@ var Schema = {
         },
         user: {
             id: {type: 'increments', nullable: false, primary: true},
-            username: {type: 'string', maxlength: 30, nullable: false, unique: true},
+            username: {type: 'string', maxlength: 30, nullable: false, unique: true, defaultTo: ''},
             email: {type: 'string', maxlength: 60, nullable: true, unique: true},
             password: {type: 'text', maxlength: 60, nullable: true},
-            group_id: {type: 'integer', maxlength: 2, fieldtype: 'smallint', nullable: false},
+            group_id: {type: 'integer', maxlength: 2, fieldtype: 'smallint', nullable: false, defaultTo: 0},
             social_login_type: {type: 'text', maxlength: 20, nullable: false},
             social_login_token: {type: 'text', maxlength: 100, nullable: true},
             status: {type: 'string', maxlength: 10, nullable: false, defaultTo: 'active'}, //pending,active,deleted
             created_at: {type: 'dateTime', nullable: false},
-            updated_at: {type: 'dateTime', nullable: true},
+            updated_at: {type: 'dateTime', nullable: false},
         },
         photo: {
             id: {type: 'increments', nullable: false, primary: true},
@@ -86,7 +82,7 @@ var Schema = {
             filepath: {type: 'string', maxlength: 60, nullable: false},
             caption: {type: 'string', maxlength: 140, nullable: true},
             created_at: {type: 'dateTime', nullable: false},
-            updated_at: {type: 'dateTime', nullable: true},
+            updated_at: {type: 'dateTime', nullable: false},
         },
         location: {
             id: {type: 'increments', nullable: false, primary: true},

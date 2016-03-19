@@ -1,16 +1,58 @@
 	var Lab = require("lab");
 	var Code = require('code');   // assertion library
 	var server = require("../../");
+	var models = require('../../database');
 	var _ = require("lodash");
+	var util = require('../utils/auth');
 
 	// Test shortcuts
 	var lab = exports.lab = Lab.script();
 
 lab.experiment("Lookup", function() {
+	var cookie;
+	var payload;
+	var userRecordJson;
+	var user = {
+					email: 'test-lookup-controller@test.com',
+					username: 'test-lookup-controller',
+					password: 'testpassword',
+					network: 'email'
+	};
+
+	lab.beforeEach(function (done) {
+		//setup test record
+		models.User.add(user).then(function (userRecord) {
+			userRecordJson = userRecord.toJSON();
+
+			//setup payload
+			return {
+				method: "post",url: "/auth/login",
+				payload: {
+					network: user.network,
+					email: user.email,
+					password: user.password,
+				}
+			};
+		}).then(function(payload){
+			return util.loginAsPromise(payload);
+		}).then(function(response){
+			cookie = response;
+			done();
+		});
+	});
+
+	lab.afterEach(function (done) {
+		util.logout(cookie, function(err, result) {});
+		models.User.destroy({id:userRecordJson.id}).then(function() {
+			done();
+		});
+	});
+
 	lab.test("/activelevel get endpoint", function(done) {
 		var options = {
 			method: "GET",
-			url: "/lookup/activelevel"
+			url: "/lookup/activelevel",
+			headers : {cookie:cookie}
 		};
 		server.inject(options, function(response) {
 			var result = response.result;
@@ -32,7 +74,8 @@ lab.experiment("Lookup", function() {
 	lab.test("/astrologicalsign endpoint", function(done) {
 		var options = {
 			method: "GET",
-			url: "/lookup/astrologicalsign"
+			url: "/lookup/astrologicalsign",
+			headers : {cookie:cookie}
 	    };
 		server.inject(options, function(response) {
 			var result = response.result;
@@ -54,7 +97,8 @@ lab.experiment("Lookup", function() {
 	lab.test("/bodytype endpoint", function(done) {
 		var options = {
 			method: "GET",
-			url: "/lookup/bodytype"
+			url: "/lookup/bodytype",
+			headers : {cookie:cookie}
 		};
 		server.inject(options, function(response) {
 			var result = response.result;
@@ -73,32 +117,11 @@ lab.experiment("Lookup", function() {
 			done();
 		});
 	});
-	lab.test("/buzzline endpoint", function(done) {
-		var options = {
-			method: "GET",
-			url: "/lookup/buzzline"
-		};
-		server.inject(options, function(response) {
-			var result = response.result;
-
-			Code.expect(response.statusCode).to.equal(200);
-			Code.expect(response.result).to.be.instanceof(Object);
-			Code.expect(result.hasOwnProperty('buzzline')).to.be.a.boolean();
-
-			var rows = result.buzzline;
-			Code.expect(rows).to.have.length(10);
-
-			_.each(rows, function(row){
-				Code.expect(row.hasOwnProperty('id')).to.be.a.boolean();
-				Code.expect(row.hasOwnProperty('description')).to.be.a.boolean();
-			});
-			done();
-		});
-	});
 	lab.test("/children endpoint", function(done) {
 		var options = {
 			method: "GET",
-			url: "/lookup/children"
+			url: "/lookup/children",
+			headers : {cookie:cookie}
 		};
 		server.inject(options, function(response) {
 			var result = response.result;
@@ -120,7 +143,8 @@ lab.experiment("Lookup", function() {
 	lab.test("/country endpoint", function(done) {
 		var options = {
 			method: "GET",
-			url: "/lookup/country"
+			url: "/lookup/country",
+			headers : {cookie:cookie}
 		};
 		server.inject(options, function(response) {
 			var result = response.result;
@@ -142,7 +166,8 @@ lab.experiment("Lookup", function() {
 	lab.test("/diet endpoint", function(done) {
 		var options = {
 			method: "GET",
-			url: "/lookup/diet"
+			url: "/lookup/diet",
+			headers : {cookie:cookie}
 		};
 		server.inject(options, function(response) {
 			var result = response.result;
@@ -164,7 +189,8 @@ lab.experiment("Lookup", function() {
 	lab.test("/drink endpoint", function(done) {
 		var options = {
 			method: "GET",
-			url: "/lookup/drink"
+			url: "/lookup/drink",
+			headers : {cookie:cookie}
 		};
 		server.inject(options, function(response) {
 			var result = response.result;
@@ -186,7 +212,8 @@ lab.experiment("Lookup", function() {
 	lab.test("/drug endpoint", function(done) {
 		var options = {
 			method: "GET",
-			url: "/lookup/drug"
+			url: "/lookup/drug",
+			headers : {cookie:cookie}
 		};
 		server.inject(options, function(response) {
 			var result = response.result;
@@ -208,7 +235,8 @@ lab.experiment("Lookup", function() {
 	lab.test("/education endpoint", function(done) {
 		var options = {
 			method: "GET",
-			url: "/lookup/education"
+			url: "/lookup/education",
+			headers : {cookie:cookie}
 		};
 		server.inject(options, function(response) {
 			var result = response.result;
@@ -230,7 +258,8 @@ lab.experiment("Lookup", function() {
 	lab.test("/phototype endpoint", function(done) {
 		var options = {
 			method: "GET",
-			url: "/lookup/phototype"
+			url: "/lookup/phototype",
+			headers : {cookie:cookie}
 		};
 		server.inject(options, function(response) {
 			var result = response.result;
@@ -252,7 +281,8 @@ lab.experiment("Lookup", function() {
 	lab.test("/profession endpoint", function(done) {
 		var options = {
 			method: "GET",
-			url: "/lookup/profession"
+			url: "/lookup/profession",
+			headers : {cookie:cookie}
 		};
 		server.inject(options, function(response) {
 			var result = response.result;
@@ -274,7 +304,8 @@ lab.experiment("Lookup", function() {
 	lab.test("/relationshipstatus endpoint", function(done) {
 		var options = {
 			method: "GET",
-			url: "/lookup/relationshipstatus"
+			url: "/lookup/relationshipstatus",
+			headers : {cookie:cookie}
 		};
 		server.inject(options, function(response) {
 			var result = response.result;
@@ -296,7 +327,8 @@ lab.experiment("Lookup", function() {
 	lab.test("/smoke endpoint", function(done) {
 		var options = {
 			method: "GET",
-			url: "/lookup/smoke"
+			url: "/lookup/smoke",
+			headers : {cookie:cookie}
 		};
 		server.inject(options, function(response) {
 			var result = response.result;
@@ -318,7 +350,8 @@ lab.experiment("Lookup", function() {
 	lab.test("/question endpoint", function(done) {
 		var options = {
 			method: "GET",
-			url: "/lookup/question"
+			url: "/lookup/question",
+			headers : {cookie:cookie}
 		};
 		server.inject(options, function(response) {
 			var result = response.result;

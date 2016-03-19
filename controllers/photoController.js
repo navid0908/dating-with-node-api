@@ -69,7 +69,7 @@ exports.add = {
 			var current = Promise.resolve();
 
 			// Create a new uuid so that there is no naming collision
-			var newFilename = config.general.public_upload_path + uuid.v1() + '.jpg';
+			var newFilename = config.general.public_upload_path + '/' + uuid.v1() + '.jpg';
 
 			// Set the location for the file to be placed.
 			var fileOut = fs.createWriteStream(newFilename);
@@ -81,7 +81,7 @@ exports.add = {
 			});
 			request.payload.file.on('end', function(err){
 				current.then(function(){
-					return models.Photo.forge({user_id: request.auth.credentials.user.id});
+					return models.Photo.forge({user_id: request.auth.credentials.id});
 				}).then(function(photo){
 					if (request.payload.caption){
 						photo.set('caption', request.payload.caption);

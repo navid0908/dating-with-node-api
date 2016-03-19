@@ -20,8 +20,8 @@
 		var payload;
 		var userRecordJson;
 		var user = {
-					email: 'autogenerateusername212@test.com',
-					username: 'autogenerateuser2nam2e1',
+					email: 'test-invite-controller@test.com',
+					username: 'test-invite-controller',
 					password: 'testpassword',
 					network: 'email'
 				};
@@ -34,36 +34,33 @@
 				return {
 					method: "post",url: "/auth/login",
 					payload: {
-						network: 'email',
-						email: userRecordJson.email,
-						password: 'testpassword',
+						network: user.network,
+						email: user.email,
+						password: user.password,
 					}
 				};
-			}).then(function(payloadRequest){
-				//perform login action and store the cookie.
-				util.login(payloadRequest, function(err, result) {
-					cookie = result;
-					done();
-				});
+			}).then(function(payload){
+				return util.loginAsPromise(payload);
+			}).then(function(response){
+				cookie = response;
+				done();
 			});
 		});
 
 		lab.afterEach(function (done) {
-			//logout
 			util.logout(cookie, function(err, result) {});
 			models.Invitation.findAll().
-			then(function (collection) {
-				// ... all Invitations have been destroyed
-				return collection.invokeThen('destroy');
-			}).then(function() {				  
-				return models.User.destroy({id:userRecordJson.id})
-			}).then(function() {
-				done();
-			})
+				then(function (collection) {
+					// ... all Invitations have been destroyed
+					return collection.invokeThen('destroy');
+				}).then(function() {
+					return models.User.destroy({id:userRecordJson.id})
+				}).then(function() {
+					done();
+				});
 		});
-
 		lab.test("invitation to join fails due to systemMax", function(done) {
-			for (var i=1; i<config.invitation.systemMax+1; i++){
+			for (var i=1; i<config.invitations.systemMax+1; i++){
 				models.Invitation.add({
 					user_id:userRecordJson.id,
 					email: "randomeemail" + i + "@gmail.com"
@@ -84,7 +81,7 @@
 		    });
 		});
 		lab.test("invitation to join fails due to userMax", function(done) {
-			for (var i=1; i<config.invitation.userMax+1; i++){
+			for (var i=1; i<config.invitations.userMax+1; i++){
 				models.Invitation.add({
 					user_id:userRecordJson.id,
 					email: "randomeemail" + i + "@gmail.com"
@@ -136,8 +133,8 @@
 		var user = null;
 		lab.beforeEach(function (done) {
 			user = {
-					email: 'invitetest@test.com',
-					username: 'invitationtest',
+					email: 'test-invite-controller@test.com',
+					username: 'test-invite-controller',
 					password: 'invitepassword',
 					network: 'email'
 				};
@@ -151,34 +148,39 @@
 					payload: {
 						network: user.network,
 						email: user.email,
-						password: user.password
+						password: user.password,
 					}
 				};
-			}).then(function(payloadRequest){
-				//perform login action and store the cookie.
-				util.login(payloadRequest, function(err, result) {
-					cookie = result;
-					done();
-				});
+			}).then(function(payload){
+				return util.loginAsPromise(payload);
+			}).then(function(response){
+				cookie = response;
+				done();
 			});
 		});
 		lab.afterEach(function (done) {
 			//logout
 			util.logout(cookie, function(err, result) {});
 			// clean up
-			models.Invitation.findAll({user_id:user.id}).then(function (collection) {
-				// destroy all invitations
-				return collection.invokeThen('destroy');
-			}).then(function() {
-				  return models.User.destroy({id:user.id});
-			}).then(function(){
-				done();
-			});
+			models.Invitation.findAll({user_id:user.id}).
+				then(function (collection) {
+					// destroy all invitations created by this user
+					return collection.invokeThen('destroy');
+				}).then(function() {
+					return models.Setting.findAll({user_id:user.id});
+				}).then(function(collection) {
+					// destroy all settings for this user
+					return collection.invokeThen('destroy');
+				}).then(function() {
+					  return models.User.destroy({id:user.id});
+				}).then(function(){
+					done();
+				});
 		});
 		lab.test("invitation to join succeeds with increase in userMax", function(done) {
 			var promises = [];
 			var data = []
-			var userMax = config.invitation.userMax + 10;
+			var userMax = config.invitations.userMax + 10;
 
 			//increase this users sending limit to the new user max.
 			models.Setting.add({user_id:user.id, name:models.Setting.CONST_USER_MAX_INVITE, value: userMax});
