@@ -342,8 +342,5 @@
 		{"description":"I spend my off-time doing …"},
 		{"description":"The most private thing I’m willing to admit"},
 		{"description":"I’m looking for"}
-	],
-	"user" : [
-		{"social_login_type" : "email" , "email" : "testemail@test.com", "password" : "$2a$10$ppMRNBdlu2ehVFhWShLf7OaA1e.p.4ypvU/LV9Y7Nd1ZKZJ1AFy6K"}
-	]
+	]	
 }

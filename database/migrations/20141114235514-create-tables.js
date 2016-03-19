@@ -23,10 +23,11 @@ function populateTables(tableNames, knex){
 }
 
 function dropTables(tableNames,knex){
- 	// Delete all tables in reverse order
  	return _.map(tableNames, function (tableName) {
-		return utils.deleteTable(tableName, knex);
-	}).reverse();
+		return function(){
+			return utils.deleteTable(tableName, knex);
+		}
+	});
 }
 
 exports.up = function(knex, Promise) {
@@ -44,11 +45,14 @@ exports.up = function(knex, Promise) {
 };
 
 exports.down = function(knex, Promise) {
-	var tableNames = _.keys(schema);
+	var tables = [];
+	var tableSequence;
+	var tableNames = _.keys(schema).reverse();
 
-	Promise.all(dropTables(tableNames,knex)).done(function(results){
+	tables = dropTables(tableNames,knex);
+	tableSequence = sequence(tables);
+
+	return tableSequence.then(function () {
 		console.log('DB cleanup successful');
-	},function(err){
-		console.log('DB cleanup failed: ' + err);
-  	});
+    });
 };
