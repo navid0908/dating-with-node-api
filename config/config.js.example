@@ -4,7 +4,7 @@ module.exports = {
         host: "127.0.0.1", //FQN or ip of this box that the server is attached too.
         port: 8080, // Incoming HTTP traffic is assigned to this port.
         options: {
-            cors: true,
+            cors: false,
             cache: {
                 engine: require("catbox-redis"),
                 partition: 'dating-with-node', // The Redis parition name under which keys are stored. Default is ''

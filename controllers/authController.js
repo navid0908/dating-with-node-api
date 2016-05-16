@@ -15,7 +15,7 @@ exports.login = {
 	},
 	plugins: {
 		'hapi-auth-cookie': {
-			redirectTo: false
+			redirectTo: true
 		}
 	},
 	validate: {
