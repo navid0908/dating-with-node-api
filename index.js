@@ -40,7 +40,7 @@ for (var index=0; index < config.hapi.auth.strategy.length; index++){
 	);
 }
 
-const cache = server.cache({ segment: 'sessions', expiresIn: 3 * 24 * 60 * 60 * 1000 });
+const cache = server.cache({ segment: 'sessions', expiresIn: 3 * 24 * 60 * 60 * 100 });
 server.app.cache = cache;
 
 server.auth.strategy('session', 'cookie', true, {
